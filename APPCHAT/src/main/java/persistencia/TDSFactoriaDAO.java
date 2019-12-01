@@ -15,8 +15,8 @@ public class TDSFactoriaDAO extends FactoriaDAO {
 	}
 
 	@Override
-	public IAdaptadorGrupoDAO getGrupoDAO() {
-		return AdaptadorGrupoTDS.getUnicaInstancia();
+	public IAdaptadorContactoGrupoDAO getGrupoDAO() {
+		return AdaptadorContactoGrupoTDS.getUnicaInstancia();
 	}
 
 	@Override

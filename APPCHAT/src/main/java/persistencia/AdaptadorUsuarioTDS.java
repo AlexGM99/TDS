@@ -15,6 +15,8 @@ import modelo.ContactoIndividual;
 import modelo.Usuario;
 import modelo.Venta;
 
+//TODO SIN HACER
+
 //Usa un pool para evitar problemas doble referencia con ventas
 public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 	private static ServicioPersistencia servPersistencia;
@@ -55,7 +57,6 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 			if (c instanceof ContactoGrupo)
 				adaptadorContactoGrupo.registrarContactoGrupo(c);
 
-		// TODO POR AQUI
 		// crear entidad Usuario
 		eUsuario = new Entidad();
 		eUsuario.setNombre("usuario");

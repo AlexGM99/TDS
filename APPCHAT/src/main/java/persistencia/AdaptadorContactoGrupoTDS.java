@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import tds.driver.FactoriaServicioPersistencia;
@@ -108,8 +109,7 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 		// nombre
 		String nombre = servPersistencia.recuperarPropiedadEntidad(eContactoGr, "nombre");
 		
-		// TODO ¿Está bien inicializar con admin a 'null'?
-		ContactoGrupo grupo = new ContactoGrupo(nombre, null);
+		ContactoGrupo grupo = new ContactoGrupo(nombre);
 		grupo.setCodigo(codigo);
 
 		// IMPORTANTE:añadir el grupo al pool antes de llamar a otros
@@ -144,7 +144,7 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 	}
 	
 	// -------------------Funciones auxiliares-----------------------------
-	private String obtenerCodigosMiembros(List<ContactoIndividual> miembros) {
+	private String obtenerCodigosMiembros(Set<ContactoIndividual> miembros) {
 		String lineas = "";
 		for (ContactoIndividual miembro : miembros) {
 			lineas += miembro.getCodigo() + " ";

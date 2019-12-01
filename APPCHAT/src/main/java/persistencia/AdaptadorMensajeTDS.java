@@ -7,20 +7,17 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 import beans.Entidad;
 import beans.Propiedad;
 
-import modelo.Venta;
-import modelo.Cliente;
-import modelo.LineaVenta;
 import modelo.Mensaje;
 
+//TODO 'Usuario' tiene una lista de mensajes, ¿cuándo la actualizamos?
+
 public class AdaptadorMensajeTDS implements IAdaptadorMensajeDAO {
-	// Usa un pool para evitar problemas doble referencia con cliente
 
 	private static ServicioPersistencia servPersistencia;
 
@@ -53,129 +50,73 @@ public class AdaptadorMensajeTDS implements IAdaptadorMensajeDAO {
 		}
 		if (existe) return;
 
-		// TODO Por aquí
 		// registrar primero los atributos que son objetos
-		// registrar lineas de venta
-		AdaptadorLineaVentaTDS adaptadorLV = AdaptadorLineaVentaTDS.getUnicaInstancia();
-		for (LineaVenta ldv : venta.getLineasVenta())
-			adaptadorLV.registrarLineaVenta(ldv);
-		// registrar cliente
-		AdaptadorClienteTDS adaptadorCliente = AdaptadorClienteTDS.getUnicaInstancia();
-		adaptadorCliente.registrarCliente(venta.getCliente());
 
 		// Crear entidad venta
-		eVenta = new Entidad();
+		eMensaje = new Entidad();
 
-		eVenta.setNombre("venta");
-		eVenta.setPropiedades(new ArrayList<Propiedad>(
-				Arrays.asList(new Propiedad("cliente", String.valueOf(venta.getCliente().getCodigo())),
-						new Propiedad("fecha", dateFormat.format(venta.getFecha())),
-						new Propiedad("lineasventa", obtenerCodigosLineaVenta(venta.getLineasVenta())))));
+		eMensaje.setNombre("mensaje");
+		eMensaje.setPropiedades(new ArrayList<Propiedad>(
+				Arrays.asList(new Propiedad("texto", mensaje.getTexto()),
+						new Propiedad("tlfEmisor", mensaje.getTlfEmisor()),
+						new Propiedad("fecha", dateFormat.format(mensaje.getHora())))));
 		// registrar entidad venta
-		eVenta = servPersistencia.registrarEntidad(eVenta);
+		eMensaje = servPersistencia.registrarEntidad(eMensaje);
 		// asignar identificador unico
 		// Se aprovecha el que genera el servicio de persistencia
-		venta.setCodigo(eVenta.getId()); 	
+		mensaje.setCodigo(eMensaje.getId()); 	
 	}
 
-	public void borrarVenta(Venta venta) {
-		// No se comprueban restricciones de integridad con Cliente
-		Entidad eVenta;
-		AdaptadorLineaVentaTDS adaptadorLV = AdaptadorLineaVentaTDS.getUnicaInstancia();
-
-		for (LineaVenta lineaVenta : venta.getLineasVenta()) {
-			adaptadorLV.borrarLineaVenta(lineaVenta);
-		}
-		eVenta = servPersistencia.recuperarEntidad(venta.getCodigo());
-		servPersistencia.borrarEntidad(eVenta);
+	public void borrarMensaje(Mensaje mensaje) {
+		// No se comprueban restricciones de integridad
+		Entidad eMensaje;
+		
+		eMensaje = servPersistencia.recuperarEntidad(mensaje.getCodigo());
+		servPersistencia.borrarEntidad(eMensaje);
 
 	}
 
-	public void modificarVenta(Venta venta) {
-		Entidad eVenta;
+	public void modificarMensaje(Mensaje mensaje) {
+		Entidad eMensaje;
 
-		eVenta = servPersistencia.recuperarEntidad(venta.getCodigo());
-		servPersistencia.eliminarPropiedadEntidad(eVenta, "cliente");
-		servPersistencia.anadirPropiedadEntidad(eVenta, "cliente", String.valueOf(venta.getCliente().getCodigo()));
-		servPersistencia.eliminarPropiedadEntidad(eVenta, "fecha");
-		servPersistencia.anadirPropiedadEntidad(eVenta, "fecha", dateFormat.format(venta.getFecha()));
-
-		String lineas = obtenerCodigosLineaVenta(venta.getLineasVenta());
-		servPersistencia.eliminarPropiedadEntidad(eVenta, "lineasventa");
-		servPersistencia.anadirPropiedadEntidad(eVenta, "lineasventa", lineas);
-
+		eMensaje = servPersistencia.recuperarEntidad(mensaje.getCodigo());
+		servPersistencia.eliminarPropiedadEntidad(eMensaje, "texto");
+		servPersistencia.anadirPropiedadEntidad(eMensaje, "texto", mensaje.getTexto());
+		servPersistencia.eliminarPropiedadEntidad(eMensaje, "tlfEmisor");
+		servPersistencia.anadirPropiedadEntidad(eMensaje, "tlfEmisor", mensaje.getTlfEmisor());
+		servPersistencia.eliminarPropiedadEntidad(eMensaje, "fecha");
+		servPersistencia.anadirPropiedadEntidad(eMensaje, "fecha", dateFormat.format(mensaje.getHora()));
 	}
 
-	public Venta recuperarVenta(int codigo) {
-		// Si la entidad est� en el pool la devuelve directamente
-		if (PoolDAO.getUnicaInstancia().contiene(codigo))
-			return (Venta) PoolDAO.getUnicaInstancia().getObjeto(codigo);
-
-		// si no, la recupera de la base de datos
-		// recuperar entidad
-		Entidad eVenta = servPersistencia.recuperarEntidad(codigo);
-
-		// recuperar propiedades que no son objetos
-		// fecha
-		Date fecha = null;
+	public Mensaje recuperarMensaje(int codigo) {
+		Entidad eMensaje;
+		String texto;
+		String tlfEmisor;
+		Date hora = null;
+		
+		eMensaje = servPersistencia.recuperarEntidad(codigo);
+		texto = servPersistencia.recuperarPropiedadEntidad(eMensaje, "texto");
+		tlfEmisor = servPersistencia.recuperarPropiedadEntidad(eMensaje, "tlfEmisor");
+		
 		try {
-			fecha = dateFormat.parse(servPersistencia.recuperarPropiedadEntidad(eVenta, "fecha"));
+			hora = dateFormat.parse(servPersistencia.recuperarPropiedadEntidad(eMensaje, "fecha"));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		Venta venta = new Venta(fecha);
-		venta.setCodigo(codigo);
-
-		// IMPORTANTE:a�adir la venta al pool antes de llamar a otros
-		// adaptadores
-		PoolDAO.getUnicaInstancia().addObjeto(codigo, venta);
-
-		// recuperar propiedades que son objetos llamando a adaptadores
-		// cliente
-		AdaptadorClienteTDS adaptadorCliente = AdaptadorClienteTDS.getUnicaInstancia();
-		int codigoCliente = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eVenta, "cliente"));
-		
-		Cliente cliente  = adaptadorCliente.recuperarCliente(codigoCliente);
-		venta.setCliente(cliente);
-		// lineas de venta
-		List<LineaVenta> lineasVenta = obtenerLineasVentaDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eVenta, "lineasventa"));
-
-		for (LineaVenta lv : lineasVenta)
-			venta.addLineaVenta(lv);
-
-		// devolver el objeto venta
-		return venta;
+		//
+		Mensaje mensaje = new Mensaje(texto, hora, tlfEmisor);
+		mensaje.setCodigo(codigo);
+		return mensaje;
 	}
 
-	public List<Venta> recuperarTodasVentas() {
-		List<Venta> ventas = new LinkedList<Venta>();
-		List<Entidad> eVentas = servPersistencia.recuperarEntidades("venta");
+	public List<Mensaje> recuperarTodosMensajes() {
+		List<Mensaje> mensajes = new LinkedList<Mensaje>();
+		List<Entidad> eMensajes = servPersistencia.recuperarEntidades("mensaje");
 
-		for (Entidad eVenta : eVentas) {
-			ventas.add(recuperarVenta(eVenta.getId()));
+		for (Entidad eMensaje : eMensajes) {
+			mensajes.add(recuperarMensaje(eMensaje.getId()));
 		}
-		return ventas;
-	}
-
-	// -------------------Funciones auxiliares-----------------------------
-	private String obtenerCodigosLineaVenta(List<LineaVenta> lineasVenta) {
-		String lineas = "";
-		for (LineaVenta lineaVenta : lineasVenta) {
-			lineas += lineaVenta.getCodigo() + " ";
-		}
-		return lineas.trim();
-
-	}
-
-	private List<LineaVenta> obtenerLineasVentaDesdeCodigos(String lineas) {
-
-		List<LineaVenta> lineasVenta = new LinkedList<LineaVenta>();
-		StringTokenizer strTok = new StringTokenizer(lineas, " ");
-		AdaptadorLineaVentaTDS adaptadorLV = AdaptadorLineaVentaTDS.getUnicaInstancia();
-		while (strTok.hasMoreTokens()) {
-			lineasVenta.add(adaptadorLV.recuperarLineaVenta(Integer.valueOf((String) strTok.nextElement())));
-		}
-		return lineasVenta;
+		return mensajes;
 	}
 
 }

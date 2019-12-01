@@ -1,19 +1,21 @@
 package modelo;
 
 import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+
+// TODO ¿Añadir lista de mensajes?
 
 public class ContactoGrupo extends Contacto {
 	
 	private Usuario admin;
-	private List<ContactoIndividual> miembros;
+	private Set<ContactoIndividual> miembros;
 
-	public ContactoGrupo(String nombre, Usuario admin) {
+	public ContactoGrupo(String nombre, ContactoIndividual...miembros) {
 		super(nombre);
-		this.admin = admin;
-		this.miembros = new LinkedList<ContactoIndividual>();
-		admin.addAdministrador(this);
+		this.admin = null;
+		this.miembros = new HashSet<ContactoIndividual>();
+		Collections.addAll(this.miembros, miembros);
 	}
 
 	public Usuario getAdmin() {
@@ -32,8 +34,12 @@ public class ContactoGrupo extends Contacto {
 		miembros.add(new ContactoIndividual(nombre, movil));
 	}
 	
-	public List<ContactoIndividual> getMiembros() {
-		return Collections.unmodifiableList(miembros);
+	public void removeMiembro(ContactoIndividual c) {
+		miembros.remove(c);
+	}
+	
+	public Set<ContactoIndividual> getMiembros() {
+		return Collections.unmodifiableSet(miembros);
 	}
 
 }

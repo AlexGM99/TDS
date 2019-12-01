@@ -11,6 +11,9 @@ import beans.Entidad;
 import beans.Propiedad;
 import modelo.ContactoIndividual;
 
+// Dependencia con 'Usuario' (contactos) y 'ContactoGrupo' (miembros)
+// TODO ¿Cuando se elimina un ContactoIndividual actualizar listas?
+
 public class AdaptadorContactoIndividualTDS implements IAdaptadorContactoIndividualDAO {
 
 	private static ServicioPersistencia servPersistencia;

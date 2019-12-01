@@ -1,8 +1,6 @@
 package persistencia;
 
 import java.util.List;
-
-import modelo.Contacto;
 import modelo.Mensaje;
 
 public interface IAdaptadorMensajeDAO {
@@ -13,6 +11,4 @@ public interface IAdaptadorMensajeDAO {
 	public Mensaje recuperarMensaje(int codigo);
 	public List<Mensaje> recuperarTodosMensajes();
 	
-	public void registrarContacto(Contacto contacto);
-	public void borrarContacto(Contacto contacto);
 }

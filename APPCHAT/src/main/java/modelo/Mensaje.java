@@ -1,27 +1,26 @@
 package modelo;
 
-import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 
-// TODO Implementar
+// TODO Terminar de implementar
+// TODO Emoticonos
+// TODO ¿Guardar destinatarios?
 
 public class Mensaje {
 	private int codigo;
 	private String texto;
+	private String tlfEmisor;
 	private Date hora;
-	// private _ emoticon;
-	private Usuario emisor;
-	private List<Contacto> receptores;
+	//private _ emoticon;
+	//private List<Contacto> receptores;
 
-	public Mensaje(String texto, Date hora, Usuario emisor, Contacto... receptores) {
+	public Mensaje(String texto, Date hora, String tlfEmisor) {
 		this.codigo = 0;
 		this.texto = texto;
 		this.hora = hora;
-		this.emisor = emisor;
-		this.receptores = new LinkedList<Contacto>();
-		Collections.addAll(this.receptores, receptores);
+		this.tlfEmisor = tlfEmisor;
+		//this.receptores = new LinkedList<Contacto>();
+		//Collections.addAll(this.receptores, receptores);
 
 	}
 
@@ -33,7 +32,6 @@ public class Mensaje {
 		this.codigo = codigo;
 	}
 
-	
 	public String getTexto() {
 		return texto;
 	}
@@ -50,15 +48,28 @@ public class Mensaje {
 		this.hora = hora;
 	}
 
-	public Usuario getEmisor() {
-		return emisor;
+	public String getTlfEmisor() {
+		return tlfEmisor;
 	}
 
-	public void setEmisor(Usuario emisor) {
-		this.emisor = emisor;
+	public void setTlfEmisor(String tlfEmisor) {
+		this.tlfEmisor = tlfEmisor;
+	}
+	
+	/*
+	public void addReceptor(Contacto c) {
+		receptores.add(c);
+	}
+	
+	public void addReceptor(String nombre, String movil) {
+		receptores.add(new ContactoIndividual(nombre, movil));
+	}
+	
+	public void addReceptor(String nombre, Usuario admin) {
+		receptores.add(new ContactoGrupo(nombre, admin));
 	}
 	
 	public List<Contacto> getReceptores() {
 		return Collections.unmodifiableList(receptores);
-	}
+	}*/
 }
