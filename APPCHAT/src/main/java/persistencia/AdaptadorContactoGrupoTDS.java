@@ -4,20 +4,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 import beans.Entidad;
 import beans.Propiedad;
-import modelo.Contacto;
 import modelo.ContactoGrupo;
 import modelo.ContactoIndividual;
-import modelo.LineaVenta;
+import modelo.Usuario;
 
 public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 
 	private static ServicioPersistencia servPersistencia;
-	private static AdaptadorContactoGrupoTDS unicaInstancia = null;
+	private static AdaptadorContactoGrupoTDS unicaInstancia;
 
 	public static AdaptadorContactoGrupoTDS getUnicaInstancia() { // patron singleton
 		if (unicaInstancia == null) {
@@ -32,7 +32,7 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 
 	/* cuando se registra un ContactoGrupo se le asigna un identificador unico */
 	public void registrarContactoGrupo(ContactoGrupo contacto) {
-		Entidad eContactoGr = null;
+		Entidad eContactoGr;
 		// Si la entidad está registrada no la registra de nuevo
 		boolean existe = true; 
 		try {
@@ -54,8 +54,10 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 		
 		// crear entidad contactoGrupo
 		eContactoGr = new Entidad();
+		
 		eContactoGr.setNombre("contactoGrupo");
-		eContactoGr.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(new Propiedad("nombre", contacto.getNombre()),
+		eContactoGr.setPropiedades(new ArrayList<Propiedad>(
+				Arrays.asList(new Propiedad("nombre", contacto.getNombre()),
 				new Propiedad("admin", String.valueOf(contacto.getAdmin().getCodigo())),
 				new Propiedad("miembros", obtenerCodigosMiembros(contacto.getMiembros())))));
 		
@@ -79,8 +81,9 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 	}
 
 	public void modificarContactoGrupo(ContactoGrupo contacto) {
-		Entidad eContactoGr = servPersistencia.recuperarEntidad(contacto.getCodigo());
-
+		Entidad eContactoGr; 
+		
+		eContactoGr = servPersistencia.recuperarEntidad(contacto.getCodigo());
 		servPersistencia.eliminarPropiedadEntidad(eContactoGr, "nombre");
 		servPersistencia.anadirPropiedadEntidad(eContactoGr, "nombre", contacto.getNombre());
 		servPersistencia.eliminarPropiedadEntidad(eContactoGr, "admin");
@@ -92,22 +95,47 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 	}
 
 	public ContactoGrupo recuperarContactoGrupo(int codigo) {
-		Entidad eContactoGr;
-		String nombre;
-		String movil;
+		
+		// Si la entidad está en el pool la devuelve directamente
+		if (PoolDAO.getUnicaInstancia().contiene(codigo))
+			return (ContactoGrupo) PoolDAO.getUnicaInstancia().getObjeto(codigo);
 
-		eContactoGr = servPersistencia.recuperarEntidad(codigo);
-		nombre = servPersistencia.recuperarPropiedadEntidad(eContactoGr, "nombre");
-		movil = servPersistencia.recuperarPropiedadEntidad(eContactoGr, "movil");
+		// si no, la recupera de la base de datos
+		// recuperar entidad
+		Entidad eContactoGr = servPersistencia.recuperarEntidad(codigo);
 
-		ContactoGrupo contacto = new ContactoGrupo(nombre, movil);
-		contacto.setCodigo(codigo);
-		return contacto;
+		// recuperar propiedades que no son objetos
+		// nombre
+		String nombre = servPersistencia.recuperarPropiedadEntidad(eContactoGr, "nombre");
+		
+		// TODO ¿Está bien inicializar con admin a 'null'?
+		ContactoGrupo grupo = new ContactoGrupo(nombre, null);
+		grupo.setCodigo(codigo);
+
+		// IMPORTANTE:añadir el grupo al pool antes de llamar a otros
+		// adaptadores
+		PoolDAO.getUnicaInstancia().addObjeto(codigo, grupo);
+
+		// recuperar propiedades que son objetos llamando a adaptadores
+		// admin
+		AdaptadorUsuarioTDS adaptadorUsuario = AdaptadorUsuarioTDS.getUnicaInstancia();
+		int codigoUsuario = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eContactoGr, "admin"));
+		
+		Usuario admin  = adaptadorUsuario.recuperarUsuario(codigoUsuario);
+		grupo.setAdmin(admin);
+		// miembros
+		List<ContactoIndividual> miembros = obtenerContactosIndividualesDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eContactoGr, "miembros"));
+
+		for (ContactoIndividual ci : miembros)
+			grupo.addMiembro(ci);
+		
+		// devolver el objeto venta
+		return grupo;
 	}
 
 	public List<ContactoGrupo> recuperarTodosContactoGrupos(){
 		List<ContactoGrupo> contactos = new LinkedList<ContactoGrupo>();
-		List<Entidad> entidades = servPersistencia.recuperarEntidades("contactoIndividual");
+		List<Entidad> entidades = servPersistencia.recuperarEntidades("contactoGrupo");
 
 		for (Entidad eContactoGr : entidades) {
 			contactos.add(recuperarContactoGrupo(eContactoGr.getId()));
@@ -123,6 +151,17 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 		}
 		return lineas.trim();
 
+	}
+	
+	private List<ContactoIndividual> obtenerContactosIndividualesDesdeCodigos(String lineas) {
+
+		List<ContactoIndividual> miembros = new LinkedList<ContactoIndividual>();
+		StringTokenizer strTok = new StringTokenizer(lineas, " ");
+		AdaptadorContactoIndividualTDS adaptadorCI = AdaptadorContactoIndividualTDS.getUnicaInstancia();
+		while (strTok.hasMoreTokens()) {
+			miembros.add(adaptadorCI.recuperarContactoIndividual(Integer.valueOf((String) strTok.nextElement())));
+		}
+		return miembros;
 	}
 
 }

@@ -24,6 +24,14 @@ public class ContactoGrupo extends Contacto {
 		this.admin = admin;
 	}
 
+	public void addMiembro(ContactoIndividual c) {
+		miembros.add(c);
+	}
+	
+	public void addMiembro(String nombre, String movil) {
+		miembros.add(new ContactoIndividual(nombre, movil));
+	}
+	
 	public List<ContactoIndividual> getMiembros() {
 		return Collections.unmodifiableList(miembros);
 	}

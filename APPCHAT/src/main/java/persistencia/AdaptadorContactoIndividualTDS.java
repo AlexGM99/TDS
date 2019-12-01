@@ -29,7 +29,7 @@ public class AdaptadorContactoIndividualTDS implements IAdaptadorContactoIndivid
 
 	/* cuando se registra un ContactoIndividual se le asigna un identificador unico */
 	public void registrarContactoIndividual(ContactoIndividual contacto) {
-		Entidad eContactoInd = null;
+		Entidad eContactoInd;
 		// Si la entidad está registrada no la registra de nuevo
 		boolean existe = true; 
 		try {
@@ -42,7 +42,8 @@ public class AdaptadorContactoIndividualTDS implements IAdaptadorContactoIndivid
 		// crear entidad contactoIndividual
 		eContactoInd = new Entidad();
 		eContactoInd.setNombre("contactoIndividual");
-		eContactoInd.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(new Propiedad("nombre", contacto.getNombre()),
+		eContactoInd.setPropiedades(new ArrayList<Propiedad>(
+				Arrays.asList(new Propiedad("nombre", contacto.getNombre()),
 				new Propiedad("movil", contacto.getMovil()))));
 		
 		// registrar entidad contactoIndividual
@@ -59,8 +60,9 @@ public class AdaptadorContactoIndividualTDS implements IAdaptadorContactoIndivid
 	}
 
 	public void modificarContactoIndividual(ContactoIndividual contacto) {
-		Entidad eContactoInd = servPersistencia.recuperarEntidad(contacto.getCodigo());
-
+		Entidad eContactoInd;
+		
+		eContactoInd = servPersistencia.recuperarEntidad(contacto.getCodigo());
 		servPersistencia.eliminarPropiedadEntidad(eContactoInd, "nombre");
 		servPersistencia.anadirPropiedadEntidad(eContactoInd, "nombre", contacto.getNombre());
 		servPersistencia.eliminarPropiedadEntidad(eContactoInd, "movil");
