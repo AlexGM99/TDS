@@ -57,8 +57,8 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 		eContactoGr = new Entidad();
 		
 		eContactoGr.setNombre("contactoGrupo");
-		eContactoGr.setPropiedades(new ArrayList<Propiedad>(
-				Arrays.asList(new Propiedad("nombre", contacto.getNombre()),
+		eContactoGr.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(
+				new Propiedad("nombre", contacto.getNombre()),
 				new Propiedad("admin", String.valueOf(contacto.getAdmin().getCodigo())),
 				new Propiedad("miembros", obtenerCodigosMiembros(contacto.getMiembros())))));
 		
@@ -72,8 +72,11 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 	public void borrarContactoGrupo(ContactoGrupo contacto) {
 		// No se comprueban restricciones de integridad
 		Entidad eContactoGr;
-		AdaptadorContactoIndividualTDS adaptadorCI = AdaptadorContactoIndividualTDS.getUnicaInstancia();
 		
+		AdaptadorUsuarioTDS adaptadorU = AdaptadorUsuarioTDS.getUnicaInstancia();
+		adaptadorU.borrarUsuario(contacto.getAdmin());
+		
+		AdaptadorContactoIndividualTDS adaptadorCI = AdaptadorContactoIndividualTDS.getUnicaInstancia();
 		for (ContactoIndividual contactoInd : contacto.getMiembros())
 			adaptadorCI.borrarContactoIndividual(contactoInd);
 		

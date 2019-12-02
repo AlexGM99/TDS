@@ -15,7 +15,7 @@ import beans.Propiedad;
 
 import modelo.Mensaje;
 
-//TODO 'Usuario' tiene una lista de mensajes, ¿cuándo la actualizamos?
+// 'Usuario' tiene una lista de mensajes, ¿cuándo la actualizamos?
 
 public class AdaptadorMensajeTDS implements IAdaptadorMensajeDAO {
 
@@ -50,8 +50,6 @@ public class AdaptadorMensajeTDS implements IAdaptadorMensajeDAO {
 		}
 		if (existe) return;
 
-		// registrar primero los atributos que son objetos
-
 		// Crear entidad venta
 		eMensaje = new Entidad();
 
@@ -73,7 +71,6 @@ public class AdaptadorMensajeTDS implements IAdaptadorMensajeDAO {
 		
 		eMensaje = servPersistencia.recuperarEntidad(mensaje.getCodigo());
 		servPersistencia.borrarEntidad(eMensaje);
-
 	}
 
 	public void modificarMensaje(Mensaje mensaje) {
@@ -103,7 +100,7 @@ public class AdaptadorMensajeTDS implements IAdaptadorMensajeDAO {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		//
+		
 		Mensaje mensaje = new Mensaje(texto, hora, tlfEmisor);
 		mensaje.setCodigo(codigo);
 		return mensaje;

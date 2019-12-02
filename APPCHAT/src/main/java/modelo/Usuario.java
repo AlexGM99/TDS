@@ -13,7 +13,7 @@ import java.util.List;
 public class Usuario {
 	private int codigo;
 	private String nombre;
-	private Date fechanacimiento;
+	private Date fechaNacimiento;
 	private String email;
 	private String movil;
 	private String usuario;
@@ -21,7 +21,8 @@ public class Usuario {
 	private String imagen;
 	private String saludo;
 	private boolean premium;
-	private List<Contacto> contactos;
+	private List<ContactoIndividual> contactos;
+	private List<ContactoGrupo> grupos;
 	private List<Mensaje> mensajes;
 
 	// Constructor sin saludo
@@ -29,7 +30,7 @@ public class Usuario {
 			String imagen, boolean premium) {
 		this.codigo = 0;
 		this.nombre = nombre;
-		this.fechanacimiento = fechanacimiento;
+		this.fechaNacimiento = fechanacimiento;
 		this.email = email;
 		this.movil = movil;
 		this.usuario = usuario;
@@ -37,7 +38,8 @@ public class Usuario {
 		this.imagen = imagen;
 		this.saludo = null;
 		this.premium = premium;
-		this.contactos = new LinkedList<Contacto>();
+		this.contactos = new LinkedList<ContactoIndividual>();
+		this.grupos = new LinkedList<ContactoGrupo>();
 	}
 	
 	// Constructor con saludo
@@ -45,7 +47,7 @@ public class Usuario {
 			String imagen, String saludo, boolean premium) {
 		this.codigo = 0;
 		this.nombre = nombre;
-		this.fechanacimiento = fechanacimiento;
+		this.fechaNacimiento = fechanacimiento;
 		this.email = email;
 		this.movil = movil;
 		this.usuario = usuario;
@@ -53,7 +55,8 @@ public class Usuario {
 		this.imagen = imagen;
 		this.saludo = saludo;
 		this.premium = premium;
-		this.contactos = new LinkedList<Contacto>();
+		this.contactos = new LinkedList<ContactoIndividual>();
+		this.grupos = new LinkedList<ContactoGrupo>();
 	}
 
 	public int getCodigo() {
@@ -72,12 +75,12 @@ public class Usuario {
 		this.nombre = nombre;
 	}
 
-	public Date getFechanacimiento() {
-		return fechanacimiento;
+	public Date getFechaNacimiento() {
+		return fechaNacimiento;
 	}
 
-	public void setFechanacimiento(Date fechanacimiento) {
-		this.fechanacimiento = fechanacimiento;
+	public void setFechaNacimiento(Date fechanacimiento) {
+		this.fechaNacimiento = fechanacimiento;
 	}
 
 	public String getEmail() {
@@ -136,7 +139,7 @@ public class Usuario {
 		this.premium = premium;
 	}
 
-	public void addContacto(Contacto c) {
+	public void addContacto(ContactoIndividual c) {
 		contactos.add(c);
 	}
 
@@ -144,34 +147,41 @@ public class Usuario {
 		contactos.add(new ContactoIndividual(nombre, telefono));
 	}
 
-	public List<Contacto> getContactos() {
+	public List<ContactoIndividual> getContactos() {
 		return Collections.unmodifiableList(contactos);
 	}
 
 	public void crearGrupo(ContactoGrupo g) {
-		contactos.add(g);
 		g.setAdmin(this);
-		contactos.add(g);
+		grupos.add(g);
+	}
+	
+	public void addGrupo(ContactoGrupo g) {
+		this.grupos.add(g);
 	}
 
 	public void crearGrupo(String nombre, ContactoIndividual... miembros) {
 		ContactoGrupo g = new ContactoGrupo(nombre, miembros);
 		g.setAdmin(this);
-		contactos.add(g);
+		grupos.add(g);
 	}
 
 	public void anadirMiembros(ContactoGrupo g, ContactoIndividual... miembros) {
-		if (contactos.contains(g) && g.getAdmin().equals(this))
+		if (grupos.contains(g) && g.getAdmin().equals(this))
 			for (ContactoIndividual miembro : miembros) {
 				g.addMiembro(miembro);
 			}
 	}
 
 	public void eliminarMiembros(ContactoGrupo g, ContactoIndividual... miembros) {
-		if (contactos.contains(g) && g.getAdmin().equals(this))
+		if (grupos.contains(g) && g.getAdmin().equals(this))
 			for (ContactoIndividual miembro : miembros) {
 				g.removeMiembro(miembro);
 			}
+	}
+	
+	public List<ContactoGrupo> getGrupos() {
+		return Collections.unmodifiableList(grupos);
 	}
 	
 	public List<Mensaje> getMensajes() {
