@@ -1,6 +1,5 @@
 package modelo;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,10 +35,11 @@ public class Usuario {
 		this.usuario = usuario;
 		this.contraseña = contraseña;
 		this.imagen = imagen;
-		this.saludo = null;
+		this.saludo = "Hey there! I'm using AppChat";
 		this.premium = premium;
 		this.contactos = new LinkedList<ContactoIndividual>();
 		this.grupos = new LinkedList<ContactoGrupo>();
+		this.mensajes = new LinkedList<Mensaje>();
 	}
 	
 	// Constructor con saludo
@@ -148,44 +148,44 @@ public class Usuario {
 	}
 
 	public List<ContactoIndividual> getContactos() {
-		return Collections.unmodifiableList(contactos);
+		return contactos;
 	}
 
+	public void addGrupo(ContactoGrupo g) {
+		this.grupos.add(g);
+	}
+	
 	public void crearGrupo(ContactoGrupo g) {
 		g.setAdmin(this);
 		grupos.add(g);
 	}
-	
-	public void addGrupo(ContactoGrupo g) {
-		this.grupos.add(g);
-	}
 
-	public void crearGrupo(String nombre, ContactoIndividual... miembros) {
+	public void crearGrupo(String nombre, String... miembros) {
 		ContactoGrupo g = new ContactoGrupo(nombre, miembros);
 		g.setAdmin(this);
 		grupos.add(g);
 	}
 
-	public void anadirMiembros(ContactoGrupo g, ContactoIndividual... miembros) {
+	public void anadirMiembros(ContactoGrupo g, String... miembros) {
 		if (grupos.contains(g) && g.getAdmin().equals(this))
-			for (ContactoIndividual miembro : miembros) {
+			for (String miembro : miembros) {
 				g.addMiembro(miembro);
 			}
 	}
 
-	public void eliminarMiembros(ContactoGrupo g, ContactoIndividual... miembros) {
+	public void eliminarMiembros(ContactoGrupo g, String... miembros) {
 		if (grupos.contains(g) && g.getAdmin().equals(this))
-			for (ContactoIndividual miembro : miembros) {
+			for (String miembro : miembros) {
 				g.removeMiembro(miembro);
 			}
 	}
 	
 	public List<ContactoGrupo> getGrupos() {
-		return Collections.unmodifiableList(grupos);
+		return grupos;
 	}
 	
 	public List<Mensaje> getMensajes() {
-		return Collections.unmodifiableList(mensajes);
+		return mensajes;
 	}
 	
 	public void addMensaje(Mensaje m) {
@@ -217,6 +217,14 @@ public class Usuario {
 		if (codigo != other.codigo)
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + " [codigo=" + codigo + ", nombre=" + nombre + ", fechaNacimiento=" + fechaNacimiento + ", email="
+				+ email + ", movil=" + movil + ", usuario=" + usuario + ", contraseña=" + contraseña + ", imagen="
+				+ imagen + ", saludo=" + saludo + ", premium=" + premium + ", contactos=" + contactos + ", grupos="
+				+ grupos + ", mensajes=" + mensajes + "]";
 	}
 
 }

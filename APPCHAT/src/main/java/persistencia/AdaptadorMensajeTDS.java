@@ -35,7 +35,7 @@ public class AdaptadorMensajeTDS implements IAdaptadorMensajeDAO {
 
 	private AdaptadorMensajeTDS() { 
 		servPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
-		dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
 	}
 
 	/* cuando se registra un mensaje se le asigna un identificador unico */
@@ -73,7 +73,7 @@ public class AdaptadorMensajeTDS implements IAdaptadorMensajeDAO {
 		servPersistencia.borrarEntidad(eMensaje);
 	}
 
-	public void modificarMensaje(Mensaje mensaje) {
+	public void actualizarMensaje(Mensaje mensaje) {
 		Entidad eMensaje;
 
 		eMensaje = servPersistencia.recuperarEntidad(mensaje.getCodigo());

@@ -17,4 +17,9 @@ public class ContactoIndividual extends Contacto {
 		this.movil = movil;
 	}
 
+	@Override
+	public String toString() {
+		return super.toString() + "[movil=" + movil + "]";
+	}
+
 }

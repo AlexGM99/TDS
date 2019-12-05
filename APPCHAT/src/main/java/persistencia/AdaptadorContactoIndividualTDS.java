@@ -45,8 +45,8 @@ public class AdaptadorContactoIndividualTDS implements IAdaptadorContactoIndivid
 		// crear entidad contactoIndividual
 		eContactoInd = new Entidad();
 		eContactoInd.setNombre("contactoIndividual");
-		eContactoInd.setPropiedades(new ArrayList<Propiedad>(
-				Arrays.asList(new Propiedad("nombre", contacto.getNombre()),
+		eContactoInd.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(
+				new Propiedad("nombre", contacto.getNombre()),
 				new Propiedad("movil", contacto.getMovil()))));
 		
 		// registrar entidad contactoIndividual
@@ -62,10 +62,14 @@ public class AdaptadorContactoIndividualTDS implements IAdaptadorContactoIndivid
 		servPersistencia.borrarEntidad(eContactoInd);
 	}
 
-	public void modificarContactoIndividual(ContactoIndividual contacto) {
+	public void actualizarContactoIndividual(ContactoIndividual contacto) {
 		Entidad eContactoInd;
-		
-		eContactoInd = servPersistencia.recuperarEntidad(contacto.getCodigo());
+		try {
+			eContactoInd = servPersistencia.recuperarEntidad(contacto.getCodigo());
+		} catch (NullPointerException e) {
+			System.err.println("ERROR: No se puede modificar un 'ContactoIndividual' no registrado");
+			return;
+		}
 		servPersistencia.eliminarPropiedadEntidad(eContactoInd, "nombre");
 		servPersistencia.anadirPropiedadEntidad(eContactoInd, "nombre", contacto.getNombre());
 		servPersistencia.eliminarPropiedadEntidad(eContactoInd, "movil");
@@ -77,7 +81,12 @@ public class AdaptadorContactoIndividualTDS implements IAdaptadorContactoIndivid
 		String nombre;
 		String movil;
 
-		eContactoInd = servPersistencia.recuperarEntidad(codigo);
+		try {
+			eContactoInd = servPersistencia.recuperarEntidad(codigo);
+		} catch (NullPointerException e) {
+			System.err.println("ERROR: No se puede recuperar un 'ContactoIndividual' no registrado");
+			return null;
+		}
 		nombre = servPersistencia.recuperarPropiedadEntidad(eContactoInd, "nombre");
 		movil = servPersistencia.recuperarPropiedadEntidad(eContactoInd, "movil");
 

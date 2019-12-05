@@ -55,6 +55,11 @@ public class Mensaje {
 	public void setTlfEmisor(String tlfEmisor) {
 		this.tlfEmisor = tlfEmisor;
 	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + " [codigo=" + codigo + ", texto='" + texto + "', tlfEmisor=" + tlfEmisor + ", hora=" + hora + "]";
+	}
 	
 	/*
 	public void addReceptor(Contacto c) {

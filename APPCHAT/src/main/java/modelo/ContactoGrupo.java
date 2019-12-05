@@ -9,12 +9,12 @@ import java.util.Set;
 public class ContactoGrupo extends Contacto {
 	
 	private Usuario admin;
-	private Set<ContactoIndividual> miembros;
+	private Set<String> miembros;
 
-	public ContactoGrupo(String nombre, ContactoIndividual...miembros) {
+	public ContactoGrupo(String nombre, String...miembros) {
 		super(nombre);
 		this.admin = null;
-		this.miembros = new HashSet<ContactoIndividual>();
+		this.miembros = new HashSet<String>();
 		Collections.addAll(this.miembros, miembros);
 	}
 
@@ -26,20 +26,16 @@ public class ContactoGrupo extends Contacto {
 		this.admin = admin;
 	}
 
-	public void addMiembro(ContactoIndividual c) {
+	public void addMiembro(String c) {
 		miembros.add(c);
 	}
 	
-	public void addMiembro(String nombre, String movil) {
-		miembros.add(new ContactoIndividual(nombre, movil));
-	}
-	
-	public void removeMiembro(ContactoIndividual c) {
+	public void removeMiembro(String c) {
 		miembros.remove(c);
 	}
 	
-	public Set<ContactoIndividual> getMiembros() {
-		return Collections.unmodifiableSet(miembros);
+	public Set<String> getMiembros() {
+		return miembros;
 	}
 
 }

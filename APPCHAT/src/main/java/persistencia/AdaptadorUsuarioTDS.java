@@ -39,7 +39,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 
 	private AdaptadorUsuarioTDS() {
 		servPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
-		dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
 	}
 
 	/* cuando se registra un usuario se le asigna un identificador unico */
@@ -116,7 +116,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 
 	}
 
-	public void modificarUsuario(Usuario usuario) {
+	public void actualizarUsuario(Usuario usuario) {
 		Entidad eUsuario;
 
 		eUsuario = servPersistencia.recuperarEntidad(usuario.getCodigo());

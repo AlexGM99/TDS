@@ -26,4 +26,9 @@ public abstract class Contacto {
 		this.nombre = nombre;
 	}
 
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + " [codigo=" + codigo + ", nombre=" + nombre + "]";
+	}
+
 }
