@@ -12,6 +12,8 @@ import javax.swing.JPasswordField;
 import java.awt.Dimension;
 import java.awt.Point;
 import javax.swing.JButton;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class LogIn {
 
@@ -97,6 +99,12 @@ public class LogIn {
 		frmAppchatlogin.getContentPane().add(passwordField, gbc_passwordField);
 		
 		btnLogin = new JButton("logIn");
+		btnLogin.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				//TODO implementar funcionalidad del login
+			}
+		});
 		GridBagConstraints gbc_btnLogin = new GridBagConstraints();
 		gbc_btnLogin.insets = new Insets(0, 0, 5, 5);
 		gbc_btnLogin.gridx = 5;
