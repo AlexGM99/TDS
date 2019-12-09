@@ -102,7 +102,9 @@ public class LogIn {
 		btnLogin.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				//TODO implementar funcionalidad del login
+				//TODO funcionalidad del login
+				String usuario = textField.getText();
+				String contrasena = passwordField.getText();
 			}
 		});
 		GridBagConstraints gbc_btnLogin = new GridBagConstraints();
@@ -119,6 +121,12 @@ public class LogIn {
 		frmAppchatlogin.getContentPane().add(label, gbc_label);
 		
 		btnRegister = new JButton("Register");
+		btnRegister.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+			//TODO cambiar a la ventana de registro
+			}
+		});
 		GridBagConstraints gbc_btnRegister = new GridBagConstraints();
 		gbc_btnRegister.insets = new Insets(0, 0, 0, 5);
 		gbc_btnRegister.gridx = 5;
