@@ -3,8 +3,6 @@ package interfazGrafica;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import java.awt.BorderLayout;
-import javax.swing.JPanel;
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
