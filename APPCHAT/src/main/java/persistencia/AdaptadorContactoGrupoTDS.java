@@ -42,12 +42,15 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 			return;
 
 		// registrar primero los atributos que son objetos
+		
+		/*
 		// registrar admin
 		AdaptadorUsuarioTDS adaptadorUsuario = AdaptadorUsuarioTDS.getUnicaInstancia();
 
 		AdaptadorUsuarioTDS adaptadorU = AdaptadorUsuarioTDS.getUnicaInstancia();
 		adaptadorUsuario.registrarUsuario(adaptadorU.recuperarUsuario(contacto.getAdmin().getCodigo()));
-
+		*/
+		
 		// crear entidad contactoGrupo
 		eContactoGr = new Entidad();
 
