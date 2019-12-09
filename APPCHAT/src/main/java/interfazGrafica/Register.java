@@ -15,6 +15,8 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JCheckBox;
 import javax.swing.JButton;
 import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class Register {
 
@@ -213,6 +215,20 @@ public class Register {
 		textField_7.setColumns(10);
 		
 		btnRegister = new JButton("register");
+		btnRegister.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//TODO implementar mensaje de registro al controlador
+				String firts = textField.getText();
+				String second = textField_1.getText();
+				String birth = textField_2.getText();
+				String email = textField_3.getText();
+				String phone = textField_4.getText();
+				String nick = textField_5.getText();
+				String pass = passwordField.getText();
+				String avatar = textField_7.getText();
+			}
+		});
 		GridBagConstraints gbc_btnRegister = new GridBagConstraints();
 		gbc_btnRegister.insets = new Insets(0, 0, 5, 5);
 		gbc_btnRegister.gridx = 2;
@@ -220,6 +236,12 @@ public class Register {
 		frmAppchatregister.getContentPane().add(btnRegister, gbc_btnRegister);
 		
 		btnIveAnAccount = new JButton("I've an account");
+		btnIveAnAccount.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+			//TODO cambiar a ventana de login
+			}
+		});
 		GridBagConstraints gbc_btnIveAnAccount = new GridBagConstraints();
 		gbc_btnIveAnAccount.insets = new Insets(0, 0, 5, 5);
 		gbc_btnIveAnAccount.gridx = 2;
