@@ -53,14 +53,14 @@ public class LogIn {
 	private void initialize() {
 		frmAppchatlogin = new JFrame();
 		frmAppchatlogin.setTitle("APPCHAT-LogIn");
+		frmAppchatlogin.setMinimumSize(new Dimension(500, 500));
 		frmAppchatlogin.setLocation(new Point(400, 100));
 		frmAppchatlogin.setSize(new Dimension(500, 500));
-		frmAppchatlogin.setResizable(false);
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{120, 0, 0, 0, 0, 0, 0, 0};
-		gridBagLayout.rowHeights = new int[]{100, 0, 0, 0, 0, 0, 0, 0};
-		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.columnWidths = new int[]{100, 0, 0, 0, 0, 0, 100, 0};
+		gridBagLayout.rowHeights = new int[]{50, 0, 0, 0, 0, 0, 0, 0, 0};
+		gridBagLayout.columnWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		frmAppchatlogin.getContentPane().setLayout(gridBagLayout);
 		
 		JLabel lblTlf = new JLabel("tlf");
@@ -128,7 +128,7 @@ public class LogIn {
 			}
 		});
 		GridBagConstraints gbc_btnRegister = new GridBagConstraints();
-		gbc_btnRegister.insets = new Insets(0, 0, 0, 5);
+		gbc_btnRegister.insets = new Insets(0, 0, 5, 5);
 		gbc_btnRegister.gridx = 5;
 		gbc_btnRegister.gridy = 6;
 		frmAppchatlogin.getContentPane().add(btnRegister, gbc_btnRegister);
