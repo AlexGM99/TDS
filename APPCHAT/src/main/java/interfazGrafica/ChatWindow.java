@@ -14,17 +14,28 @@ import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyVetoException;
+
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JInternalFrame;
+import javax.swing.JSeparator;
+import java.awt.Dimension;
+import java.awt.Component;
+import java.awt.Font;
 
 public class ChatWindow {
 
 	private JFrame frame;
 	private JTextField txtBuscar;
+	private JTextField txtChat;
+	private JTextField textmensaje;
 
 	/**
 	 * Launch the application.
@@ -59,6 +70,7 @@ public class ChatWindow {
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 		
 		JPanel panel = new JPanel();
+		panel.setAutoscrolls(true);
 		panel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -67,11 +79,32 @@ public class ChatWindow {
 		});
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
 		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[]{0, 0, 0, 165, 35, 0, 0};
-		gbl_panel.rowHeights = new int[]{0, 28, 37, 0, 0, 0, 0};
-		gbl_panel.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_panel.rowWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.columnWidths = new int[]{1, 0, 0, 0, 0, 165, 35, 0, 0};
+		gbl_panel.rowHeights = new int[]{0, 28, 37, 0, 0};
+		gbl_panel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.rowWeights = new double[]{0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
+		
+		JPanel buscadorChats = new JPanel();
+		GridBagConstraints gbc_buscadorChats = new GridBagConstraints();
+		gbc_buscadorChats.gridheight = 2;
+		gbc_buscadorChats.gridwidth = 3;
+		gbc_buscadorChats.insets = new Insets(0, 0, 5, 5);
+		gbc_buscadorChats.fill = GridBagConstraints.BOTH;
+		gbc_buscadorChats.gridx = 1;
+		gbc_buscadorChats.gridy = 0;
+		panel.add(buscadorChats, gbc_buscadorChats);
+		
+		txtChat = new JTextField();
+		txtChat.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO buscador por pulsación al igual que los mensajes
+			}
+		});
+		txtChat.setText("chat");
+		buscadorChats.add(txtChat);
+		txtChat.setColumns(10);
 		
 		JPanel nombreChat = new JPanel();
 		nombreChat.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -79,7 +112,7 @@ public class ChatWindow {
 		gbc_nombreChat.gridheight = 2;
 		gbc_nombreChat.insets = new Insets(0, 0, 5, 5);
 		gbc_nombreChat.fill = GridBagConstraints.BOTH;
-		gbc_nombreChat.gridx = 2;
+		gbc_nombreChat.gridx = 4;
 		gbc_nombreChat.gridy = 0;
 		panel.add(nombreChat, gbc_nombreChat);
 		
@@ -92,15 +125,15 @@ public class ChatWindow {
 			}
 		});
 		
-		JPanel panel_1 = new JPanel();
-		panel_1.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
-		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
-		gbc_panel_1.gridheight = 2;
-		gbc_panel_1.insets = new Insets(0, 0, 5, 5);
-		gbc_panel_1.fill = GridBagConstraints.BOTH;
-		gbc_panel_1.gridx = 3;
-		gbc_panel_1.gridy = 0;
-		panel.add(panel_1, gbc_panel_1);
+		JPanel buscadorMensjs = new JPanel();
+		buscadorMensjs.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
+		GridBagConstraints gbc_buscadorMensjs = new GridBagConstraints();
+		gbc_buscadorMensjs.gridheight = 2;
+		gbc_buscadorMensjs.insets = new Insets(0, 0, 5, 5);
+		gbc_buscadorMensjs.fill = GridBagConstraints.BOTH;
+		gbc_buscadorMensjs.gridx = 5;
+		gbc_buscadorMensjs.gridy = 0;
+		panel.add(buscadorMensjs, gbc_buscadorMensjs);
 		
 		txtBuscar = new JTextField();
 		txtBuscar.addKeyListener(new KeyAdapter() {
@@ -110,28 +143,66 @@ public class ChatWindow {
 			}
 		});
 		txtBuscar.setText("buscar");
-		panel_1.add(txtBuscar);
+		buscadorMensjs.add(txtBuscar);
 		txtBuscar.setColumns(10);
 		GridBagConstraints gbc_opciones_usuario = new GridBagConstraints();
 		gbc_opciones_usuario.gridheight = 2;
 		gbc_opciones_usuario.insets = new Insets(0, 0, 5, 5);
 		gbc_opciones_usuario.fill = GridBagConstraints.BOTH;
-		gbc_opciones_usuario.gridx = 4;
+		gbc_opciones_usuario.gridx = 6;
 		gbc_opciones_usuario.gridy = 0;
 		panel.add(opciones_usuario, gbc_opciones_usuario);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
-		gbc_scrollPane.gridheight = 3;
-		gbc_scrollPane.gridwidth = 3;
-		gbc_scrollPane.insets = new Insets(0, 0, 5, 5);
-		gbc_scrollPane.fill = GridBagConstraints.BOTH;
-		gbc_scrollPane.gridx = 2;
-		gbc_scrollPane.gridy = 2;
-		panel.add(scrollPane, gbc_scrollPane);
+		JScrollPane scrollChats = new JScrollPane();
+		GridBagConstraints gbc_scrollChats = new GridBagConstraints();
+		gbc_scrollChats.gridheight = 2;
+		gbc_scrollChats.gridwidth = 3;
+		gbc_scrollChats.insets = new Insets(0, 0, 0, 5);
+		gbc_scrollChats.fill = GridBagConstraints.BOTH;
+		gbc_scrollChats.gridx = 1;
+		gbc_scrollChats.gridy = 2;
+		panel.add(scrollChats, gbc_scrollChats);
 		
-		JList list = new JList();
-		scrollPane.setViewportView(list);
+		JList chatslist = new JList();
+		scrollChats.setViewportView(chatslist);
+		
+		JScrollPane scroll_chat = new JScrollPane();
+		GridBagConstraints gbc_scroll_chat = new GridBagConstraints();
+		gbc_scroll_chat.gridwidth = 3;
+		gbc_scroll_chat.insets = new Insets(0, 0, 5, 5);
+		gbc_scroll_chat.fill = GridBagConstraints.BOTH;
+		gbc_scroll_chat.gridx = 4;
+		gbc_scroll_chat.gridy = 2;
+		panel.add(scroll_chat, gbc_scroll_chat);
+		
+		JList chat_list = new JList();
+		scroll_chat.setViewportView(chat_list);
+		
+		JScrollPane scrollmensaje = new JScrollPane();
+		GridBagConstraints gbc_scrollmensaje = new GridBagConstraints();
+		gbc_scrollmensaje.gridwidth = 2;
+		gbc_scrollmensaje.insets = new Insets(0, 0, 0, 5);
+		gbc_scrollmensaje.fill = GridBagConstraints.BOTH;
+		gbc_scrollmensaje.gridx = 4;
+		gbc_scrollmensaje.gridy = 3;
+		panel.add(scrollmensaje, gbc_scrollmensaje);
+		
+		textmensaje = new JTextField();
+		scrollmensaje.setViewportView(textmensaje);
+		textmensaje.setColumns(10);
+		
+		JPanel enviarMensaje = new JPanel();
+		enviarMensaje.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//TODO enviar mensajes
+			}
+		});
+		GridBagConstraints gbc_enviarMensaje = new GridBagConstraints();
+		gbc_enviarMensaje.insets = new Insets(0, 0, 0, 5);
+		gbc_enviarMensaje.fill = GridBagConstraints.BOTH;
+		gbc_enviarMensaje.gridx = 6;
+		gbc_enviarMensaje.gridy = 3;
+		panel.add(enviarMensaje, gbc_enviarMensaje);
 	}
-
 }
