@@ -22,38 +22,49 @@ public class Prueba {
 		} catch (DAOException e) {
 			e.printStackTrace();
 		}
-
 		
+		IAdaptadorContactoIndividualDAO adaptadorCI = miFactoria.getContactoIndividualDAO();
+		IAdaptadorContactoGrupoDAO adaptadorCG = miFactoria.getGrupoDAO();
+		IAdaptadorUsuarioDAO adaptadorU = miFactoria.getUsuarioDAO();
+		IAdaptadorMensajeDAO adaptadorM = miFactoria.getMensajeDAO();
+
 		Usuario usu1 = new Usuario("Edu", Date.from(Instant.parse("1998-12-14T01:02:03Z")), "email-edu", "movil-edu", "edupema", "passEdu", "imagenEdu", false);
-		Usuario usu2 = new Usuario("Alex", Date.from(Instant.parse("1998-12-14T01:02:03Z")), "email-edu", "movil-edu", "edupema", "passAlex", "imagenAlex", false);
+		Usuario usu2 = new Usuario("Alex", Date.from(Instant.parse("1998-12-14T01:02:03Z")), "email-alex", "movil-alex", "alexgm", "passAlex", "imagenAlex", false);
+		
+		// Usuarios
+		System.out.println("\nRegistrar usuarios");
+		adaptadorU.registrarUsuario(usu1);
+		System.out.println("-- usuarios 'usu1' registrado: " + usu1);
+		adaptadorU.registrarUsuario(usu2);
+		System.out.println("-- usuarios 'usu1' registrado: " + usu2);
+				
+		System.out.println("\n Recuperar usuarios");
+		System.out.println("-- recuperado usu1: " + adaptadorU.recuperarUsuario(usu1.getCodigo()));
+		System.out.println("-- recuperado usu2: " + adaptadorU.recuperarUsuario(usu2.getCodigo()));
+		
 		
 		ContactoIndividual ind1 = new ContactoIndividual("Edu", usu1.getMovil());
 		ContactoIndividual ind2 = new ContactoIndividual("Alex", usu2.getMovil());
+		usu2.addContacto(ind1);
+		usu1.addContacto(ind2);
 		
 		ContactoGrupo gr1 = new ContactoGrupo("Grupo 1", usu1.getMovil());
-		usu1.crearGrupo(gr1);
+		gr1.addMiembro(usu1.getMovil());
+		gr1.setAdmin(usu1);
+		usu1.addGrupo(gr1);
 		ContactoGrupo gr2 = new ContactoGrupo("Grupo 2", usu1.getMovil(), usu2.getMovil());
+		gr2.addMiembro(usu1.getMovil());
+		gr2.addMiembro(usu2.getMovil());
+		gr2.setAdmin(usu2);
+		usu2.addGrupo(gr2);
 		
 		Mensaje m1 = new Mensaje("Hola mundo", Date.from(Instant.now()), usu1.getMovil());
+		usu1.addMensaje(m1);
 		Mensaje m2 = new Mensaje("Hello World", Date.from(Instant.now()), usu2.getMovil());
-		
-		IAdaptadorContactoIndividualDAO adaptadorCI = miFactoria.getContactoIndividualDAO();
-		
-		IAdaptadorContactoGrupoDAO adaptadorCG = miFactoria.getGrupoDAO();
-		IAdaptadorUsuarioDAO adaptadorU = miFactoria.getUsuarioDAO();
-
-		IAdaptadorMensajeDAO adaptadorM = miFactoria.getMensajeDAO();
-		
-		// Usuarios
-		System.out.println("\tRegistrar usuarios");
-		adaptadorU.registrarUsuario(usu1);
-		System.out.println("-- usuarios 'usu1' registrado: " + usu1);
-		
-		System.out.println("\t Recuperar usuarios");
-		System.out.println("-- recuperado usu1: " + adaptadorU.recuperarUsuario(usu1.getCodigo()));
+		usu2.addMensaje(m2);
 
 		// Mensajes
-		System.out.println("Registrar mensajes");
+		System.out.println("\nRegistrar mensajes");
 		adaptadorM.registrarMensaje(m1);
 		System.out.println("-- mensaje 'm1' registrado: " + m1);
 		adaptadorM.registrarMensaje(m2);
@@ -77,32 +88,63 @@ public class Prueba {
 		System.out.println("-- contacto 'ind2' registrado: " + ind2);
 		
 		System.out.println("\nRecuperar ContactosInvididuales");
-		adaptadorCI.recuperarContactoIndividual(ind1.getCodigo());
-		System.out.println("-- recuperado ind1: " + ind1);
-		adaptadorCI.recuperarContactoIndividual(ind2.getCodigo());
-		System.out.println("-- recuperado ind2: " + ind2);
+		System.out.println("-- recuperado ind1: " + adaptadorCI.recuperarContactoIndividual(ind1.getCodigo()));
+		System.out.println("-- recuperado ind2: " + adaptadorCI.recuperarContactoIndividual(ind2.getCodigo()));
 
 		System.out.println("\nModificar ContactosInvididuales");
 		ind1.setNombre("edupema");
 		adaptadorCI.actualizarContactoIndividual(ind1);
 		System.out.println("--modificado ind1: " + adaptadorCI.recuperarContactoIndividual(ind1.getCodigo()));
 		
-		/*System.out.println("\nPrueba POOLcliente");
-		System.out.println("añado cliente usu1 al pool");
-		PoolDAO.getUnicaInstancia().addObjeto(usu1.getCodigo(), usu1);
-		System.out.println("pool contiene usu1=" + PoolDAO.getUnicaInstancia().contiene(usu1.getCodigo()));
-		// System.exit(0);*/
 		
+		/*
+		// Usuarios
+		System.out.println("\nRegistrar usuarios");
+		adaptadorU.registrarUsuario(usu1);
+		System.out.println("-- usuarios 'usu1' registrado: " + usu1);
+		adaptadorU.registrarUsuario(usu2);
+		System.out.println("-- usuarios 'usu1' registrado: " + usu2);
+		
+		PoolDAO.getUnicaInstancia().mostrarTodos();
+		
+		System.out.println("\n Recuperar usuarios");
+		System.out.println("-- recuperado usu1: " + adaptadorU.recuperarUsuario(usu1.getCodigo()));
+		System.out.println("-- recuperado usu2: " + adaptadorU.recuperarUsuario(usu2.getCodigo()));*/
+		
+		// Grupos
+		System.out.println("\nRegistrar Grupos");
+		adaptadorCG.registrarContactoGrupo(gr1);
+		System.out.println("-- grupo 'gr1' registrado: " + gr1);
+		adaptadorCG.registrarContactoGrupo(gr2);
+		System.out.println("-- grupo 'gr2' registrado: " + gr2);
+		
+		System.out.println("\nRecuperar Grupos");
+		System.out.println("-- recuperado gr1: " + adaptadorCG.recuperarContactoGrupo(gr1.getCodigo()));
+		System.out.println("-- recuperado gr2: " + adaptadorCG.recuperarContactoGrupo(gr2.getCodigo()));
+		
+		gr1.addMiembro(usu2.getMovil());
+		gr1.addMiembro("1234");
+		adaptadorCG.actualizarContactoGrupo(gr1);
+		System.out.println("-- actualizado gr1: " + adaptadorCG.recuperarContactoGrupo(gr1.getCodigo()));
 
+		
+		adaptadorU.actualizarUsuario(usu1);
+		adaptadorU.actualizarUsuario(usu2);
+		
+		System.out.println("\n Recuperar usuarios");
+		System.out.println("-- recuperado usu1: " + adaptadorU.recuperarUsuario(usu1.getCodigo()));
+		System.out.println("-- recuperado usu2: " + adaptadorU.recuperarUsuario(usu2.getCodigo()));
 		
 		
 		// Limpiar
 		adaptadorU.borrarUsuario(usu1);
 		adaptadorU.borrarUsuario(usu2);
+		/*adaptadorCG.borrarContactoGrupo(gr1);
+		adaptadorCG.borrarContactoGrupo(gr2);
 		adaptadorCI.borrarContactoIndividual(ind1);
 		adaptadorCI.borrarContactoIndividual(ind2);
 		adaptadorM.borrarMensaje(m1);
-		adaptadorM.borrarMensaje(m2);
+		adaptadorM.borrarMensaje(m2);*/
 		
 		System.out.println("\nContactos residuales:");
 		for (ContactoIndividual c : adaptadorCI.recuperarTodosContactoIndividuals()) {
@@ -112,11 +154,11 @@ public class Prueba {
 		for (Mensaje m : adaptadorM.recuperarTodosMensajes()) {
 			System.out.println("\t" + m);
 		}
-		System.out.println("\tUsuarios residuales:");
+		System.out.println("\nUsuarios residuales:");
 		for (Usuario u : adaptadorU.recuperarTodosUsuarios()) {
 			System.out.println("\t" + u);
 		}
-		System.out.println("\tGrupos residuales:");
+		System.out.println("\nGrupos residuales:");
 		for (ContactoGrupo g : adaptadorCG.recuperarTodosContactoGrupos()) {
 			System.out.println("\t" + g);
 		}

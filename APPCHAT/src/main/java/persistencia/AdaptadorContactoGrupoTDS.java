@@ -2,8 +2,11 @@ package persistencia;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
@@ -43,13 +46,12 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 
 		// registrar primero los atributos que son objetos
 		
-		/*
+		
 		// registrar admin
-		AdaptadorUsuarioTDS adaptadorUsuario = AdaptadorUsuarioTDS.getUnicaInstancia();
-
-		AdaptadorUsuarioTDS adaptadorU = AdaptadorUsuarioTDS.getUnicaInstancia();
-		adaptadorUsuario.registrarUsuario(adaptadorU.recuperarUsuario(contacto.getAdmin().getCodigo()));
-		*/
+		//AdaptadorUsuarioTDS adaptadorUsuario = AdaptadorUsuarioTDS.getUnicaInstancia();
+		//adaptadorUsuario.actualizarUsuario(contacto.getAdmin());
+		//adaptadorUsuario.registrarUsuario(adaptadorUsuario.recuperarUsuario(contacto.getAdmin().getCodigo()));
+		
 		
 		// crear entidad contactoGrupo
 		eContactoGr = new Entidad();
@@ -70,8 +72,8 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 		// No se comprueban restricciones de integridad
 		Entidad eContactoGr;
 
-		AdaptadorUsuarioTDS adaptadorU = AdaptadorUsuarioTDS.getUnicaInstancia();
-		adaptadorU.borrarUsuario(contacto.getAdmin());
+		/*AdaptadorUsuarioTDS adaptadorU = AdaptadorUsuarioTDS.getUnicaInstancia();
+		adaptadorU.borrarUsuario(contacto.getAdmin());*/
 
 		eContactoGr = servPersistencia.recuperarEntidad(contacto.getCodigo());
 		servPersistencia.borrarEntidad(eContactoGr);
@@ -85,8 +87,13 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 		servPersistencia.anadirPropiedadEntidad(eContactoGr, "nombre", contacto.getNombre());
 		servPersistencia.eliminarPropiedadEntidad(eContactoGr, "admin");
 		servPersistencia.anadirPropiedadEntidad(eContactoGr, "admin", String.valueOf(contacto.getAdmin().getCodigo()));
+		
+		String lineas = obtenerCodigosMiembros(contacto.getMiembros());
 		servPersistencia.eliminarPropiedadEntidad(eContactoGr, "miembros");
-		servPersistencia.anadirPropiedadEntidad(eContactoGr, "miembros", contacto.getMiembros().toString());
+		servPersistencia.anadirPropiedadEntidad(eContactoGr, "miembros", lineas);
+		
+		if (PoolDAO.getUnicaInstancia().contiene(contacto.getCodigo()))
+			PoolDAO.getUnicaInstancia().addObjeto(contacto.getCodigo(), contacto);
 	}
 
 	public ContactoGrupo recuperarContactoGrupo(int codigo) {
@@ -103,7 +110,7 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 		// nombre
 		String nombre = servPersistencia.recuperarPropiedadEntidad(eContactoGr, "nombre");
 
-		// miembros
+		// miembrosList
 		String lineas = servPersistencia.recuperarPropiedadEntidad(eContactoGr, "miembros");
 		List<String> aux = Arrays.asList(lineas);
 		String[] miembros = new String[aux.size()];
@@ -125,7 +132,7 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 		Usuario admin = adaptadorUsuario.recuperarUsuario(codigoUsuario);
 		grupo.setAdmin(admin);
 
-		// devolver el objeto venta
+		// devolver el objeto
 		return grupo;
 	}
 
@@ -137,6 +144,26 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 			contactos.add(recuperarContactoGrupo(eContactoGr.getId()));
 		}
 		return contactos;
+	}
+	
+	// -------------------Funciones auxiliares-----------------------------
+	private String obtenerCodigosMiembros(Set<String> miembros) {
+		String lineas = "";
+		for (String miembro : miembros) {
+			lineas += miembro + " ";
+		}
+		return lineas.trim();
+
+	}
+
+	private Set<String> obtenerMiembrosDesdeCodigos(String lineas) {
+
+		Set<String> miembros = new HashSet<String>();
+		StringTokenizer strTok = new StringTokenizer(lineas, " ");
+		while (strTok.hasMoreTokens()) {
+			miembros.add((String) strTok.nextElement());
+		}
+		return miembros;
 	}
 
 }

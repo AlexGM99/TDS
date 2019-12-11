@@ -151,6 +151,10 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		lineas = obtenerCodigos(usuario.getMensajes());
 		servPersistencia.eliminarPropiedadEntidad(eUsuario, "mensajes");
 		servPersistencia.anadirPropiedadEntidad(eUsuario, "mensajes", lineas);
+		
+		if (PoolDAO.getUnicaInstancia().contiene(usuario.getCodigo()))
+			PoolDAO.getUnicaInstancia().addObjeto(usuario.getCodigo(), usuario);
+		
 	}
 
 	public Usuario recuperarUsuario(int codigo) {
@@ -188,7 +192,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 
 		// IMPORTANTE:añadir la usuario al pool antes de llamar a otros
 		// adaptadores
-		PoolDAO.getUnicaInstancia().addObjeto(codigo, usuario);
+		PoolDAO.getUnicaInstancia().addObjeto(codigo, usu);
 
 		// recuperar propiedades que son objetos llamando a adaptadores
 		// contactos
@@ -211,7 +215,6 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 
 		for (Mensaje m : mensajes)
 			usu.addMensaje(m);
-				
 
 		// devolver el objeto usuario
 		return usu;

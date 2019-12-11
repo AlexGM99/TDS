@@ -7,7 +7,6 @@ import java.util.List;
 // TODO Revisar implementación
 // TODO Faltan premium
 // TODO Faltan estadísticas
-// TODO Revisar la relación entre grupos y usuarios, ¿los usuarios crean los grupos?
 
 public class Usuario {
 	private int codigo;
@@ -45,18 +44,8 @@ public class Usuario {
 	// Constructor con saludo
 	public Usuario(String nombre, Date fechanacimiento, String email, String movil, String usuario, String contraseña,
 			String imagen, String saludo, boolean premium) {
-		this.codigo = 0;
-		this.nombre = nombre;
-		this.fechaNacimiento = fechanacimiento;
-		this.email = email;
-		this.movil = movil;
-		this.usuario = usuario;
-		this.contraseña = contraseña;
-		this.imagen = imagen;
+		this(nombre, fechanacimiento, email, movil, usuario, contraseña, imagen, premium);
 		this.saludo = saludo;
-		this.premium = premium;
-		this.contactos = new LinkedList<ContactoIndividual>();
-		this.grupos = new LinkedList<ContactoGrupo>();
 	}
 
 	public int getCodigo() {
@@ -155,31 +144,6 @@ public class Usuario {
 		this.grupos.add(g);
 	}
 	
-	public void crearGrupo(ContactoGrupo g) {
-		g.setAdmin(this);
-		grupos.add(g);
-	}
-
-	public void crearGrupo(String nombre, String... miembros) {
-		ContactoGrupo g = new ContactoGrupo(nombre, miembros);
-		g.setAdmin(this);
-		grupos.add(g);
-	}
-
-	public void anadirMiembros(ContactoGrupo g, String... miembros) {
-		if (grupos.contains(g) && g.getAdmin().equals(this))
-			for (String miembro : miembros) {
-				g.addMiembro(miembro);
-			}
-	}
-
-	public void eliminarMiembros(ContactoGrupo g, String... miembros) {
-		if (grupos.contains(g) && g.getAdmin().equals(this))
-			for (String miembro : miembros) {
-				g.removeMiembro(miembro);
-			}
-	}
-	
 	public List<ContactoGrupo> getGrupos() {
 		return grupos;
 	}
@@ -219,12 +183,20 @@ public class Usuario {
 		return true;
 	}
 
-	@Override
+	/*@Override
 	public String toString() {
 		return getClass().getSimpleName() + " [codigo=" + codigo + ", nombre=" + nombre + ", fechaNacimiento=" + fechaNacimiento + ", email="
 				+ email + ", movil=" + movil + ", usuario=" + usuario + ", contraseña=" + contraseña + ", imagen="
 				+ imagen + ", saludo=" + saludo + ", premium=" + premium + ", contactos=" + contactos + ", grupos="
 				+ grupos + ", mensajes=" + mensajes + "]";
+	}*/
+	
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + " [\n\t codigo=" + codigo + "\n\t nombre=" + nombre + "\n\t fechaNacimiento=" + fechaNacimiento + "\n\t email="
+				+ email + "\n\t movil=" + movil + "\n\t usuario=" + usuario + "\n\t contraseña=" + contraseña + "\n\t imagen="
+				+ imagen + "\n\t saludo=" + saludo + "\n\t premium=" + premium + "\n\t contactos=" + contactos + "\n\t grupos="
+				+ grupos + "\n\t mensajes=" + mensajes + "]";
 	}
 
 }

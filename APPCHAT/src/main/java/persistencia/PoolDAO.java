@@ -29,4 +29,12 @@ public class PoolDAO {
 	public boolean contiene(int id) {
 		return pool.containsKey(id);
 	}
+	
+	//aux
+	public void mostrarTodos() {
+		System.out.println("\nPool:");
+		for (Object it : pool.values()) {
+			System.out.println("\t" + it);
+		}
+	}
 }
