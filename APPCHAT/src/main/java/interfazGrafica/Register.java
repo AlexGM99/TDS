@@ -17,6 +17,9 @@ import javax.swing.JButton;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.Font;
 
 public class Register {
 
@@ -32,6 +35,9 @@ public class Register {
 	private JCheckBox chckbxPremium;
 	private JButton btnRegister;
 	private JButton btnIveAnAccount;
+	private JLabel lblRepeatThePass;
+	private JPasswordField passwordField_1;
+	private JLabel lblNewLabel_5;
 
 	/**
 	 * Launch the application.
@@ -66,18 +72,26 @@ public class Register {
 		frmAppchatregister.setBounds(100, 100, 450, 300);
 		frmAppchatregister.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{0, 150, 0, 122, 0, 150, 0};
-		gridBagLayout.rowHeights = new int[]{50, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 50, 0};
-		gridBagLayout.columnWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gridBagLayout.columnWidths = new int[]{0, 150, 0, 189, 0, 150, 0};
+		gridBagLayout.rowHeights = new int[]{50, 0, 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 50, 0};
+		gridBagLayout.columnWeights = new double[]{1.0, 0.0, 0.0, 1.0, 0.0, 1.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		frmAppchatregister.getContentPane().setLayout(gridBagLayout);
+		
+		lblNewLabel_5 = new JLabel("REGISTER");
+		lblNewLabel_5.setFont(new Font("Dialog", Font.BOLD, 22));
+		GridBagConstraints gbc_lblNewLabel_5 = new GridBagConstraints();
+		gbc_lblNewLabel_5.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel_5.gridx = 3;
+		gbc_lblNewLabel_5.gridy = 1;
+		frmAppchatregister.getContentPane().add(lblNewLabel_5, gbc_lblNewLabel_5);
 		
 		JLabel lblNewLabel = new JLabel("first name");
 		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
 		gbc_lblNewLabel.anchor = GridBagConstraints.WEST;
 		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNewLabel.gridx = 2;
-		gbc_lblNewLabel.gridy = 1;
+		gbc_lblNewLabel.gridy = 2;
 		frmAppchatregister.getContentPane().add(lblNewLabel, gbc_lblNewLabel);
 		
 		textField = new JTextField();
@@ -85,7 +99,7 @@ public class Register {
 		gbc_textField.insets = new Insets(0, 0, 5, 5);
 		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField.gridx = 3;
-		gbc_textField.gridy = 1;
+		gbc_textField.gridy = 2;
 		frmAppchatregister.getContentPane().add(textField, gbc_textField);
 		textField.setColumns(10);
 		
@@ -94,7 +108,7 @@ public class Register {
 		gbc_lblNewLabel_4.anchor = GridBagConstraints.WEST;
 		gbc_lblNewLabel_4.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNewLabel_4.gridx = 2;
-		gbc_lblNewLabel_4.gridy = 2;
+		gbc_lblNewLabel_4.gridy = 3;
 		frmAppchatregister.getContentPane().add(lblNewLabel_4, gbc_lblNewLabel_4);
 		
 		textField_1 = new JTextField();
@@ -102,7 +116,7 @@ public class Register {
 		gbc_textField_1.insets = new Insets(0, 0, 5, 5);
 		gbc_textField_1.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField_1.gridx = 3;
-		gbc_textField_1.gridy = 2;
+		gbc_textField_1.gridy = 3;
 		frmAppchatregister.getContentPane().add(textField_1, gbc_textField_1);
 		textField_1.setColumns(10);
 		
@@ -111,7 +125,7 @@ public class Register {
 		gbc_lblNewLabel_1.anchor = GridBagConstraints.WEST;
 		gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNewLabel_1.gridx = 2;
-		gbc_lblNewLabel_1.gridy = 3;
+		gbc_lblNewLabel_1.gridy = 4;
 		frmAppchatregister.getContentPane().add(lblNewLabel_1, gbc_lblNewLabel_1);
 		
 		textField_2 = new JTextField();
@@ -119,7 +133,7 @@ public class Register {
 		gbc_textField_2.insets = new Insets(0, 0, 5, 5);
 		gbc_textField_2.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField_2.gridx = 3;
-		gbc_textField_2.gridy = 3;
+		gbc_textField_2.gridy = 4;
 		frmAppchatregister.getContentPane().add(textField_2, gbc_textField_2);
 		textField_2.setColumns(10);
 		
@@ -127,7 +141,7 @@ public class Register {
 		GridBagConstraints gbc_chckbxPremium = new GridBagConstraints();
 		gbc_chckbxPremium.insets = new Insets(0, 0, 5, 5);
 		gbc_chckbxPremium.gridx = 4;
-		gbc_chckbxPremium.gridy = 3;
+		gbc_chckbxPremium.gridy = 4;
 		frmAppchatregister.getContentPane().add(chckbxPremium, gbc_chckbxPremium);
 		
 		JLabel lblNewLabel_2 = new JLabel("email");
@@ -135,7 +149,7 @@ public class Register {
 		gbc_lblNewLabel_2.anchor = GridBagConstraints.WEST;
 		gbc_lblNewLabel_2.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNewLabel_2.gridx = 2;
-		gbc_lblNewLabel_2.gridy = 4;
+		gbc_lblNewLabel_2.gridy = 5;
 		frmAppchatregister.getContentPane().add(lblNewLabel_2, gbc_lblNewLabel_2);
 		
 		textField_3 = new JTextField();
@@ -143,7 +157,7 @@ public class Register {
 		gbc_textField_3.insets = new Insets(0, 0, 5, 5);
 		gbc_textField_3.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField_3.gridx = 3;
-		gbc_textField_3.gridy = 4;
+		gbc_textField_3.gridy = 5;
 		frmAppchatregister.getContentPane().add(textField_3, gbc_textField_3);
 		textField_3.setColumns(10);
 		
@@ -152,7 +166,7 @@ public class Register {
 		gbc_lblNewLabel_3.anchor = GridBagConstraints.WEST;
 		gbc_lblNewLabel_3.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNewLabel_3.gridx = 2;
-		gbc_lblNewLabel_3.gridy = 5;
+		gbc_lblNewLabel_3.gridy = 6;
 		frmAppchatregister.getContentPane().add(lblNewLabel_3, gbc_lblNewLabel_3);
 		
 		textField_4 = new JTextField();
@@ -160,7 +174,7 @@ public class Register {
 		gbc_textField_4.insets = new Insets(0, 0, 5, 5);
 		gbc_textField_4.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField_4.gridx = 3;
-		gbc_textField_4.gridy = 5;
+		gbc_textField_4.gridy = 6;
 		frmAppchatregister.getContentPane().add(textField_4, gbc_textField_4);
 		textField_4.setColumns(10);
 		
@@ -169,7 +183,7 @@ public class Register {
 		gbc_lblNick.anchor = GridBagConstraints.WEST;
 		gbc_lblNick.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNick.gridx = 2;
-		gbc_lblNick.gridy = 6;
+		gbc_lblNick.gridy = 7;
 		frmAppchatregister.getContentPane().add(lblNick, gbc_lblNick);
 		
 		textField_5 = new JTextField();
@@ -177,7 +191,7 @@ public class Register {
 		gbc_textField_5.insets = new Insets(0, 0, 5, 5);
 		gbc_textField_5.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField_5.gridx = 3;
-		gbc_textField_5.gridy = 6;
+		gbc_textField_5.gridy = 7;
 		frmAppchatregister.getContentPane().add(textField_5, gbc_textField_5);
 		textField_5.setColumns(10);
 		
@@ -186,7 +200,7 @@ public class Register {
 		gbc_lblPass.anchor = GridBagConstraints.WEST;
 		gbc_lblPass.insets = new Insets(0, 0, 5, 5);
 		gbc_lblPass.gridx = 2;
-		gbc_lblPass.gridy = 7;
+		gbc_lblPass.gridy = 8;
 		frmAppchatregister.getContentPane().add(lblPass, gbc_lblPass);
 		
 		passwordField = new JPasswordField();
@@ -194,15 +208,31 @@ public class Register {
 		gbc_passwordField.insets = new Insets(0, 0, 5, 5);
 		gbc_passwordField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_passwordField.gridx = 3;
-		gbc_passwordField.gridy = 7;
+		gbc_passwordField.gridy = 8;
 		frmAppchatregister.getContentPane().add(passwordField, gbc_passwordField);
+		
+		lblRepeatThePass = new JLabel("repeat the pass");
+		GridBagConstraints gbc_lblRepeatThePass = new GridBagConstraints();
+		gbc_lblRepeatThePass.anchor = GridBagConstraints.EAST;
+		gbc_lblRepeatThePass.insets = new Insets(0, 0, 5, 5);
+		gbc_lblRepeatThePass.gridx = 2;
+		gbc_lblRepeatThePass.gridy = 9;
+		frmAppchatregister.getContentPane().add(lblRepeatThePass, gbc_lblRepeatThePass);
+		
+		passwordField_1 = new JPasswordField();
+		GridBagConstraints gbc_passwordField_1 = new GridBagConstraints();
+		gbc_passwordField_1.insets = new Insets(0, 0, 5, 5);
+		gbc_passwordField_1.fill = GridBagConstraints.HORIZONTAL;
+		gbc_passwordField_1.gridx = 3;
+		gbc_passwordField_1.gridy = 9;
+		frmAppchatregister.getContentPane().add(passwordField_1, gbc_passwordField_1);
 		
 		JLabel lblAvatar = new JLabel("avatar");
 		GridBagConstraints gbc_lblAvatar = new GridBagConstraints();
 		gbc_lblAvatar.anchor = GridBagConstraints.WEST;
 		gbc_lblAvatar.insets = new Insets(0, 0, 5, 5);
 		gbc_lblAvatar.gridx = 2;
-		gbc_lblAvatar.gridy = 8;
+		gbc_lblAvatar.gridy = 10;
 		frmAppchatregister.getContentPane().add(lblAvatar, gbc_lblAvatar);
 		
 		textField_7 = new JTextField();
@@ -210,11 +240,15 @@ public class Register {
 		gbc_textField_7.insets = new Insets(0, 0, 5, 5);
 		gbc_textField_7.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField_7.gridx = 3;
-		gbc_textField_7.gridy = 8;
+		gbc_textField_7.gridy = 10;
 		frmAppchatregister.getContentPane().add(textField_7, gbc_textField_7);
 		textField_7.setColumns(10);
 		
 		btnRegister = new JButton("register");
+		btnRegister.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
 		btnRegister.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -226,13 +260,14 @@ public class Register {
 				String phone = textField_4.getText();
 				String nick = textField_5.getText();
 				String pass = passwordField.getText();
+				String passAgain = lblRepeatThePass.getText();
 				String avatar = textField_7.getText();
 			}
 		});
 		GridBagConstraints gbc_btnRegister = new GridBagConstraints();
 		gbc_btnRegister.insets = new Insets(0, 0, 5, 5);
 		gbc_btnRegister.gridx = 3;
-		gbc_btnRegister.gridy = 9;
+		gbc_btnRegister.gridy = 11;
 		frmAppchatregister.getContentPane().add(btnRegister, gbc_btnRegister);
 		
 		btnIveAnAccount = new JButton("I've an account");
@@ -245,7 +280,7 @@ public class Register {
 		GridBagConstraints gbc_btnIveAnAccount = new GridBagConstraints();
 		gbc_btnIveAnAccount.insets = new Insets(0, 0, 5, 5);
 		gbc_btnIveAnAccount.gridx = 3;
-		gbc_btnIveAnAccount.gridy = 10;
+		gbc_btnIveAnAccount.gridy = 12;
 		frmAppchatregister.getContentPane().add(btnIveAnAccount, gbc_btnIveAnAccount);
 	}
 

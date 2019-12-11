@@ -79,32 +79,29 @@ public class ChatWindow {
 		});
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
 		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[]{1, 0, 0, 0, 0, 165, 35, 0, 0};
-		gbl_panel.rowHeights = new int[]{0, 28, 37, 0, 0};
-		gbl_panel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_panel.rowWeights = new double[]{0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.columnWidths = new int[]{1, 0, 0, 0, 0, 165, 35, 0, 0, 0};
+		gbl_panel.rowHeights = new int[]{0, 28, 0, 37, 0, 0};
+		gbl_panel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
-		JPanel buscadorChats = new JPanel();
-		GridBagConstraints gbc_buscadorChats = new GridBagConstraints();
-		gbc_buscadorChats.gridheight = 2;
-		gbc_buscadorChats.gridwidth = 3;
-		gbc_buscadorChats.insets = new Insets(0, 0, 5, 5);
-		gbc_buscadorChats.fill = GridBagConstraints.BOTH;
-		gbc_buscadorChats.gridx = 1;
-		gbc_buscadorChats.gridy = 0;
-		panel.add(buscadorChats, gbc_buscadorChats);
-		
-		txtChat = new JTextField();
-		txtChat.addKeyListener(new KeyAdapter() {
+		JPanel mostrarPerfil = new JPanel();
+		mostrarPerfil.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		mostrarPerfil.addMouseListener(new MouseAdapter() {
 			@Override
-			public void keyTyped(KeyEvent e) {
-				// TODO buscador por pulsación al igual que los mensajes
+			public void mouseClicked(MouseEvent e) {
+				//TODO mostrar el perfil del usuario
+				System.out.println("perfil");
 			}
 		});
-		txtChat.setText("chat");
-		buscadorChats.add(txtChat);
-		txtChat.setColumns(10);
+		GridBagConstraints gbc_mostrarPerfil = new GridBagConstraints();
+		gbc_mostrarPerfil.gridheight = 2;
+		gbc_mostrarPerfil.gridwidth = 3;
+		gbc_mostrarPerfil.insets = new Insets(0, 0, 5, 5);
+		gbc_mostrarPerfil.fill = GridBagConstraints.BOTH;
+		gbc_mostrarPerfil.gridx = 1;
+		gbc_mostrarPerfil.gridy = 0;
+		panel.add(mostrarPerfil, gbc_mostrarPerfil);
 		
 		JPanel nombreChat = new JPanel();
 		nombreChat.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -153,6 +150,26 @@ public class ChatWindow {
 		gbc_opciones_usuario.gridy = 0;
 		panel.add(opciones_usuario, gbc_opciones_usuario);
 		
+		JPanel buscadorChats = new JPanel();
+		GridBagConstraints gbc_buscadorChats = new GridBagConstraints();
+		gbc_buscadorChats.gridwidth = 3;
+		gbc_buscadorChats.insets = new Insets(0, 0, 5, 5);
+		gbc_buscadorChats.fill = GridBagConstraints.BOTH;
+		gbc_buscadorChats.gridx = 1;
+		gbc_buscadorChats.gridy = 2;
+		panel.add(buscadorChats, gbc_buscadorChats);
+		
+		txtChat = new JTextField();
+		txtChat.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO buscador por pulsación al igual que los mensajes
+			}
+		});
+		txtChat.setText("chat");
+		buscadorChats.add(txtChat);
+		txtChat.setColumns(10);
+		
 		JScrollPane scrollChats = new JScrollPane();
 		GridBagConstraints gbc_scrollChats = new GridBagConstraints();
 		gbc_scrollChats.gridheight = 2;
@@ -160,7 +177,7 @@ public class ChatWindow {
 		gbc_scrollChats.insets = new Insets(0, 0, 0, 5);
 		gbc_scrollChats.fill = GridBagConstraints.BOTH;
 		gbc_scrollChats.gridx = 1;
-		gbc_scrollChats.gridy = 2;
+		gbc_scrollChats.gridy = 3;
 		panel.add(scrollChats, gbc_scrollChats);
 		
 		JList chatslist = new JList();
@@ -168,7 +185,8 @@ public class ChatWindow {
 		
 		JScrollPane scroll_chat = new JScrollPane();
 		GridBagConstraints gbc_scroll_chat = new GridBagConstraints();
-		gbc_scroll_chat.gridwidth = 3;
+		gbc_scroll_chat.gridheight = 2;
+		gbc_scroll_chat.gridwidth = 4;
 		gbc_scroll_chat.insets = new Insets(0, 0, 5, 5);
 		gbc_scroll_chat.fill = GridBagConstraints.BOTH;
 		gbc_scroll_chat.gridx = 4;
@@ -184,7 +202,7 @@ public class ChatWindow {
 		gbc_scrollmensaje.insets = new Insets(0, 0, 0, 5);
 		gbc_scrollmensaje.fill = GridBagConstraints.BOTH;
 		gbc_scrollmensaje.gridx = 4;
-		gbc_scrollmensaje.gridy = 3;
+		gbc_scrollmensaje.gridy = 4;
 		panel.add(scrollmensaje, gbc_scrollmensaje);
 		
 		textmensaje = new JTextField();
@@ -192,17 +210,33 @@ public class ChatWindow {
 		textmensaje.setColumns(10);
 		
 		JPanel enviarMensaje = new JPanel();
+		enviarMensaje.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		enviarMensaje.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				//TODO enviar mensajes
 			}
 		});
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		panel_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				System.out.println("emojis");
+			}
+		});
+		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
+		gbc_panel_1.insets = new Insets(0, 0, 0, 5);
+		gbc_panel_1.fill = GridBagConstraints.BOTH;
+		gbc_panel_1.gridx = 6;
+		gbc_panel_1.gridy = 4;
+		panel.add(panel_1, gbc_panel_1);
 		GridBagConstraints gbc_enviarMensaje = new GridBagConstraints();
 		gbc_enviarMensaje.insets = new Insets(0, 0, 0, 5);
 		gbc_enviarMensaje.fill = GridBagConstraints.BOTH;
-		gbc_enviarMensaje.gridx = 6;
-		gbc_enviarMensaje.gridy = 3;
+		gbc_enviarMensaje.gridx = 7;
+		gbc_enviarMensaje.gridy = 4;
 		panel.add(enviarMensaje, gbc_enviarMensaje);
 	}
 }

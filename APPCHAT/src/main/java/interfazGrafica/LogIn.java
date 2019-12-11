@@ -14,6 +14,7 @@ import java.awt.Point;
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.Font;
 
 public class LogIn {
 
@@ -23,6 +24,7 @@ public class LogIn {
 	private JButton btnLogin;
 	private JLabel label;
 	private JButton btnRegister;
+	private JLabel lblNewLabel;
 
 	/**
 	 * Launch the application.
@@ -62,6 +64,14 @@ public class LogIn {
 		gridBagLayout.columnWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		gridBagLayout.rowWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		frmAppchatlogin.getContentPane().setLayout(gridBagLayout);
+		
+		lblNewLabel = new JLabel("WELCOME BACK!");
+		lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 26));
+		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
+		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel.gridx = 5;
+		gbc_lblNewLabel.gridy = 0;
+		frmAppchatlogin.getContentPane().add(lblNewLabel, gbc_lblNewLabel);
 		
 		JLabel lblTlf = new JLabel("tlf");
 		GridBagConstraints gbc_lblTlf = new GridBagConstraints();
