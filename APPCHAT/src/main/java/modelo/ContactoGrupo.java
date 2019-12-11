@@ -38,9 +38,4 @@ public class ContactoGrupo extends Contacto {
 		return miembros;
 	}
 
-	@Override
-	public String toString() {
-		return "ContactoGrupo [admin=" + admin.getUsuario() + ", miembros=" + miembros + "]";
-	}
-
 }

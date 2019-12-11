@@ -2,6 +2,8 @@ package modelo;
 
 import java.util.Date;
 
+import tds.BubbleText;
+
 // TODO Terminar de implementar
 // TODO Emoticonos
 // TODO ¿Guardar destinatarios?
@@ -11,6 +13,7 @@ public class Mensaje {
 	private String texto;
 	private String tlfEmisor;
 	private Date hora;
+	private BubbleText emoticon;
 	//private _ emoticon;
 	//private List<Contacto> receptores;
 
