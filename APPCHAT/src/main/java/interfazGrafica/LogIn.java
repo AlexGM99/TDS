@@ -135,6 +135,7 @@ public class LogIn {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 			//TODO cambiar a la ventana de registro
+			
 			}
 		});
 		GridBagConstraints gbc_btnRegister = new GridBagConstraints();
