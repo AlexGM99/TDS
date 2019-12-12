@@ -9,6 +9,7 @@ import java.awt.GridBagLayout;
 import javax.swing.JButton;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.PopupMenu;
 import java.awt.Color;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
@@ -29,6 +30,10 @@ import javax.swing.JSeparator;
 import java.awt.Dimension;
 import java.awt.Component;
 import java.awt.Font;
+import javax.swing.JPopupMenu;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JMenu;
 
 public class ChatWindow {
 
@@ -116,12 +121,6 @@ public class ChatWindow {
 		
 		JPanel opciones_usuario = new JPanel();
 		opciones_usuario.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
-		opciones_usuario.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				System.out.println("opciones preciosas");
-			}
-		});
 		
 		JPanel buscadorMensjs = new JPanel();
 		buscadorMensjs.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -151,6 +150,23 @@ public class ChatWindow {
 		gbc_opciones_usuario.gridy = 0;
 		panel.add(opciones_usuario, gbc_opciones_usuario);
 		
+		JButton btnopciones = new JButton("options");
+		btnopciones.setActionCommand("");
+		opciones_usuario.add(btnopciones);
+		
+		final JPopupMenu popupMenu_1 = new JPopupMenu();
+		addPopup(btnopciones, popupMenu_1);
+		
+		JButton btnNewButton_3 = new JButton("New button");
+		popupMenu_1.add(btnNewButton_3);
+		
+		btnopciones.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				 popupMenu_1.show(e.getComponent(), e.getX(), e.getY());
+		         popupMenu_1.setVisible(true);
+			}
+		});
 		JPanel buscadorChats = new JPanel();
 		GridBagConstraints gbc_buscadorChats = new GridBagConstraints();
 		gbc_buscadorChats.gridwidth = 3;
@@ -239,5 +255,22 @@ public class ChatWindow {
 		gbc_enviarMensaje.gridx = 7;
 		gbc_enviarMensaje.gridy = 4;
 		panel.add(enviarMensaje, gbc_enviarMensaje);
+	}
+	private static void addPopup(Component component, final JPopupMenu popup) {
+		component.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			public void mouseReleased(MouseEvent e) {
+				if (e.isPopupTrigger()) {
+					showMenu(e);
+				}
+			}
+			private void showMenu(MouseEvent e) {
+				popup.show(e.getComponent(), e.getX(), e.getY());
+			}
+		});
 	}
 }

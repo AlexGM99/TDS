@@ -114,7 +114,7 @@ public class LogIn {
 			public void mouseReleased(MouseEvent e) {
 				//TODO funcionalidad del login
 				String usuario = textField.getText();
-				String contrasena = passwordField.getText();
+				String contrasena = passwordField.getPassword().toString();
 			}
 		});
 		GridBagConstraints gbc_btnLogin = new GridBagConstraints();
