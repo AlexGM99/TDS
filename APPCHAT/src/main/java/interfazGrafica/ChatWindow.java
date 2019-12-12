@@ -32,7 +32,7 @@ import java.awt.Font;
 
 public class ChatWindow {
 
-	private JFrame frame;
+	private JFrame frmAppchat;
 	private JTextField txtBuscar;
 	private JTextField txtChat;
 	private JTextField textmensaje;
@@ -45,7 +45,7 @@ public class ChatWindow {
 			public void run() {
 				try {
 					ChatWindow window = new ChatWindow();
-					window.frame.setVisible(true);
+					window.frmAppchat.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -64,10 +64,11 @@ public class ChatWindow {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(new BorderLayout(0, 0));
+		frmAppchat = new JFrame();
+		frmAppchat.setTitle("APPCHAT");
+		frmAppchat.setBounds(100, 100, 450, 300);
+		frmAppchat.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmAppchat.getContentPane().setLayout(new BorderLayout(0, 0));
 		
 		JPanel panel = new JPanel();
 		panel.setAutoscrolls(true);
@@ -77,7 +78,7 @@ public class ChatWindow {
 				System.out.println("hola, aqui tienes los datos de individuo/grupo");
 			}
 		});
-		frame.getContentPane().add(panel, BorderLayout.CENTER);
+		frmAppchat.getContentPane().add(panel, BorderLayout.CENTER);
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[]{1, 0, 0, 0, 0, 165, 35, 0, 0, 0};
 		gbl_panel.rowHeights = new int[]{0, 28, 0, 37, 0, 0};
