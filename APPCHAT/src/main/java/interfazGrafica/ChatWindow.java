@@ -34,6 +34,7 @@ import javax.swing.JPopupMenu;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JMenu;
+import javax.swing.JLabel;
 
 public class ChatWindow {
 
@@ -85,7 +86,7 @@ public class ChatWindow {
 		});
 		frmAppchat.getContentPane().add(panel, BorderLayout.CENTER);
 		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[]{1, 0, 0, 0, 0, 165, 35, 0, 0, 0};
+		gbl_panel.columnWidths = new int[]{1, 0, 0, 0, 75, 165, 0, 35, 0, 0};
 		gbl_panel.rowHeights = new int[]{0, 28, 0, 37, 0, 0};
 		gbl_panel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
@@ -108,6 +109,12 @@ public class ChatWindow {
 		gbc_mostrarPerfil.gridx = 1;
 		gbc_mostrarPerfil.gridy = 0;
 		panel.add(mostrarPerfil, gbc_mostrarPerfil);
+		GridBagLayout gbl_mostrarPerfil = new GridBagLayout();
+		gbl_mostrarPerfil.columnWidths = new int[]{0};
+		gbl_mostrarPerfil.rowHeights = new int[]{0};
+		gbl_mostrarPerfil.columnWeights = new double[]{Double.MIN_VALUE};
+		gbl_mostrarPerfil.rowWeights = new double[]{Double.MIN_VALUE};
+		mostrarPerfil.setLayout(gbl_mostrarPerfil);
 		
 		JPanel nombreChat = new JPanel();
 		nombreChat.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -118,6 +125,29 @@ public class ChatWindow {
 		gbc_nombreChat.gridx = 4;
 		gbc_nombreChat.gridy = 0;
 		panel.add(nombreChat, gbc_nombreChat);
+		GridBagLayout gbl_nombreChat = new GridBagLayout();
+		gbl_nombreChat.columnWidths = new int[]{0, 0, 0};
+		gbl_nombreChat.rowHeights = new int[]{0, 0, 0};
+		gbl_nombreChat.columnWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
+		gbl_nombreChat.rowWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
+		nombreChat.setLayout(gbl_nombreChat);
+		
+		JPanel panelimage = new JPanel();
+		GridBagConstraints gbc_panelimage = new GridBagConstraints();
+		gbc_panelimage.insets = new Insets(0, 0, 5, 5);
+		gbc_panelimage.fill = GridBagConstraints.BOTH;
+		gbc_panelimage.gridx = 0;
+		gbc_panelimage.gridy = 0;
+		nombreChat.add(panelimage, gbc_panelimage);
+		
+		JLabel lblImage = new JLabel("");
+		panelimage.add(lblImage);
+		
+		JLabel lblnombrechat = new JLabel("");
+		GridBagConstraints gbc_lblnombrechat = new GridBagConstraints();
+		gbc_lblnombrechat.gridx = 1;
+		gbc_lblnombrechat.gridy = 1;
+		nombreChat.add(lblnombrechat, gbc_lblnombrechat);
 		
 		JPanel opciones_usuario = new JPanel();
 		opciones_usuario.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -143,6 +173,7 @@ public class ChatWindow {
 		buscadorMensjs.add(txtBuscar);
 		txtBuscar.setColumns(10);
 		GridBagConstraints gbc_opciones_usuario = new GridBagConstraints();
+		gbc_opciones_usuario.gridwidth = 2;
 		gbc_opciones_usuario.gridheight = 2;
 		gbc_opciones_usuario.insets = new Insets(0, 0, 5, 5);
 		gbc_opciones_usuario.fill = GridBagConstraints.BOTH;
@@ -151,14 +182,33 @@ public class ChatWindow {
 		panel.add(opciones_usuario, gbc_opciones_usuario);
 		
 		JButton btnopciones = new JButton("options");
+		btnopciones.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
 		btnopciones.setActionCommand("");
 		opciones_usuario.add(btnopciones);
 		
 		final JPopupMenu popupMenu_1 = new JPopupMenu();
 		addPopup(btnopciones, popupMenu_1);
 		
-		JButton btnNewButton_3 = new JButton("New button");
-		popupMenu_1.add(btnNewButton_3);
+		JButton btnDeleteContact = new JButton("Delete contact");
+		btnDeleteContact.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//TODO delete contact
+			}
+		});
+		popupMenu_1.add(btnDeleteContact);
+		
+		JButton btnClearHistory = new JButton("Clear history");
+		btnClearHistory.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//TODO clear history messages of the chat
+			}
+		});
+		popupMenu_1.add(btnClearHistory);
 		
 		btnopciones.addMouseListener(new MouseAdapter() {
 			@Override
@@ -203,8 +253,8 @@ public class ChatWindow {
 		JScrollPane scroll_chat = new JScrollPane();
 		GridBagConstraints gbc_scroll_chat = new GridBagConstraints();
 		gbc_scroll_chat.gridheight = 2;
-		gbc_scroll_chat.gridwidth = 4;
-		gbc_scroll_chat.insets = new Insets(0, 0, 5, 5);
+		gbc_scroll_chat.gridwidth = 5;
+		gbc_scroll_chat.insets = new Insets(0, 0, 5, 0);
 		gbc_scroll_chat.fill = GridBagConstraints.BOTH;
 		gbc_scroll_chat.gridx = 4;
 		gbc_scroll_chat.gridy = 2;
@@ -226,15 +276,6 @@ public class ChatWindow {
 		scrollmensaje.setViewportView(textmensaje);
 		textmensaje.setColumns(10);
 		
-		JPanel enviarMensaje = new JPanel();
-		enviarMensaje.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		enviarMensaje.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				//TODO enviar mensajes
-			}
-		});
-		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		panel_1.addMouseListener(new MouseAdapter() {
@@ -249,6 +290,15 @@ public class ChatWindow {
 		gbc_panel_1.gridx = 6;
 		gbc_panel_1.gridy = 4;
 		panel.add(panel_1, gbc_panel_1);
+		
+		JPanel enviarMensaje = new JPanel();
+		enviarMensaje.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		enviarMensaje.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//TODO enviar mensajes
+			}
+		});
 		GridBagConstraints gbc_enviarMensaje = new GridBagConstraints();
 		gbc_enviarMensaje.insets = new Insets(0, 0, 0, 5);
 		gbc_enviarMensaje.fill = GridBagConstraints.BOTH;
