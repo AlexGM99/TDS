@@ -6,6 +6,8 @@ import javax.swing.JFrame;
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import java.awt.GridBagLayout;
+import java.awt.Image;
+
 import javax.swing.JButton;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -26,6 +28,8 @@ import javax.swing.JPopupMenu;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
+import javax.swing.ImageIcon;
+import java.awt.FlowLayout;
 
 public class ChatWindow implements InterfazVistas{
 
@@ -86,6 +90,7 @@ public class ChatWindow implements InterfazVistas{
 		panel.setLayout(gbl_panel);
 		
 		JPanel mostrarPerfil = new JPanel();
+		mostrarPerfil.setMaximumSize(new Dimension(50, 50));
 		mostrarPerfil.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		mostrarPerfil.addMouseListener(new MouseAdapter() {
 			@Override
@@ -103,11 +108,28 @@ public class ChatWindow implements InterfazVistas{
 		gbc_mostrarPerfil.gridy = 0;
 		panel.add(mostrarPerfil, gbc_mostrarPerfil);
 		GridBagLayout gbl_mostrarPerfil = new GridBagLayout();
-		gbl_mostrarPerfil.columnWidths = new int[]{0};
-		gbl_mostrarPerfil.rowHeights = new int[]{0};
-		gbl_mostrarPerfil.columnWeights = new double[]{Double.MIN_VALUE};
-		gbl_mostrarPerfil.rowWeights = new double[]{Double.MIN_VALUE};
+		gbl_mostrarPerfil.columnWidths = new int[]{0, 0, 0, 0, 0};
+		gbl_mostrarPerfil.rowHeights = new int[]{0, 0};
+		gbl_mostrarPerfil.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_mostrarPerfil.rowWeights = new double[]{0.0, Double.MIN_VALUE};
 		mostrarPerfil.setLayout(gbl_mostrarPerfil);
+		
+		JLabel label_MifotoPerfil = new JLabel("");
+		Image img= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/usuarioDefecto.png")).getImage();
+		ImageIcon img2=new ImageIcon(img.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+		label_MifotoPerfil.setIcon(img2);
+		GridBagConstraints gbc_label_MifotoPerfil = new GridBagConstraints();
+		gbc_label_MifotoPerfil.insets = new Insets(0, 0, 0, 5);
+		gbc_label_MifotoPerfil.gridx = 0;
+		gbc_label_MifotoPerfil.gridy = 0;
+		mostrarPerfil.add(label_MifotoPerfil, gbc_label_MifotoPerfil);
+		
+		JLabel lblMiNombre = new JLabel("MI NOMBRE");
+		GridBagConstraints gbc_lblMiNombre = new GridBagConstraints();
+		gbc_lblMiNombre.insets = new Insets(0, 0, 0, 5);
+		gbc_lblMiNombre.gridx = 2;
+		gbc_lblMiNombre.gridy = 0;
+		mostrarPerfil.add(lblMiNombre, gbc_lblMiNombre);
 		
 		JPanel nombreChat = new JPanel();
 		nombreChat.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -210,16 +232,34 @@ public class ChatWindow implements InterfazVistas{
 		         popupMenu_1.setVisible(true);
 			}
 		});
+		
+		JPanel panel_1 = new JPanel();
+		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
+		gbc_panel_1.gridwidth = 2;
+		gbc_panel_1.insets = new Insets(0, 0, 5, 5);
+		gbc_panel_1.fill = GridBagConstraints.BOTH;
+		gbc_panel_1.gridx = 1;
+		gbc_panel_1.gridy = 2;
+		panel.add(panel_1, gbc_panel_1);
+		
+		JLabel label_1 = new JLabel("");
+		Image img5= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/lupitaRed.png")).getImage();
+		ImageIcon img6=new ImageIcon(img5.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+		label_1.setIcon(img6);
+		panel_1.add(label_1);
 		JPanel buscadorChats = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) buscadorChats.getLayout();
+		flowLayout.setAlignOnBaseline(true);
 		GridBagConstraints gbc_buscadorChats = new GridBagConstraints();
-		gbc_buscadorChats.gridwidth = 3;
+		gbc_buscadorChats.anchor = GridBagConstraints.WEST;
 		gbc_buscadorChats.insets = new Insets(0, 0, 5, 5);
-		gbc_buscadorChats.fill = GridBagConstraints.BOTH;
-		gbc_buscadorChats.gridx = 1;
+		gbc_buscadorChats.fill = GridBagConstraints.VERTICAL;
+		gbc_buscadorChats.gridx = 3;
 		gbc_buscadorChats.gridy = 2;
 		panel.add(buscadorChats, gbc_buscadorChats);
 		
 		txtChat = new JTextField();
+		txtChat.setAlignmentX(Component.LEFT_ALIGNMENT);
 		txtChat.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
@@ -269,20 +309,26 @@ public class ChatWindow implements InterfazVistas{
 		scrollmensaje.setViewportView(textmensaje);
 		textmensaje.setColumns(10);
 		
-		JPanel panel_1 = new JPanel();
-		panel_1.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		panel_1.addMouseListener(new MouseAdapter() {
+		JPanel panel_emoji = new JPanel();
+		panel_emoji.setMaximumSize(new Dimension(20, 20));
+		panel_emoji.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		panel_emoji.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				System.out.println("emojis");
 			}
 		});
-		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
-		gbc_panel_1.insets = new Insets(0, 0, 0, 5);
-		gbc_panel_1.fill = GridBagConstraints.BOTH;
-		gbc_panel_1.gridx = 6;
-		gbc_panel_1.gridy = 4;
-		panel.add(panel_1, gbc_panel_1);
+		GridBagConstraints gbc_panel_emoji = new GridBagConstraints();
+		gbc_panel_emoji.insets = new Insets(0, 0, 0, 5);
+		gbc_panel_emoji.fill = GridBagConstraints.BOTH;
+		gbc_panel_emoji.gridx = 6;
+		gbc_panel_emoji.gridy = 4;
+		panel.add(panel_emoji, gbc_panel_emoji);
+		panel_emoji.setLayout(new BorderLayout(0, 0));
+		
+		JLabel labelemoji = new JLabel("");
+		labelemoji.setIcon(new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/emoji_20*20.png")));
+		panel_emoji.add(labelemoji, BorderLayout.CENTER);
 		
 		JPanel enviarMensaje = new JPanel();
 		enviarMensaje.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -298,6 +344,13 @@ public class ChatWindow implements InterfazVistas{
 		gbc_enviarMensaje.gridx = 7;
 		gbc_enviarMensaje.gridy = 4;
 		panel.add(enviarMensaje, gbc_enviarMensaje);
+		enviarMensaje.setLayout(new BorderLayout(0, 0));
+		
+		JLabel label = new JLabel("");
+		Image img3= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/envioAdap.png")).getImage();
+		ImageIcon img4=new ImageIcon(img3.getScaledInstance(50, 27, Image.SCALE_SMOOTH));
+		label.setIcon(img4);
+		enviarMensaje.add(label, BorderLayout.CENTER);
 	}
 	private static void addPopup(Component component, final JPopupMenu popup) {
 		component.addMouseListener(new MouseAdapter() {
