@@ -50,7 +50,7 @@ public class LogIn implements InterfazVistas {
 		});
 	}*/
 	public void exit() {
-		this.frmAppchatlogin.setVisible(false);
+		this.frmAppchatlogin.dispose();
 	}
 
 	/**

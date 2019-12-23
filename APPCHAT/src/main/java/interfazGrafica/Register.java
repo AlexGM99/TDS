@@ -30,6 +30,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
@@ -64,11 +66,15 @@ public class Register implements InterfazVistas {
 	private JTextField textField;
 	
 	private ControladorVistaAppChat controlador;
-	
+	private JLabel lblWrongMailFormat;
+	Pattern pattern = Pattern
+            .compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                    + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
 	
 	private boolean checkFields() {
 		boolean salida=true;
-		boolean passMatch = true;		
+		boolean passMatch = true;
+		boolean mailmatch = true;
 		/*borrar todos los errores en pantalla*/
 		ocultarErrores();
 		String pass1=new String(passwordField.getPassword());
@@ -81,6 +87,13 @@ public class Register implements InterfazVistas {
 		}
 		if(emailField.getText().trim().isEmpty()) {
 			salida = false;
+		}
+		if (!emailField.getText().trim().isEmpty()) {
+			Matcher mather = pattern.matcher(emailField.getText());
+			if (mather.find() == false) {
+				lblWrongMailFormat.setVisible(true);
+				mailmatch = false;
+			}
 		}
 		if(phoneField.getText().trim().isEmpty()) {
 			salida = false;
@@ -99,12 +112,13 @@ public class Register implements InterfazVistas {
 			lblPassMustMatch.setVisible(true);
 		}
 		if (!salida) lblCampoObligatorioError.setVisible(true);
-		return salida&&passMatch;
+		return salida&&passMatch&&mailmatch;
 	}
 	
 	private void ocultarErrores() {
 		lblCampoObligatorioError.setVisible(false);
 		lblPassMustMatch.setVisible(false);
+		lblWrongMailFormat.setVisible(false);
 	}
 
 	/**
@@ -301,6 +315,15 @@ public class Register implements InterfazVistas {
 		frmAppchatregister.getContentPane().add(emailField, gbc_emailField);
 		emailField.setColumns(10);
 		
+		lblWrongMailFormat = new JLabel("Wrong mail format");
+		lblWrongMailFormat.setForeground(Color.RED);
+		GridBagConstraints gbc_lblWrongMailFormat = new GridBagConstraints();
+		gbc_lblWrongMailFormat.insets = new Insets(0, 0, 5, 5);
+		gbc_lblWrongMailFormat.gridx = 4;
+		gbc_lblWrongMailFormat.gridy = 6;
+		frmAppchatregister.getContentPane().add(lblWrongMailFormat, gbc_lblWrongMailFormat);
+		lblWrongMailFormat.setVisible(false);
+		
 		JLabel lblNewLabel_3 = new JLabel("phone*");
 		GridBagConstraints gbc_lblNewLabel_3 = new GridBagConstraints();
 		gbc_lblNewLabel_3.anchor = GridBagConstraints.WEST;
@@ -402,7 +425,6 @@ public class Register implements InterfazVistas {
 					String nick = nickField.getText();
 					String pass = passwordField.getPassword().toString();
 					String passAgain = passwordField_1.getPassword().toString();
-					
 					ImageIcon fotoPerfil = (ImageIcon)lblPhoto.getIcon();
 				}
 				//TO DO coger la foto de perfil por defecto o la añadida por el usuario.
@@ -430,6 +452,7 @@ public class Register implements InterfazVistas {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 			//TODO cambiar a ventana de login
+				controlador.changeToLogin();
 			}
 		});
 		GridBagConstraints gbc_btnIveAnAccount = new GridBagConstraints();
@@ -453,7 +476,7 @@ public class Register implements InterfazVistas {
 	}
 
 	public void exit() {
-		this.frmAppchatregister.setVisible(false);	
+		this.frmAppchatregister.dispose();	
 	}
 
 }

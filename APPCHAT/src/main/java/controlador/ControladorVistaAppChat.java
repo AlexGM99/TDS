@@ -3,6 +3,7 @@ package controlador;
 import java.util.Date;
 
 import interfazGrafica.InterfazVistas;
+import interfazGrafica.LogIn;
 import interfazGrafica.Register;
 import modelo.CatalogoUsuarios;
 import modelo.Usuario;
@@ -64,10 +65,18 @@ public class ControladorVistaAppChat {
 		//TODO registrar el usuario
 		return false;
 	}
+	public boolean RegisterUser(String nombre, Date fechanacimiento, String email, String movil, String usuario, String contraseña, String imagen, String saludo, boolean premium) {
+		return false;
+	}
 	public void changeToRegister() {
 		InterfazVistas antigua = interfaz;
-		antigua.exit();
 		interfaz = new Register(this);
+		antigua.exit();
 	}
-	
+	public void changeToLogin()
+	{
+		InterfazVistas antigua = interfaz;
+		interfaz = new LogIn(this);
+		antigua.exit();
+	}
 }
