@@ -14,6 +14,8 @@ import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import com.toedter.calendar.JDateChooser;
 
+import controlador.ControladorVistaAppChat;
+
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -58,7 +60,10 @@ public class Register implements InterfazVistas {
 	private JLabel lblPassMustMatch;
 	private JLabel lblPhoto;
 	private JLabel lblWrongPicture;
+	private JLabel lblGreeting;
+	private JTextField textField;
 	
+	private ControladorVistaAppChat controlador;
 	
 	
 	private boolean checkFields() {
@@ -105,7 +110,7 @@ public class Register implements InterfazVistas {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -116,13 +121,15 @@ public class Register implements InterfazVistas {
 				}
 			}
 		});
-	}
+	}*/
 
 	/**
 	 * Create the application.
 	 */
-	public Register() {
+	public Register(ControladorVistaAppChat controlador) {
 		initialize();
+		this.controlador = controlador;
+		this.frmAppchatregister.setVisible(true);
 	}
 
 	/**
@@ -130,15 +137,16 @@ public class Register implements InterfazVistas {
 	 */
 	private void initialize() {
 		frmAppchatregister = new JFrame();
-		frmAppchatregister.setMinimumSize(new Dimension(650, 600));
+		frmAppchatregister.setMinimumSize(new Dimension(700, 600));
 		frmAppchatregister.setTitle("APPCHAT-Register");
 		frmAppchatregister.setBounds(100, 100, 450, 300);
 		frmAppchatregister.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmAppchatregister.setLocationRelativeTo(null);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 150, 0, 189, 0, 150, 0};
-		gridBagLayout.rowHeights = new int[]{50, 54, 145, 32, 0, 60, 0, 0, 0, 0, 0, 0, 0, 0, 45, 0};
-		gridBagLayout.columnWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gridBagLayout.rowHeights = new int[]{50, 54, 145, 32, 0, 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 45, 0};
+		gridBagLayout.columnWeights = new double[]{1.0, 0.0, 0.0, 1.0, 0.0, 1.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		frmAppchatregister.getContentPane().setLayout(gridBagLayout);
 		
 		lblNewLabel_5 = new JLabel("REGISTER");
@@ -327,12 +335,29 @@ public class Register implements InterfazVistas {
 		frmAppchatregister.getContentPane().add(nickField, gbc_nickField);
 		nickField.setColumns(10);
 		
+		lblGreeting = new JLabel("greeting");
+		GridBagConstraints gbc_lblGreeting = new GridBagConstraints();
+		gbc_lblGreeting.anchor = GridBagConstraints.WEST;
+		gbc_lblGreeting.insets = new Insets(0, 0, 5, 5);
+		gbc_lblGreeting.gridx = 2;
+		gbc_lblGreeting.gridy = 9;
+		frmAppchatregister.getContentPane().add(lblGreeting, gbc_lblGreeting);
+		
+		textField = new JTextField();
+		GridBagConstraints gbc_textField = new GridBagConstraints();
+		gbc_textField.insets = new Insets(0, 0, 5, 5);
+		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField.gridx = 3;
+		gbc_textField.gridy = 9;
+		frmAppchatregister.getContentPane().add(textField, gbc_textField);
+		textField.setColumns(10);
+		
 		JLabel lblPass = new JLabel("pass*");
 		GridBagConstraints gbc_lblPass = new GridBagConstraints();
 		gbc_lblPass.anchor = GridBagConstraints.WEST;
 		gbc_lblPass.insets = new Insets(0, 0, 5, 5);
 		gbc_lblPass.gridx = 2;
-		gbc_lblPass.gridy = 9;
+		gbc_lblPass.gridy = 10;
 		frmAppchatregister.getContentPane().add(lblPass, gbc_lblPass);
 		
 		passwordField = new JPasswordField();
@@ -340,7 +365,7 @@ public class Register implements InterfazVistas {
 		gbc_passwordField.insets = new Insets(0, 0, 5, 5);
 		gbc_passwordField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_passwordField.gridx = 3;
-		gbc_passwordField.gridy = 9;
+		gbc_passwordField.gridy = 10;
 		frmAppchatregister.getContentPane().add(passwordField, gbc_passwordField);
 		
 		lblRepeatThePass = new JLabel("repeat the pass*");
@@ -348,7 +373,7 @@ public class Register implements InterfazVistas {
 		gbc_lblRepeatThePass.anchor = GridBagConstraints.EAST;
 		gbc_lblRepeatThePass.insets = new Insets(0, 0, 5, 5);
 		gbc_lblRepeatThePass.gridx = 2;
-		gbc_lblRepeatThePass.gridy = 10;
+		gbc_lblRepeatThePass.gridy = 11;
 		frmAppchatregister.getContentPane().add(lblRepeatThePass, gbc_lblRepeatThePass);
 		
 		passwordField_1 = new JPasswordField();
@@ -356,7 +381,7 @@ public class Register implements InterfazVistas {
 		gbc_passwordField_1.insets = new Insets(0, 0, 5, 5);
 		gbc_passwordField_1.fill = GridBagConstraints.HORIZONTAL;
 		gbc_passwordField_1.gridx = 3;
-		gbc_passwordField_1.gridy = 10;
+		gbc_passwordField_1.gridy = 11;
 		frmAppchatregister.getContentPane().add(passwordField_1, gbc_passwordField_1);
 		
 		btnRegister = new JButton("register");
@@ -390,14 +415,14 @@ public class Register implements InterfazVistas {
 		GridBagConstraints gbc_lblPassMustMatch = new GridBagConstraints();
 		gbc_lblPassMustMatch.insets = new Insets(0, 0, 5, 5);
 		gbc_lblPassMustMatch.gridx = 4;
-		gbc_lblPassMustMatch.gridy = 10;
+		gbc_lblPassMustMatch.gridy = 11;
 		frmAppchatregister.getContentPane().add(lblPassMustMatch, gbc_lblPassMustMatch);
 		lblPassMustMatch.setVisible(false);
 		
 		GridBagConstraints gbc_btnRegister = new GridBagConstraints();
 		gbc_btnRegister.insets = new Insets(0, 0, 5, 5);
 		gbc_btnRegister.gridx = 3;
-		gbc_btnRegister.gridy = 11;
+		gbc_btnRegister.gridy = 12;
 		frmAppchatregister.getContentPane().add(btnRegister, gbc_btnRegister);
 		
 		btnIveAnAccount = new JButton("I've an account");
@@ -411,7 +436,7 @@ public class Register implements InterfazVistas {
 		gbc_btnIveAnAccount.anchor = GridBagConstraints.WEST;
 		gbc_btnIveAnAccount.insets = new Insets(0, 0, 5, 5);
 		gbc_btnIveAnAccount.gridx = 4;
-		gbc_btnIveAnAccount.gridy = 11;
+		gbc_btnIveAnAccount.gridy = 12;
 		frmAppchatregister.getContentPane().add(btnIveAnAccount, gbc_btnIveAnAccount);
 		
 		lblCampoObligatorioError = new JLabel("mandatary fields *");
@@ -422,9 +447,13 @@ public class Register implements InterfazVistas {
 		gbc_lblCampoObligatorioError.gridheight = 2;
 		gbc_lblCampoObligatorioError.insets = new Insets(0, 0, 5, 5);
 		gbc_lblCampoObligatorioError.gridx = 3;
-		gbc_lblCampoObligatorioError.gridy = 12;
+		gbc_lblCampoObligatorioError.gridy = 13;
 		frmAppchatregister.getContentPane().add(lblCampoObligatorioError, gbc_lblCampoObligatorioError);
 		lblCampoObligatorioError.setVisible(false);
+	}
+
+	public void exit() {
+		this.frmAppchatregister.setVisible(false);	
 	}
 
 }

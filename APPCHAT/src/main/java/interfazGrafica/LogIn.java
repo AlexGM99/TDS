@@ -5,12 +5,19 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.GridBagConstraints;
 import javax.swing.JTextField;
+
+import controlador.ControladorVistaAppChat;
+
 import java.awt.Insets;
 import javax.swing.JPasswordField;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Toolkit;
+
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -25,11 +32,12 @@ public class LogIn implements InterfazVistas {
 	private JLabel label;
 	private JButton btnRegister;
 	private JLabel lblNewLabel;
+	private ControladorVistaAppChat controlador;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -40,15 +48,20 @@ public class LogIn implements InterfazVistas {
 				}
 			}
 		});
+	}*/
+	public void exit() {
+		this.frmAppchatlogin.setVisible(false);
 	}
 
 	/**
 	 * Create the application.
 	 */
-	public LogIn() {
+	public LogIn(ControladorVistaAppChat controlador) {
 		initialize();
+		this.controlador = controlador;
+		this.frmAppchatlogin.setVisible(true);
 	}
-
+	
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -56,8 +69,9 @@ public class LogIn implements InterfazVistas {
 		frmAppchatlogin = new JFrame();
 		frmAppchatlogin.setTitle("APPCHAT-LogIn");
 		frmAppchatlogin.setMinimumSize(new Dimension(500, 500));
-		frmAppchatlogin.setLocation(new Point(400, 100));
+	    frmAppchatlogin.setLocationRelativeTo(null);
 		frmAppchatlogin.setSize(new Dimension(500, 500));
+		frmAppchatlogin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{100, 0, 0, 0, 0, 0, 100, 0};
 		gridBagLayout.rowHeights = new int[]{50, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -91,7 +105,7 @@ public class LogIn implements InterfazVistas {
 		frmAppchatlogin.getContentPane().add(textField, gbc_textField);
 		textField.setColumns(10);
 		
-		JLabel lblPass = new JLabel("pass");
+		final JLabel lblPass = new JLabel("pass");
 		GridBagConstraints gbc_lblPass = new GridBagConstraints();
 		gbc_lblPass.anchor = GridBagConstraints.EAST;
 		gbc_lblPass.insets = new Insets(0, 0, 5, 5);
@@ -114,7 +128,11 @@ public class LogIn implements InterfazVistas {
 			public void mouseReleased(MouseEvent e) {
 				//TODO funcionalidad del login
 				String usuario = textField.getText();
-				String contrasena = passwordField.getPassword().toString();
+				String contrasena = passwordField.getText();
+				boolean logeado = controlador.loginUser(usuario, contrasena);
+				if (!logeado) {
+					JOptionPane.showMessageDialog(lblPass, "Hey, u made a mistake, i dont't know why, but u can't login", "CHECK YOUR LOGIN" , 0);
+				}
 			}
 		});
 		GridBagConstraints gbc_btnLogin = new GridBagConstraints();
@@ -135,7 +153,7 @@ public class LogIn implements InterfazVistas {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 			//TODO cambiar a la ventana de registro
-			
+			controlador.changeToRegister();
 			}
 		});
 		GridBagConstraints gbc_btnRegister = new GridBagConstraints();
