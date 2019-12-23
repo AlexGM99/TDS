@@ -66,11 +66,6 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		for (ContactoGrupo cg : usuario.getGrupos())
 			adaptadorCG.registrarContactoGrupo(cg);
 
-		// registrar mensajes
-		AdaptadorMensajeTDS adaptadorM = AdaptadorMensajeTDS.getUnicaInstancia();
-		for (Mensaje m : usuario.getMensajes())
-			adaptadorM.registrarMensaje(m);
-
 		// Crear entidad usuario
 		eUsuario = new Entidad();
 
@@ -82,8 +77,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 				new Propiedad("imagen", usuario.getImagen()), new Propiedad("saludo", usuario.getSaludo()),
 				new Propiedad("premium", String.valueOf(usuario.isPremium())),
 				new Propiedad("contactos", obtenerCodigos(usuario.getContactos())),
-				new Propiedad("grupos", obtenerCodigos(usuario.getGrupos())),
-				new Propiedad("mensajes", obtenerCodigos(usuario.getMensajes())))));
+				new Propiedad("grupos", obtenerCodigos(usuario.getGrupos())))));
 
 		// registrar entidad usuario
 		eUsuario = servPersistencia.registrarEntidad(eUsuario);
@@ -99,16 +93,6 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		AdaptadorContactoIndividualTDS adaptadorCI = AdaptadorContactoIndividualTDS.getUnicaInstancia();
 		for (ContactoIndividual ci : usuario.getContactos()) {
 			adaptadorCI.borrarContactoIndividual(ci);
-		}
-
-		AdaptadorContactoGrupoTDS adaptadorCG = AdaptadorContactoGrupoTDS.getUnicaInstancia();
-		for (ContactoGrupo cg : usuario.getGrupos()) {
-			adaptadorCG.borrarContactoGrupo(cg);
-		}
-
-		AdaptadorMensajeTDS adaptadorM = AdaptadorMensajeTDS.getUnicaInstancia();
-		for (Mensaje m : usuario.getMensajes()) {
-			adaptadorM.borrarMensaje(m);
 		}
 
 		eUsuario = servPersistencia.recuperarEntidad(usuario.getCodigo());
@@ -148,10 +132,6 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		servPersistencia.eliminarPropiedadEntidad(eUsuario, "grupos");
 		servPersistencia.anadirPropiedadEntidad(eUsuario, "grupos", lineas);
 
-		lineas = obtenerCodigos(usuario.getMensajes());
-		servPersistencia.eliminarPropiedadEntidad(eUsuario, "mensajes");
-		servPersistencia.anadirPropiedadEntidad(eUsuario, "mensajes", lineas);
-		
 		if (PoolDAO.getUnicaInstancia().contiene(usuario.getCodigo()))
 			PoolDAO.getUnicaInstancia().addObjeto(usuario.getCodigo(), usuario);
 		
@@ -208,13 +188,6 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 
 		for (ContactoGrupo cg : grupos)
 			usu.addGrupo(cg);
-				
-		// mensajes
-		List<Mensaje> mensajes = obtenerMensajesDesdeCodigos(
-				servPersistencia.recuperarPropiedadEntidad(eUsuario, "mensajes"));
-
-		for (Mensaje m : mensajes)
-			usu.addMensaje(m);
 
 		// devolver el objeto usuario
 		return usu;
@@ -240,17 +213,6 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 				lineas += ((Mensaje) it).getCodigo() + " ";
 		}
 		return lineas.trim();
-	}
-
-	private List<Mensaje> obtenerMensajesDesdeCodigos(String lineas) {
-
-		List<Mensaje> mensajes = new LinkedList<Mensaje>();
-		StringTokenizer strTok = new StringTokenizer(lineas, " ");
-		AdaptadorMensajeTDS adaptadorM = AdaptadorMensajeTDS.getUnicaInstancia();
-		while (strTok.hasMoreTokens()) {
-			mensajes.add(adaptadorM.recuperarMensaje(Integer.valueOf((String) strTok.nextElement())));
-		}
-		return mensajes;
 	}
 
 	private List<ContactoIndividual> obtenerContactosDesdeCodigos(String lineas) {

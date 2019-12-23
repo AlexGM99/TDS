@@ -1,8 +1,14 @@
 package modelo;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 // TODO Revisar implementación
 // TODO Faltan premium
@@ -21,7 +27,6 @@ public class Usuario {
 	private boolean premium;
 	private List<ContactoIndividual> contactos;
 	private List<ContactoGrupo> grupos;
-	private List<Mensaje> mensajes;
 
 	// Constructor sin saludo
 	public Usuario(String nombre, Date fechanacimiento, String email, String movil, String usuario, String contraseña,
@@ -38,7 +43,6 @@ public class Usuario {
 		this.premium = premium;
 		this.contactos = new LinkedList<ContactoIndividual>();
 		this.grupos = new LinkedList<ContactoGrupo>();
-		this.mensajes = new LinkedList<Mensaje>();
 	}
 	
 	// Constructor con saludo
@@ -147,18 +151,6 @@ public class Usuario {
 	public List<ContactoGrupo> getGrupos() {
 		return grupos;
 	}
-	
-	public List<Mensaje> getMensajes() {
-		return mensajes;
-	}
-	
-	public void addMensaje(Mensaje m) {
-		mensajes.add(m);
-	}
-
-	public void addMensaje(String texto, Date hora) {
-		mensajes.add(new Mensaje(texto, hora, this.movil));
-	}
 
 	// solo se compara el código porque es único
 	@Override
@@ -196,7 +188,43 @@ public class Usuario {
 		return getClass().getSimpleName() + " [\n\t codigo=" + codigo + "\n\t nombre=" + nombre + "\n\t fechaNacimiento=" + fechaNacimiento + "\n\t email="
 				+ email + "\n\t movil=" + movil + "\n\t usuario=" + usuario + "\n\t contraseña=" + contraseña + "\n\t imagen="
 				+ imagen + "\n\t saludo=" + saludo + "\n\t premium=" + premium + "\n\t contactos=" + contactos + "\n\t grupos="
-				+ grupos + "\n\t mensajes=" + mensajes + "]";
+				+ grupos + "]";
+	}
+	
+	public List<Integer> getMensajesPorMes(){
+		// Creamos una lista con todos los contactos: contactosInd + grupos
+		List<Contacto> contacts = new LinkedList<Contacto>(this.contactos);
+		for (ContactoGrupo cg : this.grupos) {
+			contacts.add(cg);
+		}
+		List<Integer> mensajesAnual = new ArrayList<Integer>(12);
+		int mes;
+		int yearActual = LocalDate.now().getYear();
+		for (Contacto c : contacts) {
+			for (Mensaje m : c.getMensajes()) {
+				if (m.getTlfEmisor().equals(this.movil) && m.getHora().getYear() == yearActual) {
+					mes = m.getHora().getMonthValue();
+					mensajesAnual.set(mes - 1, mensajesAnual.get(mes - 1)+ 1);
+				}
+			}
+		}
+		return mensajesAnual;
+	}
+	
+	public Map<String, Integer> getMensajesPorGrupo(){
+		
+		Map<String, Integer> mensajesGrupo = new HashMap<String, Integer>(grupos.size());
+		int contador;
+		for (ContactoGrupo cg : grupos) {
+			contador = 0;
+			for (Mensaje m : cg.getMensajes()) {
+				if (m.getTlfEmisor().equals(this.movil)) {
+					contador++;
+				}
+			}
+			mensajesGrupo.put(cg.getNombre(), contador);
+		}
+		return mensajesGrupo;
 	}
 
 }

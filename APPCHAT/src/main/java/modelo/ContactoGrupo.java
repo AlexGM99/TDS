@@ -4,8 +4,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-// TODO ¿Añadir lista de mensajes?
-
 public class ContactoGrupo extends Contacto {
 	
 	private Usuario admin;

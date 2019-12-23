@@ -1,9 +1,12 @@
 package modelo;
 
+import java.util.List;
+
 public abstract class Contacto {
 	
 	private int codigo;
 	private String nombre;
+	private List<Mensaje> mensajes;
 	
 	protected Contacto(String nombre) {
 		codigo = 0;
@@ -24,6 +27,18 @@ public abstract class Contacto {
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
+	}
+
+	public void addMensaje(Mensaje mensaje) {
+		mensajes.add(mensaje);
+	}
+	
+	public List<Mensaje> getMensajes() {
+		return mensajes;
+	}
+
+	public void setMensajes(List<Mensaje> mensajes) {
+		this.mensajes = mensajes;
 	}
 
 	@Override
