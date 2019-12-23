@@ -74,6 +74,7 @@ public class Register implements InterfazVistas {
 	Pattern pattern = Pattern
             .compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
                     + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+	private JButton btnClear;
 	
 	private boolean checkFields() {
 		boolean salida=true;
@@ -123,6 +124,18 @@ public class Register implements InterfazVistas {
 		lblCampoObligatorioError.setVisible(false);
 		lblPassMustMatch.setVisible(false);
 		lblWrongMailFormat.setVisible(false);
+	}
+	
+	private void clearFields() {
+		firtsNamefield.setText(null);
+		secondNamefield.setText(null);
+		dateChooser.setDate(null);
+		emailField.setText(null);
+		phoneField.setText(null);
+		nickField.setText(null);
+		greetingField.setText(null);
+		passwordField.setText(null);
+		passwordField_1.setText(null);
 	}
 
 	/**
@@ -452,6 +465,18 @@ public class Register implements InterfazVistas {
 		gbc_lblPassMustMatch.gridy = 11;
 		frmAppchatregister.getContentPane().add(lblPassMustMatch, gbc_lblPassMustMatch);
 		lblPassMustMatch.setVisible(false);
+		
+		btnClear = new JButton("Clear");
+		btnClear.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				clearFields();
+			}
+		});
+		GridBagConstraints gbc_btnClear = new GridBagConstraints();
+		gbc_btnClear.insets = new Insets(0, 0, 5, 5);
+		gbc_btnClear.gridx = 2;
+		gbc_btnClear.gridy = 12;
+		frmAppchatregister.getContentPane().add(btnClear, gbc_btnClear);
 		
 		GridBagConstraints gbc_btnRegister = new GridBagConstraints();
 		gbc_btnRegister.insets = new Insets(0, 0, 5, 5);
