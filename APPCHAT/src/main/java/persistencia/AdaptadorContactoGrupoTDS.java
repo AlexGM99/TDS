@@ -2,7 +2,6 @@ package persistencia;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -13,6 +12,7 @@ import tds.driver.ServicioPersistencia;
 import beans.Entidad;
 import beans.Propiedad;
 import modelo.ContactoGrupo;
+import modelo.Mensaje;
 import modelo.Usuario;
 
 public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
@@ -46,18 +46,19 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 
 		// registrar primero los atributos que son objetos
 		
-		
-		// registrar admin
-		//AdaptadorUsuarioTDS adaptadorUsuario = AdaptadorUsuarioTDS.getUnicaInstancia();
-		//adaptadorUsuario.actualizarUsuario(contacto.getAdmin());
-		//adaptadorUsuario.registrarUsuario(adaptadorUsuario.recuperarUsuario(contacto.getAdmin().getCodigo()));
-		
+		// registrar mensajes
+		AdaptadorMensajeTDS adaptadorM = AdaptadorMensajeTDS.getUnicaInstancia();
+		for (Mensaje m : contacto.getMensajes()) {
+			adaptadorM.registrarMensaje(m);
+		}
 		
 		// crear entidad contactoGrupo
 		eContactoGr = new Entidad();
 
 		eContactoGr.setNombre("contactoGrupo");
-		eContactoGr.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(new Propiedad("nombre", contacto.getNombre()),
+		eContactoGr.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(
+				new Propiedad("nombre", contacto.getNombre()),
+				new Propiedad("mensajes", contacto.getMensajes().toString()),
 				new Propiedad("admin", String.valueOf(contacto.getAdmin().getCodigo())),
 				new Propiedad("miembros", contacto.getMiembros().toString()))));
 
@@ -72,9 +73,11 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 		// No se comprueban restricciones de integridad
 		Entidad eContactoGr;
 
-		/*AdaptadorUsuarioTDS adaptadorU = AdaptadorUsuarioTDS.getUnicaInstancia();
-		adaptadorU.borrarUsuario(contacto.getAdmin());*/
-
+		AdaptadorMensajeTDS adaptadorM = AdaptadorMensajeTDS.getUnicaInstancia();
+		for (Mensaje m : contacto.getMensajes()) {
+			adaptadorM.borrarMensaje(m);
+		}
+		
 		eContactoGr = servPersistencia.recuperarEntidad(contacto.getCodigo());
 		servPersistencia.borrarEntidad(eContactoGr);
 	}
@@ -88,7 +91,11 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 		servPersistencia.eliminarPropiedadEntidad(eContactoGr, "admin");
 		servPersistencia.anadirPropiedadEntidad(eContactoGr, "admin", String.valueOf(contacto.getAdmin().getCodigo()));
 		
-		String lineas = obtenerCodigosMiembros(contacto.getMiembros());
+		String lineas = obtenerCodigosMensajes(contacto.getMensajes());
+		servPersistencia.eliminarPropiedadEntidad(eContactoGr, "mensajes");
+		servPersistencia.anadirPropiedadEntidad(eContactoGr, "mensajes", lineas);
+		
+		lineas = obtenerCodigosMiembros(contacto.getMiembros());
 		servPersistencia.eliminarPropiedadEntidad(eContactoGr, "miembros");
 		servPersistencia.anadirPropiedadEntidad(eContactoGr, "miembros", lineas);
 		
@@ -128,10 +135,18 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 		// admin
 		AdaptadorUsuarioTDS adaptadorUsuario = AdaptadorUsuarioTDS.getUnicaInstancia();
 		int codigoUsuario = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eContactoGr, "admin"));
-
+		
 		Usuario admin = adaptadorUsuario.recuperarUsuario(codigoUsuario);
 		grupo.setAdmin(admin);
 
+		// mensajes
+		List<Mensaje> mensajes = obtenerMensajesDesdeCodigos(
+				servPersistencia.recuperarPropiedadEntidad(eContactoGr, "miembros"));
+		
+		for (Mensaje mensaje : mensajes) {
+			grupo.addMensaje(mensaje);
+		}
+		
 		// devolver el objeto
 		return grupo;
 	}
@@ -155,15 +170,23 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 		return lineas.trim();
 
 	}
+	
+	private String obtenerCodigosMensajes(List<Mensaje> mensajes) {
+		String lineas = "";
+		for (Mensaje mensaje : mensajes) {
+			lineas += mensaje.getCodigo() + " ";
+		}
+		return lineas.trim();
 
-	private Set<String> obtenerMiembrosDesdeCodigos(String lineas) {
+	}
+	
+	private List<Mensaje> obtenerMensajesDesdeCodigos(String lineas) {
 
-		Set<String> miembros = new HashSet<String>();
+		List<Mensaje> mensajes = new LinkedList<Mensaje>();
 		StringTokenizer strTok = new StringTokenizer(lineas, " ");
 		while (strTok.hasMoreTokens()) {
-			miembros.add((String) strTok.nextElement());
+			mensajes.add((Mensaje) strTok.nextElement());
 		}
-		return miembros;
+		return mensajes;
 	}
-
 }

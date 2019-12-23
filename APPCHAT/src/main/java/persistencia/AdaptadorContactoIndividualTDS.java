@@ -4,15 +4,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 import beans.Entidad;
 import beans.Propiedad;
 import modelo.ContactoIndividual;
-
-// Dependencia con 'Usuario' (contactos) y 'ContactoGrupo' (miembros)
-// ¿Cuando se elimina un ContactoIndividual actualizar listas?
+import modelo.Mensaje;
 
 public class AdaptadorContactoIndividualTDS implements IAdaptadorContactoIndividualDAO {
 
@@ -30,7 +29,6 @@ public class AdaptadorContactoIndividualTDS implements IAdaptadorContactoIndivid
 		servPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
 	}
 
-	/* cuando se registra un ContactoIndividual se le asigna un identificador unico */
 	public void registrarContactoIndividual(ContactoIndividual contacto) {
 		Entidad eContactoInd;
 		// Si la entidad está registrada no la registra de nuevo
@@ -42,11 +40,19 @@ public class AdaptadorContactoIndividualTDS implements IAdaptadorContactoIndivid
 		}
 		if (existe) return;
 		
+		// registrar primero los atributos que son objetos
+		// registrar mensajes
+		AdaptadorMensajeTDS adaptadorM = AdaptadorMensajeTDS.getUnicaInstancia();
+		for (Mensaje m : contacto.getMensajes()) {
+			adaptadorM.registrarMensaje(m);
+		}
+		
 		// crear entidad contactoIndividual
 		eContactoInd = new Entidad();
 		eContactoInd.setNombre("contactoIndividual");
 		eContactoInd.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(
 				new Propiedad("nombre", contacto.getNombre()),
+				new Propiedad("mensajes", contacto.getMensajes().toString()),
 				new Propiedad("movil", contacto.getMovil()))));
 		
 		// registrar entidad contactoIndividual
@@ -74,6 +80,10 @@ public class AdaptadorContactoIndividualTDS implements IAdaptadorContactoIndivid
 		servPersistencia.anadirPropiedadEntidad(eContactoInd, "nombre", contacto.getNombre());
 		servPersistencia.eliminarPropiedadEntidad(eContactoInd, "movil");
 		servPersistencia.anadirPropiedadEntidad(eContactoInd, "movil", contacto.getMovil());
+		
+		String lineas = obtenerCodigosMensajes(contacto.getMensajes());
+		servPersistencia.eliminarPropiedadEntidad(eContactoInd, "mensajes");
+		servPersistencia.anadirPropiedadEntidad(eContactoInd, "mensajes", lineas);
 	}
 
 	public ContactoIndividual recuperarContactoIndividual(int codigo) {
@@ -92,6 +102,16 @@ public class AdaptadorContactoIndividualTDS implements IAdaptadorContactoIndivid
 
 		ContactoIndividual contacto = new ContactoIndividual(nombre, movil);
 		contacto.setCodigo(codigo);
+		
+		// recuperar propiedades que son objetos llamando a adaptadores
+		// mensajes
+		List<Mensaje> mensajes = obtenerMensajesDesdeCodigos(
+				servPersistencia.recuperarPropiedadEntidad(eContactoInd, "miembros"));
+		
+		for (Mensaje mensaje : mensajes) {
+			contacto.addMensaje(mensaje);
+		}
+		
 		return contacto;
 	}
 
@@ -103,6 +123,26 @@ public class AdaptadorContactoIndividualTDS implements IAdaptadorContactoIndivid
 			contactos.add(recuperarContactoIndividual(eContactoInd.getId()));
 		}
 		return contactos;
+	}
+	
+	// -------------------Funciones auxiliares-----------------------------	
+	private String obtenerCodigosMensajes(List<Mensaje> mensajes) {
+		String lineas = "";
+		for (Mensaje mensaje : mensajes) {
+			lineas += mensaje.getCodigo() + " ";
+		}
+		return lineas.trim();
+
+	}
+	
+	private List<Mensaje> obtenerMensajesDesdeCodigos(String lineas) {
+
+		List<Mensaje> mensajes = new LinkedList<Mensaje>();
+		StringTokenizer strTok = new StringTokenizer(lineas, " ");
+		while (strTok.hasMoreTokens()) {
+			mensajes.add((Mensaje) strTok.nextElement());
+		}
+		return mensajes;
 	}
 
 }
