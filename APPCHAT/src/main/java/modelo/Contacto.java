@@ -45,9 +45,9 @@ public abstract class Contacto {
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + " [codigo=" + codigo + ", nombre=" + nombre + "]";
+		return getClass().getSimpleName() + " [codigo=" + codigo + ", nombre=" + nombre + ", mensajes=" + mensajes + "]";
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

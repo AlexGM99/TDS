@@ -34,7 +34,7 @@ public class PruebaPersistenciaMensaje {
 	@Test
 	public void testRegistrarMensaje() {
 		Date fecha = Date.from(Instant.now());
-		Mensaje m = new Mensaje("Mensaje de prueba", fecha, "868884831", new ContactoIndividual(nombre, movil));
+		Mensaje m = new Mensaje("Mensaje de prueba", fecha, "868884831", new ContactoIndividual("Nombre", "Movil"), false);
 		adaptadorM.registrarMensaje(m);		
 		
 		assertEquals("Prueba Registro Mensaje: Codigo", m.getCodigo() ,adaptadorM.recuperarMensaje(m.getCodigo()).getCodigo());

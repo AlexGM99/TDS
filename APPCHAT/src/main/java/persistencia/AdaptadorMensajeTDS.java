@@ -107,13 +107,19 @@ public class AdaptadorMensajeTDS implements IAdaptadorMensajeDAO {
 	}
 
 	public Mensaje recuperarMensaje(int codigo) {
-		Entidad eMensaje;
+		// Si la entidad está en el pool la devuelve directamente
+		if (PoolDAO.getUnicaInstancia().contiene(codigo))
+			return (Mensaje) PoolDAO.getUnicaInstancia().getObjeto(codigo);
+
+		// si no, la recupera de la base de datos
+		// recuperar entidad
+		Entidad eMensaje = servPersistencia.recuperarEntidad(codigo);
+		
+		// recuperar propiedades que no son objetos
 		String texto;
 		String tlfEmisor;
 		Date hora = null;
 		boolean grupo;
-
-		eMensaje = servPersistencia.recuperarEntidad(codigo);
 		texto = servPersistencia.recuperarPropiedadEntidad(eMensaje, "texto");
 		tlfEmisor = servPersistencia.recuperarPropiedadEntidad(eMensaje, "tlfEmisor");
 		grupo = Boolean.getBoolean(servPersistencia.recuperarPropiedadEntidad(eMensaje, "grupo"));

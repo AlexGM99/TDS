@@ -151,9 +151,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		Entidad eUsuario = servPersistencia.recuperarEntidad(codigo);
 
 		// recuperar propiedades que no son objetos
-		// fecha
 		String nombre, email, movil, usuario, contraseña, imagen, saludo;
-		boolean premium;
 		Date fecha = null;
 
 		try {
@@ -169,7 +167,6 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		contraseña = servPersistencia.recuperarPropiedadEntidad(eUsuario, "contraseña");
 		imagen = servPersistencia.recuperarPropiedadEntidad(eUsuario, "imagen");
 		saludo = servPersistencia.recuperarPropiedadEntidad(eUsuario, "saludo");
-		premium = Boolean.getBoolean(servPersistencia.recuperarPropiedadEntidad(eUsuario, "premium"));
 
 		Usuario usu = new Usuario(nombre, fecha, email, movil, usuario, contraseña, imagen, saludo);
 		usu.setCodigo(codigo);
