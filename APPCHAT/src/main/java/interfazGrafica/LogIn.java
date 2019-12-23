@@ -3,8 +3,6 @@ package interfazGrafica;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import java.awt.BorderLayout;
-import javax.swing.JPanel;
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
@@ -14,6 +12,9 @@ import javax.swing.JPasswordField;
 import java.awt.Dimension;
 import java.awt.Point;
 import javax.swing.JButton;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.Font;
 
 public class LogIn {
 
@@ -23,6 +24,7 @@ public class LogIn {
 	private JButton btnLogin;
 	private JLabel label;
 	private JButton btnRegister;
+	private JLabel lblNewLabel;
 
 	/**
 	 * Launch the application.
@@ -53,15 +55,23 @@ public class LogIn {
 	private void initialize() {
 		frmAppchatlogin = new JFrame();
 		frmAppchatlogin.setTitle("APPCHAT-LogIn");
+		frmAppchatlogin.setMinimumSize(new Dimension(500, 500));
 		frmAppchatlogin.setLocation(new Point(400, 100));
 		frmAppchatlogin.setSize(new Dimension(500, 500));
-		frmAppchatlogin.setResizable(false);
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{120, 0, 0, 0, 0, 0, 0, 0};
-		gridBagLayout.rowHeights = new int[]{100, 0, 0, 0, 0, 0, 0, 0};
-		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.columnWidths = new int[]{100, 0, 0, 0, 0, 0, 100, 0};
+		gridBagLayout.rowHeights = new int[]{50, 0, 0, 0, 0, 0, 0, 0, 0};
+		gridBagLayout.columnWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		frmAppchatlogin.getContentPane().setLayout(gridBagLayout);
+		
+		lblNewLabel = new JLabel("WELCOME BACK!");
+		lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 26));
+		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
+		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel.gridx = 5;
+		gbc_lblNewLabel.gridy = 0;
+		frmAppchatlogin.getContentPane().add(lblNewLabel, gbc_lblNewLabel);
 		
 		JLabel lblTlf = new JLabel("tlf");
 		GridBagConstraints gbc_lblTlf = new GridBagConstraints();
@@ -99,6 +109,14 @@ public class LogIn {
 		frmAppchatlogin.getContentPane().add(passwordField, gbc_passwordField);
 		
 		btnLogin = new JButton("logIn");
+		btnLogin.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				//TODO funcionalidad del login
+				String usuario = textField.getText();
+				String contrasena = passwordField.getPassword().toString();
+			}
+		});
 		GridBagConstraints gbc_btnLogin = new GridBagConstraints();
 		gbc_btnLogin.insets = new Insets(0, 0, 5, 5);
 		gbc_btnLogin.gridx = 5;
@@ -113,8 +131,15 @@ public class LogIn {
 		frmAppchatlogin.getContentPane().add(label, gbc_label);
 		
 		btnRegister = new JButton("Register");
+		btnRegister.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+			//TODO cambiar a la ventana de registro
+			
+			}
+		});
 		GridBagConstraints gbc_btnRegister = new GridBagConstraints();
-		gbc_btnRegister.insets = new Insets(0, 0, 0, 5);
+		gbc_btnRegister.insets = new Insets(0, 0, 5, 5);
 		gbc_btnRegister.gridx = 5;
 		gbc_btnRegister.gridy = 6;
 		frmAppchatlogin.getContentPane().add(btnRegister, gbc_btnRegister);
