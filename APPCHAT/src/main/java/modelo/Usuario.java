@@ -1,9 +1,8 @@
 package modelo;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -202,8 +201,9 @@ public class Usuario {
 		int yearActual = LocalDate.now().getYear();
 		for (Contacto c : contacts) {
 			for (Mensaje m : c.getMensajes()) {
-				if (m.getTlfEmisor().equals(this.movil) && m.getHora().getYear() == yearActual) {
-					mes = m.getHora().getMonthValue();
+				LocalDate horaM = m.getHora().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+				if (m.getTlfEmisor().equals(this.movil) && horaM.getYear() == yearActual) {
+					mes = horaM.getMonthValue();
 					mensajesAnual.set(mes - 1, mensajesAnual.get(mes - 1)+ 1);
 				}
 			}

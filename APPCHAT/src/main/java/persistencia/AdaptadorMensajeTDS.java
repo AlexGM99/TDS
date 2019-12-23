@@ -35,7 +35,7 @@ public class AdaptadorMensajeTDS implements IAdaptadorMensajeDAO {
 
 	private AdaptadorMensajeTDS() { 
 		servPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
-		dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+		dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 	}
 
 	/* cuando se registra un mensaje se le asigna un identificador unico */
@@ -57,7 +57,8 @@ public class AdaptadorMensajeTDS implements IAdaptadorMensajeDAO {
 		eMensaje.setPropiedades(new ArrayList<Propiedad>(
 				Arrays.asList(new Propiedad("texto", mensaje.getTexto()),
 						new Propiedad("tlfEmisor", mensaje.getTlfEmisor()),
-						new Propiedad("fecha", dateFormat.format(mensaje.getHora())))));
+						new Propiedad("fecha", dateFormat.
+								format(mensaje.getHora())))));
 		// registrar entidad venta
 		eMensaje = servPersistencia.registrarEntidad(eMensaje);
 		// asignar identificador unico

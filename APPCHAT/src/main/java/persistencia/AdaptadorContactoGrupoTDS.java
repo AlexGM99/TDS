@@ -58,9 +58,9 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 		eContactoGr.setNombre("contactoGrupo");
 		eContactoGr.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(
 				new Propiedad("nombre", contacto.getNombre()),
-				new Propiedad("mensajes", contacto.getMensajes().toString()),
+				new Propiedad("mensajes", obtenerCodigosMensajes(contacto.getMensajes())),
 				new Propiedad("admin", String.valueOf(contacto.getAdmin().getCodigo())),
-				new Propiedad("miembros", contacto.getMiembros().toString()))));
+				new Propiedad("miembros", obtenerCodigosMiembros(contacto.getMiembros())))));
 
 		// registrar entidad contactoGrupo
 		eContactoGr = servPersistencia.registrarEntidad(eContactoGr);
@@ -141,7 +141,7 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 
 		// mensajes
 		List<Mensaje> mensajes = obtenerMensajesDesdeCodigos(
-				servPersistencia.recuperarPropiedadEntidad(eContactoGr, "miembros"));
+				servPersistencia.recuperarPropiedadEntidad(eContactoGr, "mensajes"));
 		
 		for (Mensaje mensaje : mensajes) {
 			grupo.addMensaje(mensaje);
@@ -184,8 +184,9 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 
 		List<Mensaje> mensajes = new LinkedList<Mensaje>();
 		StringTokenizer strTok = new StringTokenizer(lineas, " ");
+		AdaptadorMensajeTDS adaptadorM = AdaptadorMensajeTDS.getUnicaInstancia();
 		while (strTok.hasMoreTokens()) {
-			mensajes.add((Mensaje) strTok.nextElement());
+			mensajes.add((adaptadorM.recuperarMensaje(Integer.valueOf((String) strTok.nextElement()))));
 		}
 		return mensajes;
 	}

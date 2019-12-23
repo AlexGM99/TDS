@@ -9,7 +9,6 @@ import persistencia.IAdaptadorContactoGrupoDAO;
 import persistencia.IAdaptadorContactoIndividualDAO;
 import persistencia.IAdaptadorMensajeDAO;
 import persistencia.IAdaptadorUsuarioDAO;
-import persistencia.PoolDAO;
 
 public class Prueba {
 
@@ -59,9 +58,9 @@ public class Prueba {
 		usu2.addGrupo(gr2);
 		
 		Mensaje m1 = new Mensaje("Hola mundo", Date.from(Instant.now()), usu1.getMovil());
-		usu1.addMensaje(m1);
+		ind1.addMensaje(m1);
 		Mensaje m2 = new Mensaje("Hello World", Date.from(Instant.now()), usu2.getMovil());
-		usu2.addMensaje(m2);
+		ind2.addMensaje(m2);
 
 		// Mensajes
 		System.out.println("\nRegistrar mensajes");
@@ -139,12 +138,12 @@ public class Prueba {
 		// Limpiar
 		adaptadorU.borrarUsuario(usu1);
 		adaptadorU.borrarUsuario(usu2);
-		/*adaptadorCG.borrarContactoGrupo(gr1);
+		adaptadorCG.borrarContactoGrupo(gr1);
 		adaptadorCG.borrarContactoGrupo(gr2);
-		adaptadorCI.borrarContactoIndividual(ind1);
-		adaptadorCI.borrarContactoIndividual(ind2);
+		//adaptadorCI.borrarContactoIndividual(ind1);
+		//adaptadorCI.borrarContactoIndividual(ind2);
 		adaptadorM.borrarMensaje(m1);
-		adaptadorM.borrarMensaje(m2);*/
+		adaptadorM.borrarMensaje(m2);
 		
 		System.out.println("\nContactos residuales:");
 		for (ContactoIndividual c : adaptadorCI.recuperarTodosContactoIndividuals()) {

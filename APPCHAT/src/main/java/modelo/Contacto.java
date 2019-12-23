@@ -1,5 +1,6 @@
 package modelo;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public abstract class Contacto {
@@ -11,6 +12,7 @@ public abstract class Contacto {
 	protected Contacto(String nombre) {
 		codigo = 0;
 		this.nombre = nombre;
+		this.mensajes = new LinkedList<Mensaje>();
 	}
 
 	public int getCodigo() {

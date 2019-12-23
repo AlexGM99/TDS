@@ -1,6 +1,5 @@
 package modelo;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 import tds.BubbleText;
@@ -12,12 +11,12 @@ public class Mensaje {
 	private int codigo;
 	private String texto;
 	private String tlfEmisor;
-	private LocalDate hora;
+	private Date hora;
 	private BubbleText emoticon;
 	//private _ emoticon;
 	//private List<Contacto> receptores;
 
-	public Mensaje(String texto, LocalDate hora, String tlfEmisor) {
+	public Mensaje(String texto, Date hora, String tlfEmisor) {
 		this.codigo = 0;
 		this.texto = texto;
 		this.hora = hora;
@@ -43,11 +42,11 @@ public class Mensaje {
 		this.texto = texto;
 	}
 
-	public LocalDate getHora() {
+	public Date getHora() {
 		return hora;
 	}
 
-	public void setHora(LocalDate hora) {
+	public void setHora(Date hora) {
 		this.hora = hora;
 	}
 

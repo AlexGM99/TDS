@@ -52,7 +52,7 @@ public class AdaptadorContactoIndividualTDS implements IAdaptadorContactoIndivid
 		eContactoInd.setNombre("contactoIndividual");
 		eContactoInd.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(
 				new Propiedad("nombre", contacto.getNombre()),
-				new Propiedad("mensajes", contacto.getMensajes().toString()),
+				new Propiedad("mensajes", obtenerCodigosMensajes(contacto.getMensajes())),
 				new Propiedad("movil", contacto.getMovil()))));
 		
 		// registrar entidad contactoIndividual
@@ -106,7 +106,7 @@ public class AdaptadorContactoIndividualTDS implements IAdaptadorContactoIndivid
 		// recuperar propiedades que son objetos llamando a adaptadores
 		// mensajes
 		List<Mensaje> mensajes = obtenerMensajesDesdeCodigos(
-				servPersistencia.recuperarPropiedadEntidad(eContactoInd, "miembros"));
+				servPersistencia.recuperarPropiedadEntidad(eContactoInd, "mensajes"));
 		
 		for (Mensaje mensaje : mensajes) {
 			contacto.addMensaje(mensaje);
@@ -139,8 +139,9 @@ public class AdaptadorContactoIndividualTDS implements IAdaptadorContactoIndivid
 
 		List<Mensaje> mensajes = new LinkedList<Mensaje>();
 		StringTokenizer strTok = new StringTokenizer(lineas, " ");
+		AdaptadorMensajeTDS adaptadorM = AdaptadorMensajeTDS.getUnicaInstancia();
 		while (strTok.hasMoreTokens()) {
-			mensajes.add((Mensaje) strTok.nextElement());
+			mensajes.add((adaptadorM.recuperarMensaje(Integer.valueOf((String) strTok.nextElement()))));
 		}
 		return mensajes;
 	}
