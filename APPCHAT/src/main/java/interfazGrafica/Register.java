@@ -469,7 +469,10 @@ public class Register implements InterfazVistas {
 		btnClear = new JButton("Clear");
 		btnClear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				clearFields();
+				int res = JOptionPane.showConfirmDialog(dateChooser, "Are you sure? everything will be lost!", "clear", 
+						JOptionPane.YES_OPTION, JOptionPane.NO_OPTION);
+				if (res == JOptionPane.YES_OPTION)
+					clearFields();
 			}
 		});
 		GridBagConstraints gbc_btnClear = new GridBagConstraints();

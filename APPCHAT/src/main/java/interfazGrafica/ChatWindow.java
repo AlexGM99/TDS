@@ -323,4 +323,8 @@ public class ChatWindow implements InterfazVistas{
 			}
 		});
 	}
+
+	public void exit() {
+		frmAppchat.dispose();
+	}
 }
