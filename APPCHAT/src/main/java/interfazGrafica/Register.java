@@ -7,6 +7,8 @@ import java.awt.GridBagLayout;
 import java.awt.Image;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
@@ -63,7 +65,9 @@ public class Register implements InterfazVistas {
 	private JLabel lblPhoto;
 	private JLabel lblWrongPicture;
 	private JLabel lblGreeting;
-	private JTextField textField;
+	private JTextField greetingField;
+	
+	private String rutaAbsolutaAlaImagen="";//si está vacio será la por defecto
 	
 	private ControladorVistaAppChat controlador;
 	private JLabel lblWrongMailFormat;
@@ -194,6 +198,7 @@ public class Register implements InterfazVistas {
 		        fileChooser.showOpenDialog(fileChooser);
 		        try {
 		            String ruta = fileChooser.getSelectedFile().getAbsolutePath();
+		            rutaAbsolutaAlaImagen = ruta;
 		            File f = new File(ruta);
 		            entrada = new Scanner(f);
 		            while (entrada.hasNext()) {
@@ -366,14 +371,14 @@ public class Register implements InterfazVistas {
 		gbc_lblGreeting.gridy = 9;
 		frmAppchatregister.getContentPane().add(lblGreeting, gbc_lblGreeting);
 		
-		textField = new JTextField();
-		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.insets = new Insets(0, 0, 5, 5);
-		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField.gridx = 3;
-		gbc_textField.gridy = 9;
-		frmAppchatregister.getContentPane().add(textField, gbc_textField);
-		textField.setColumns(10);
+		greetingField = new JTextField();
+		GridBagConstraints gbc_greetingField = new GridBagConstraints();
+		gbc_greetingField.insets = new Insets(0, 0, 5, 5);
+		gbc_greetingField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_greetingField.gridx = 3;
+		gbc_greetingField.gridy = 9;
+		frmAppchatregister.getContentPane().add(greetingField, gbc_greetingField);
+		greetingField.setColumns(10);
 		
 		JLabel lblPass = new JLabel("pass*");
 		GridBagConstraints gbc_lblPass = new GridBagConstraints();
@@ -423,12 +428,19 @@ public class Register implements InterfazVistas {
 					String email = emailField.getText();
 					String phone = phoneField.getText();
 					String nick = nickField.getText();
+					String greeting = greetingField.getText();
 					String pass = passwordField.getPassword().toString();
 					String passAgain = passwordField_1.getPassword().toString();
 					ImageIcon fotoPerfil = (ImageIcon)lblPhoto.getIcon();
+					String registrado =
+							controlador.RegisterUser(firts+" "+second, birth, email, phone, nick, pass, 
+									rutaAbsolutaAlaImagen, greeting);
+					if (!registrado.equals("")) {
+						JOptionPane.showMessageDialog(dateChooser, "Something wrong on the register\ncheck: " +registrado, "Mensaje del servidor", 0);
+					}
 				}
 				//TO DO coger la foto de perfil por defecto o la añadida por el usuario.
-				//TODO enviar registro
+				//TO DO enviar registro
 			}
 		});
 		

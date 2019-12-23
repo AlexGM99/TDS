@@ -62,11 +62,13 @@ public class ControladorVistaAppChat {
 	
 	public boolean loginUser(String name, String pass) {
 		System.out.println(name + " " + pass);
-		//TODO registrar el usuario
+		//TODO loguear el usuario
 		return false;
 	}
-	public boolean RegisterUser(String nombre, Date fechanacimiento, String email, String movil, String usuario, String contraseña, String imagen, String saludo, boolean premium) {
-		return false;
+	public String RegisterUser(String nombre, Date fechanacimiento, String email, String movil, String usuario, String contraseña, String imagen, String saludo) {
+		String fallo = "inutil";
+		//TODO registrar el usuario
+		return fallo;
 	}
 	public void changeToRegister() {
 		InterfazVistas antigua = interfaz;
