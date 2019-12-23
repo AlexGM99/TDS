@@ -449,12 +449,11 @@ public class Register implements InterfazVistas {
 							controlador.RegisterUser(firts+" "+second, birth, email, phone, nick, pass, 
 									rutaAbsolutaAlaImagen, greeting);
 					if (!registrado.equals("")) {
-						JOptionPane.showMessageDialog(dateChooser, "Something wrong on the register\ncheck: " +registrado, "Mensaje del servidor", 0);
+						JOptionPane.showMessageDialog(dateChooser,registrado, "Mensaje del servidor", JOptionPane.WARNING_MESSAGE);
 					}
 				}
-				//TO DO coger la foto de perfil por defecto o la añadida por el usuario.
-				//TO DO enviar registro
 			}
+			// TODO Comprobar fecha != null
 		});
 		
 		lblPassMustMatch = new JLabel("pass must match");

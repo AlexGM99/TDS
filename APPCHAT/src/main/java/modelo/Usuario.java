@@ -29,7 +29,7 @@ public class Usuario {
 
 	// Constructor sin saludo
 	public Usuario(String nombre, Date fechanacimiento, String email, String movil, String usuario, String contraseña,
-			String imagen, boolean premium) {
+			String imagen) {
 		this.codigo = 0;
 		this.nombre = nombre;
 		this.fechaNacimiento = fechanacimiento;
@@ -39,15 +39,15 @@ public class Usuario {
 		this.contraseña = contraseña;
 		this.imagen = imagen;
 		this.saludo = "Hey there! I'm using AppChat";
-		this.premium = premium;
+		this.premium = false;
 		this.contactos = new LinkedList<ContactoIndividual>();
 		this.grupos = new LinkedList<ContactoGrupo>();
 	}
 	
 	// Constructor con saludo
 	public Usuario(String nombre, Date fechanacimiento, String email, String movil, String usuario, String contraseña,
-			String imagen, String saludo, boolean premium) {
-		this(nombre, fechanacimiento, email, movil, usuario, contraseña, imagen, premium);
+			String imagen, String saludo) {
+		this(nombre, fechanacimiento, email, movil, usuario, contraseña, imagen);
 		this.saludo = saludo;
 	}
 

@@ -22,6 +22,10 @@ public class CatalogoUsuarios {
 	private FactoriaDAO dao;
 	private IAdaptadorUsuarioDAO adaptadorUsuario;
 
+	public static final int CODIGO_USER_NOT_FOUND = 1;
+	public static final int CODIGO_WRONG_PASSWORD = 2;
+	public static final int CODIGO_LOG_IN_OK = 0;
+
 	private CatalogoUsuarios() {
 		try {
 			dao = FactoriaDAO.getInstancia(FactoriaDAO.DAO_TDS);
@@ -57,12 +61,22 @@ public class CatalogoUsuarios {
 		return usuarios.get(movil);
 	}
 
-	public void addUsuario(Usuario cli) {
-		usuarios.put(cli.getMovil(), cli);
+	public void addUsuario(Usuario user) {
+		usuarios.put(user.getMovil(), user);
 	}
 
-	public void removeUsuario(Usuario cli) {
-		usuarios.remove(cli.getMovil());
+	public void removeUsuario(Usuario user) {
+		usuarios.remove(user.getMovil());
+	}
+
+	public int logIn(String movil, String contraseña) {
+		Usuario user = usuarios.get(movil);
+		if (user == null)
+			return CODIGO_USER_NOT_FOUND;
+		if (user.getContraseña().equals(contraseña))
+			return CODIGO_LOG_IN_OK;
+		else
+			return CODIGO_WRONG_PASSWORD;
 	}
 
 	/* Recupera todos los usuarios para trabajar con ellos en memoria */

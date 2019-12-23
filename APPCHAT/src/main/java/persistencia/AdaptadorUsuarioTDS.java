@@ -70,11 +70,15 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		eUsuario = new Entidad();
 
 		eUsuario.setNombre("usuario");
-		eUsuario.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(new Propiedad("nombre", usuario.getNombre()),
+		eUsuario.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(
+				new Propiedad("nombre", usuario.getNombre()),
 				new Propiedad("fechaNacimiento", dateFormat.format(usuario.getFechaNacimiento())),
-				new Propiedad("email", usuario.getEmail()), new Propiedad("movil", usuario.getMovil()),
-				new Propiedad("usuario", usuario.getUsuario()), new Propiedad("contraseña", usuario.getContraseña()),
-				new Propiedad("imagen", usuario.getImagen()), new Propiedad("saludo", usuario.getSaludo()),
+				new Propiedad("email", usuario.getEmail()),
+				new Propiedad("movil", usuario.getMovil()),
+				new Propiedad("usuario", usuario.getUsuario()),
+				new Propiedad("contraseña", usuario.getContraseña()),
+				new Propiedad("imagen", usuario.getImagen()),
+				new Propiedad("saludo", usuario.getSaludo()),
 				new Propiedad("premium", String.valueOf(usuario.isPremium())),
 				new Propiedad("contactos", obtenerCodigos(usuario.getContactos())),
 				new Propiedad("grupos", obtenerCodigos(usuario.getGrupos())))));
@@ -90,10 +94,10 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		// No se comprueban restricciones de integridad
 		Entidad eUsuario;
 
-		AdaptadorContactoIndividualTDS adaptadorCI = AdaptadorContactoIndividualTDS.getUnicaInstancia();
+		/*AdaptadorContactoIndividualTDS adaptadorCI = AdaptadorContactoIndividualTDS.getUnicaInstancia();
 		for (ContactoIndividual ci : usuario.getContactos()) {
 			adaptadorCI.borrarContactoIndividual(ci);
-		}
+		}*/
 
 		eUsuario = servPersistencia.recuperarEntidad(usuario.getCodigo());
 		servPersistencia.borrarEntidad(eUsuario);
@@ -167,7 +171,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		saludo = servPersistencia.recuperarPropiedadEntidad(eUsuario, "saludo");
 		premium = Boolean.getBoolean(servPersistencia.recuperarPropiedadEntidad(eUsuario, "premium"));
 
-		Usuario usu = new Usuario(nombre, fecha, email, movil, usuario, contraseña, imagen, saludo, premium);
+		Usuario usu = new Usuario(nombre, fecha, email, movil, usuario, contraseña, imagen, saludo);
 		usu.setCodigo(codigo);
 
 		// IMPORTANTE:añadir la usuario al pool antes de llamar a otros

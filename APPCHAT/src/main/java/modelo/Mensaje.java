@@ -1,7 +1,6 @@
 package modelo;
 
 import java.util.Date;
-
 import tds.BubbleText;
 
 // TODO Terminar de implementar
@@ -13,17 +12,16 @@ public class Mensaje {
 	private String tlfEmisor;
 	private Date hora;
 	private BubbleText emoticon;
-	//private _ emoticon;
-	//private List<Contacto> receptores;
+	private Contacto receptor;
+	private boolean grupo;
 
-	public Mensaje(String texto, Date hora, String tlfEmisor) {
+	public Mensaje(String texto, Date hora, String tlfEmisor, Contacto receptor, boolean grupo) {
 		this.codigo = 0;
 		this.texto = texto;
 		this.hora = hora;
 		this.tlfEmisor = tlfEmisor;
-		//this.receptores = new LinkedList<Contacto>();
-		//Collections.addAll(this.receptores, receptores);
-
+		this.receptor = receptor;
+		this.grupo = grupo;
 	}
 
 	public int getCodigo() {
@@ -58,25 +56,47 @@ public class Mensaje {
 		this.tlfEmisor = tlfEmisor;
 	}
 
+	public Contacto getReceptor() {
+		return receptor;
+	}
+
+	public void setReceptor(Contacto receptor) {
+		this.receptor = receptor;
+	}
+
+	public boolean isGrupo() {
+		return grupo;
+	}
+
+	public void setGrupo(boolean grupo) {
+		this.grupo = grupo;
+	}
+
 	@Override
 	public String toString() {
 		return getClass().getSimpleName() + " [codigo=" + codigo + ", texto='" + texto + "', tlfEmisor=" + tlfEmisor + ", hora=" + hora + "]";
 	}
-	
-	/*
-	public void addReceptor(Contacto c) {
-		receptores.add(c);
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + codigo;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Mensaje other = (Mensaje) obj;
+		if (codigo != other.codigo)
+			return false;
+		return true;
 	}
 	
-	public void addReceptor(String nombre, String movil) {
-		receptores.add(new ContactoIndividual(nombre, movil));
-	}
-	
-	public void addReceptor(String nombre, Usuario admin) {
-		receptores.add(new ContactoGrupo(nombre, admin));
-	}
-	
-	public List<Contacto> getReceptores() {
-		return Collections.unmodifiableList(receptores);
-	}*/
 }

@@ -27,8 +27,8 @@ public class Prueba {
 		IAdaptadorUsuarioDAO adaptadorU = miFactoria.getUsuarioDAO();
 		IAdaptadorMensajeDAO adaptadorM = miFactoria.getMensajeDAO();
 
-		Usuario usu1 = new Usuario("Edu", Date.from(Instant.parse("1998-12-14T01:02:03Z")), "email-edu", "movil-edu", "edupema", "passEdu", "imagenEdu", false);
-		Usuario usu2 = new Usuario("Alex", Date.from(Instant.parse("1998-12-14T01:02:03Z")), "email-alex", "movil-alex", "alexgm", "passAlex", "imagenAlex", false);
+		Usuario usu1 = new Usuario("Edu", Date.from(Instant.parse("1998-12-14T01:02:03Z")), "email-edu", "movil-edu", "edupema", "passEdu", "imagenEdu");
+		Usuario usu2 = new Usuario("Alex", Date.from(Instant.parse("1998-12-14T01:02:03Z")), "email-alex", "movil-alex", "alexgm", "passAlex", "imagenAlex");
 		
 		// Usuarios
 		System.out.println("\nRegistrar usuarios");
@@ -57,9 +57,9 @@ public class Prueba {
 		gr2.setAdmin(usu2);
 		usu2.addGrupo(gr2);
 		
-		Mensaje m1 = new Mensaje("Hola mundo", Date.from(Instant.now()), usu1.getMovil());
+		Mensaje m1 = new Mensaje("Hola mundo", Date.from(Instant.now()), usu1.getMovil(), ind1, false);
 		ind1.addMensaje(m1);
-		Mensaje m2 = new Mensaje("Hello World", Date.from(Instant.now()), usu2.getMovil());
+		Mensaje m2 = new Mensaje("Hello World", Date.from(Instant.now()), usu2.getMovil(), ind2, false);
 		ind2.addMensaje(m2);
 
 		// Mensajes

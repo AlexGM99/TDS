@@ -23,8 +23,6 @@ public class ControladorAppChat {
 
 	private CatalogoUsuarios catalogoUsuarios;
 
-	private Usuario usuarioActual;
-
 	private ControladorAppChat() {
 		inicializarAdaptadores(); // debe ser la primera linea para evitar error
 									// de sincronización
@@ -37,23 +35,22 @@ public class ControladorAppChat {
 		return unicaInstancia;
 	}
 
-	public void registrarUsuario(String nombre, Date fechanacimiento, String email, String movil, String usuario, String contraseña, String imagen, String saludo, boolean premium) {
+	public void registrarUsuario(String nombre, Date fechanacimiento, String email, String movil, String usuario,
+			String contraseña, String imagen, String saludo, boolean premium) {
 		// No se controla que existan dnis duplicados
 		Usuario user = new Usuario(nombre, fechanacimiento, email, movil, usuario, contraseña, imagen, saludo, premium);
 		adaptadorUsuario.registrarUsuario(user);
 		catalogoUsuarios.addUsuario(user);
 	}
-	
-	public void registrarUsuario(String nombre, Date fechanacimiento, String email, String movil, String usuario, String contraseña, String imagen, boolean premium) {
+
+	public void registrarUsuario(String nombre, Date fechanacimiento, String email, String movil, String usuario,
+			String contraseña, String imagen, boolean premium) {
 		// No se controla que existan dnis duplicados
 		Usuario user = new Usuario(nombre, fechanacimiento, email, movil, usuario, contraseña, imagen, premium);
 		adaptadorUsuario.registrarUsuario(user);
 		catalogoUsuarios.addUsuario(user);
 	}
 
-	
-	
-	
 	public void registrarProducto(double precio, String nombre, String descripcion) {
 		// No se controla que el valor del string precio sea un double
 		Producto producto = new Producto(precio, nombre, descripcion);
