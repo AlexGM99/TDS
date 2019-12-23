@@ -36,7 +36,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JMenu;
 import javax.swing.JLabel;
 
-public class ChatWindow {
+public class ChatWindow implements InterfazVistas{
 
 	private JFrame frmAppchat;
 	private JTextField txtBuscar;

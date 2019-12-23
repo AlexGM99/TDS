@@ -38,7 +38,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.Color;
 import java.awt.BorderLayout;
 
-public class Register {
+public class Register implements InterfazVistas {
 
 	private JFrame frmAppchatregister;
 	private JTextField firtsNamefield;

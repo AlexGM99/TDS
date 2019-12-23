@@ -16,7 +16,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Font;
 
-public class LogIn {
+public class LogIn implements InterfazVistas {
 
 	private JFrame frmAppchatlogin;
 	private JTextField textField;
