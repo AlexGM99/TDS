@@ -9,31 +9,22 @@ import java.awt.GridBagLayout;
 import javax.swing.JButton;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.PopupMenu;
-import java.awt.Color;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.beans.PropertyVetoException;
 
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
-import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JInternalFrame;
-import javax.swing.JSeparator;
-import java.awt.Dimension;
 import java.awt.Component;
-import java.awt.Font;
+import java.awt.Dimension;
+
 import javax.swing.JPopupMenu;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JMenu;
 import javax.swing.JLabel;
 
 public class ChatWindow implements InterfazVistas{
@@ -73,7 +64,9 @@ public class ChatWindow implements InterfazVistas{
 		frmAppchat = new JFrame();
 		frmAppchat.setTitle("APPCHAT");
 		frmAppchat.setBounds(100, 100, 450, 300);
+		frmAppchat.setMinimumSize(new Dimension(700, 700));
 		frmAppchat.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmAppchat.setLocationRelativeTo(null);
 		frmAppchat.getContentPane().setLayout(new BorderLayout(0, 0));
 		
 		JPanel panel = new JPanel();
