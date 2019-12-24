@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-import java.util.StringTokenizer;
 
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
@@ -58,9 +56,9 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 		eContactoGr.setNombre("contactoGrupo");
 		eContactoGr.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(
 				new Propiedad("nombre", contacto.getNombre()),
-				new Propiedad("mensajes", obtenerCodigosMensajes(contacto.getMensajes())),
+				new Propiedad("mensajes", Auxiliar.obtenerCodigos(contacto.getMensajes())),
 				new Propiedad("admin", String.valueOf(contacto.getAdmin().getCodigo())),
-				new Propiedad("miembros", obtenerCodigosMiembros(contacto.getMiembros())))));
+				new Propiedad("miembros", Auxiliar.obtenerCodigos(contacto.getMiembros())))));
 
 		// registrar entidad contactoGrupo
 		eContactoGr = servPersistencia.registrarEntidad(eContactoGr);
@@ -91,11 +89,11 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 		servPersistencia.eliminarPropiedadEntidad(eContactoGr, "admin");
 		servPersistencia.anadirPropiedadEntidad(eContactoGr, "admin", String.valueOf(contacto.getAdmin().getCodigo()));
 		
-		String lineas = obtenerCodigosMensajes(contacto.getMensajes());
+		String lineas = Auxiliar.obtenerCodigos(contacto.getMensajes());
 		servPersistencia.eliminarPropiedadEntidad(eContactoGr, "mensajes");
 		servPersistencia.anadirPropiedadEntidad(eContactoGr, "mensajes", lineas);
 		
-		lineas = obtenerCodigosMiembros(contacto.getMiembros());
+		lineas = Auxiliar.obtenerCodigos(contacto.getMiembros());
 		servPersistencia.eliminarPropiedadEntidad(eContactoGr, "miembros");
 		servPersistencia.anadirPropiedadEntidad(eContactoGr, "miembros", lineas);
 		
@@ -140,7 +138,7 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 		grupo.setAdmin(admin);
 
 		// mensajes
-		List<Mensaje> mensajes = obtenerMensajesDesdeCodigos(
+		List<Mensaje> mensajes = Auxiliar.obtenerMensajesDesdeCodigos(
 				servPersistencia.recuperarPropiedadEntidad(eContactoGr, "mensajes"));
 		
 		for (Mensaje mensaje : mensajes) {
@@ -162,32 +160,32 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 	}
 	
 	// -------------------Funciones auxiliares-----------------------------
-	private String obtenerCodigosMiembros(Set<String> miembros) {
-		String lineas = "";
-		for (String miembro : miembros) {
-			lineas += miembro + " ";
-		}
-		return lineas.trim();
-
-	}
-	
-	private String obtenerCodigosMensajes(List<Mensaje> mensajes) {
-		String lineas = "";
-		for (Mensaje mensaje : mensajes) {
-			lineas += mensaje.getCodigo() + " ";
-		}
-		return lineas.trim();
-
-	}
-	
-	private List<Mensaje> obtenerMensajesDesdeCodigos(String lineas) {
-
-		List<Mensaje> mensajes = new LinkedList<Mensaje>();
-		StringTokenizer strTok = new StringTokenizer(lineas, " ");
-		AdaptadorMensajeTDS adaptadorM = AdaptadorMensajeTDS.getUnicaInstancia();
-		while (strTok.hasMoreTokens()) {
-			mensajes.add((adaptadorM.recuperarMensaje(Integer.valueOf((String) strTok.nextElement()))));
-		}
-		return mensajes;
-	}
+//	private String obtenerCodigosMiembros(Set<String> miembros) {
+//		String lineas = "";
+//		for (String miembro : miembros) {
+//			lineas += miembro + " ";
+//		}
+//		return lineas.trim();
+//
+//	}
+//	
+//	private String obtenerCodigosMensajes(List<Mensaje> mensajes) {
+//		String lineas = "";
+//		for (Mensaje mensaje : mensajes) {
+//			lineas += mensaje.getCodigo() + " ";
+//		}
+//		return lineas.trim();
+//
+//	}
+//	
+//	private List<Mensaje> obtenerMensajesDesdeCodigos(String lineas) {
+//
+//		List<Mensaje> mensajes = new LinkedList<Mensaje>();
+//		StringTokenizer strTok = new StringTokenizer(lineas, " ");
+//		AdaptadorMensajeTDS adaptadorM = AdaptadorMensajeTDS.getUnicaInstancia();
+//		while (strTok.hasMoreTokens()) {
+//			mensajes.add((adaptadorM.recuperarMensaje(Integer.valueOf((String) strTok.nextElement()))));
+//		}
+//		return mensajes;
+//	}
 }

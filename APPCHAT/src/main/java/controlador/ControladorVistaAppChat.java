@@ -1,11 +1,15 @@
 package controlador;
 
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import interfazGrafica.InterfazVistas;
 import interfazGrafica.LogIn;
 import interfazGrafica.Register;
 import modelo.CatalogoUsuarios;
+import modelo.Contacto;
+import modelo.ContactoGrupo;
 import modelo.Usuario;
 import persistencia.DAOException;
 import persistencia.FactoriaDAO;
@@ -95,4 +99,17 @@ public class ControladorVistaAppChat {
 		interfaz = new LogIn(this);
 		antigua.exit();
 	}
+	
+	public void informacionUso() {
+		// Creamos una lista con todos los contactos: contactosInd + grupos
+		List<Contacto> contacts = new LinkedList<Contacto>(usuarioActual.getContactos());
+		for (ContactoGrupo cg : usuarioActual.getGrupos()) {
+			contacts.add(cg);
+		}
+	}
+	
+	
+	
+	
+	
 }

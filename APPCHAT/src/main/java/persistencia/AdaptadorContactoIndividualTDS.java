@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
@@ -53,7 +52,7 @@ public class AdaptadorContactoIndividualTDS implements IAdaptadorContactoIndivid
 		eContactoInd.setNombre("contactoIndividual");
 		eContactoInd
 				.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(new Propiedad("nombre", contacto.getNombre()),
-						new Propiedad("mensajes", obtenerCodigosMensajes(contacto.getMensajes())),
+						new Propiedad("mensajes", Auxiliar.obtenerCodigos(contacto.getMensajes())),
 						new Propiedad("movil", contacto.getMovil()))));
 
 		// registrar entidad contactoIndividual
@@ -82,7 +81,7 @@ public class AdaptadorContactoIndividualTDS implements IAdaptadorContactoIndivid
 		servPersistencia.eliminarPropiedadEntidad(eContactoInd, "movil");
 		servPersistencia.anadirPropiedadEntidad(eContactoInd, "movil", contacto.getMovil());
 
-		String lineas = obtenerCodigosMensajes(contacto.getMensajes());
+		String lineas = Auxiliar.obtenerCodigos(contacto.getMensajes());
 		servPersistencia.eliminarPropiedadEntidad(eContactoInd, "mensajes");
 		servPersistencia.anadirPropiedadEntidad(eContactoInd, "mUsuarioensajes", lineas);
 
@@ -113,7 +112,7 @@ public class AdaptadorContactoIndividualTDS implements IAdaptadorContactoIndivid
 
 		// recuperar propiedades que son objetos llamando a adaptadores
 		// mensajes
-		List<Mensaje> mensajes = obtenerMensajesDesdeCodigos(
+		List<Mensaje> mensajes = Auxiliar.obtenerMensajesDesdeCodigos(
 				servPersistencia.recuperarPropiedadEntidad(eContactoInd, "mensajes"));
 
 		for (Mensaje mensaje : mensajes) {
@@ -134,6 +133,7 @@ public class AdaptadorContactoIndividualTDS implements IAdaptadorContactoIndivid
 	}
 
 	// -------------------Funciones auxiliares-----------------------------
+	/*
 	private String obtenerCodigosMensajes(List<Mensaje> mensajes) {
 		String lineas = "";
 		for (Mensaje mensaje : mensajes) {
@@ -153,5 +153,5 @@ public class AdaptadorContactoIndividualTDS implements IAdaptadorContactoIndivid
 		}
 		return mensajes;
 	}
-
+	*/
 }

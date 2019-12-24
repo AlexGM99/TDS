@@ -57,8 +57,8 @@ public class Prueba {
 		gr2.setAdmin(usu2);
 		usu2.addGrupo(gr2);
 		
-		Mensaje m1 = new Mensaje("Hola mundo", Date.from(Instant.now()), usu1.getMovil(), ind1, false);
-		Mensaje m2 = new Mensaje("Hello World", Date.from(Instant.now()), usu2.getMovil(), ind2, false);
+		Mensaje m1 = new Mensaje("Hola mundo", Date.from(Instant.now()), usu1.getMovil(), ind1, TipoContacto.INDIVIDUAL);
+		Mensaje m2 = new Mensaje("Hello World", Date.from(Instant.now()), usu2.getMovil(), ind2, TipoContacto.INDIVIDUAL);
 
 		// Mensajes
 		System.out.println("\nRegistrar mensajes");

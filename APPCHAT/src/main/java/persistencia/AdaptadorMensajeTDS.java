@@ -16,6 +16,7 @@ import modelo.Contacto;
 import modelo.ContactoGrupo;
 import modelo.ContactoIndividual;
 import modelo.Mensaje;
+import modelo.TipoContacto;
 
 // 'Usuario' tiene una lista de mensajes, ¿cuándo la actualizamos?
 
@@ -54,12 +55,16 @@ public class AdaptadorMensajeTDS implements IAdaptadorMensajeDAO {
 
 		// registrar primero los atributos que son objetos
 		// receptor
-		if (mensaje.isGrupo()) {
+		switch (mensaje.getTipoReceptor()) {
+		case GRUPO:
 			AdaptadorContactoGrupoTDS adaptadorCG = AdaptadorContactoGrupoTDS.getUnicaInstancia();
 			adaptadorCG.registrarContactoGrupo((ContactoGrupo) mensaje.getReceptor());
-		} else {
+			break;
+
+		case INDIVIDUAL:
 			AdaptadorContactoIndividualTDS adaptadorCI = AdaptadorContactoIndividualTDS.getUnicaInstancia();
 			adaptadorCI.registrarContactoIndividual((ContactoIndividual) mensaje.getReceptor());
+			break;
 		}
 
 		// Crear entidad venta
@@ -70,7 +75,7 @@ public class AdaptadorMensajeTDS implements IAdaptadorMensajeDAO {
 				new Propiedad("tlfEmisor", mensaje.getTlfEmisor()),
 				new Propiedad("fecha", dateFormat.format(mensaje.getHora())),
 				new Propiedad("receptor", String.valueOf(mensaje.getReceptor().getCodigo())),
-				new Propiedad("grupo", String.valueOf(mensaje.isGrupo())))));
+				new Propiedad("tipoReceptor", String.valueOf(mensaje.getTipoReceptor())))));
 		// registrar entidad venta
 		eMensaje = servPersistencia.registrarEntidad(eMensaje);
 		// asignar identificador unico
@@ -99,8 +104,8 @@ public class AdaptadorMensajeTDS implements IAdaptadorMensajeDAO {
 		servPersistencia.eliminarPropiedadEntidad(eMensaje, "receptor");
 		servPersistencia.anadirPropiedadEntidad(eMensaje, "receptor",
 				String.valueOf(mensaje.getReceptor().getCodigo()));
-		servPersistencia.eliminarPropiedadEntidad(eMensaje, "grupo");
-		servPersistencia.anadirPropiedadEntidad(eMensaje, "grupo", String.valueOf(mensaje.isGrupo()));
+		servPersistencia.eliminarPropiedadEntidad(eMensaje, "tipoReceptor");
+		servPersistencia.anadirPropiedadEntidad(eMensaje, "tipoReceptor", String.valueOf(mensaje.getTipoReceptor()));
 
 		if (PoolDAO.getUnicaInstancia().contiene(mensaje.getCodigo()))
 			PoolDAO.getUnicaInstancia().addObjeto(mensaje.getCodigo(), mensaje);
@@ -119,10 +124,10 @@ public class AdaptadorMensajeTDS implements IAdaptadorMensajeDAO {
 		String texto;
 		String tlfEmisor;
 		Date hora = null;
-		boolean grupo;
+		TipoContacto tipoReceptor;
 		texto = servPersistencia.recuperarPropiedadEntidad(eMensaje, "texto");
 		tlfEmisor = servPersistencia.recuperarPropiedadEntidad(eMensaje, "tlfEmisor");
-		grupo = Boolean.getBoolean(servPersistencia.recuperarPropiedadEntidad(eMensaje, "grupo"));
+		tipoReceptor = TipoContacto.valueOf(servPersistencia.recuperarPropiedadEntidad(eMensaje, "tipoReceptor"));
 
 		try {
 			hora = dateFormat.parse(servPersistencia.recuperarPropiedadEntidad(eMensaje, "fecha"));
@@ -130,7 +135,7 @@ public class AdaptadorMensajeTDS implements IAdaptadorMensajeDAO {
 			e.printStackTrace();
 		}
 
-		Mensaje mensaje = new Mensaje(texto, hora, tlfEmisor, null, grupo);
+		Mensaje mensaje = new Mensaje(texto, hora, tlfEmisor, null, tipoReceptor);
 		mensaje.setCodigo(codigo);
 
 		// IMPORTANTE: añadir el mensaje al pool antes de llamar a otros adaptadores
@@ -139,18 +144,25 @@ public class AdaptadorMensajeTDS implements IAdaptadorMensajeDAO {
 		// recuperar propiedades que son objetos llamando a adaptadores
 		// receptor
 
-		if (grupo) {
+		int codigoReceptor;
+		Contacto receptor;
+		
+		switch (tipoReceptor) {
+		case GRUPO:
 			AdaptadorContactoGrupoTDS adaptadorCG = AdaptadorContactoGrupoTDS.getUnicaInstancia();
-			int codigoReceptor = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eMensaje, "receptor"));
-			Contacto receptor = adaptadorCG.recuperarContactoGrupo(codigoReceptor);
+			codigoReceptor = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eMensaje, "receptor"));
+			receptor = adaptadorCG.recuperarContactoGrupo(codigoReceptor);
 			mensaje.setReceptor(receptor);
-		} else {
+			break;
+		
+		case INDIVIDUAL:
 			AdaptadorContactoIndividualTDS adaptadorCI = AdaptadorContactoIndividualTDS.getUnicaInstancia();
-			int codigoReceptor = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eMensaje, "receptor"));
-			Contacto receptor = adaptadorCI.recuperarContactoIndividual(codigoReceptor);
+			codigoReceptor = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eMensaje, "receptor"));
+			receptor = adaptadorCI.recuperarContactoIndividual(codigoReceptor);
 			mensaje.setReceptor(receptor);
+			break;
 		}
-
+		
 		// devolver el objeto
 		return mensaje;
 	}

@@ -13,15 +13,15 @@ public class Mensaje {
 	private Date hora;
 	private BubbleText emoticon;
 	private Contacto receptor;
-	private boolean grupo;
+	private TipoContacto tipoReceptor;
 
-	public Mensaje(String texto, Date hora, String tlfEmisor, Contacto receptor, boolean grupo) {
+	public Mensaje(String texto, Date hora, String tlfEmisor, Contacto receptor, TipoContacto grupo) {
 		this.codigo = 0;
 		this.texto = texto;
 		this.hora = hora;
 		this.tlfEmisor = tlfEmisor;
 		this.receptor = receptor;
-		this.grupo = grupo;
+		this.tipoReceptor = grupo;
 	}
 
 	public int getCodigo() {
@@ -64,18 +64,18 @@ public class Mensaje {
 		this.receptor = receptor;
 	}
 
-	public boolean isGrupo() {
-		return grupo;
+	public TipoContacto getTipoReceptor() {
+		return tipoReceptor;
 	}
 
-	public void setGrupo(boolean grupo) {
-		this.grupo = grupo;
+	public void setTipoReceptor(TipoContacto tipoReceptor) {
+		this.tipoReceptor = tipoReceptor;
 	}
 
 	@Override
 	public String toString() {
 		return getClass().getSimpleName() + " [codigo=" + codigo + ", texto=" + texto + ", tlfEmisor=" + tlfEmisor + ", hora=" + hora
-				+ ", emoticon=" + emoticon + ", receptor=" + receptor.getNombre() + ", grupo=" + grupo + "]";
+				+ ", emoticon=" + emoticon + ", receptor=" + receptor.getNombre() + ", grupo=" + tipoReceptor + "]";
 	}
 
 	@Override
@@ -97,7 +97,7 @@ public class Mensaje {
 		Mensaje other = (Mensaje) obj;
 		if (codigo != other.codigo)
 			return false;
-		if (grupo != other.grupo)
+		if (tipoReceptor != other.tipoReceptor)
 			return false;
 		if (hora == null) {
 			if (other.hora != null)

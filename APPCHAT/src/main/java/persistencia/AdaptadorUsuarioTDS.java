@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
@@ -15,13 +14,10 @@ import beans.Entidad;
 import beans.Propiedad;
 
 import modelo.Usuario;
-import modelo.Contacto;
 import modelo.ContactoGrupo;
 import modelo.ContactoIndividual;
-import modelo.Mensaje;
 
 public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
-	// Usa un pool para evitar problemas doble referencia con cliente
 
 	private static ServicioPersistencia servPersistencia;
 
@@ -80,8 +76,8 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 				new Propiedad("imagen", usuario.getImagen()),
 				new Propiedad("saludo", usuario.getSaludo()),
 				new Propiedad("premium", String.valueOf(usuario.isPremium())),
-				new Propiedad("contactos", obtenerCodigos(usuario.getContactos())),
-				new Propiedad("grupos", obtenerCodigos(usuario.getGrupos())))));
+				new Propiedad("contactos", Auxiliar.obtenerCodigos(usuario.getContactos())),
+				new Propiedad("grupos", Auxiliar.obtenerCodigos(usuario.getGrupos())))));
 
 		// registrar entidad usuario
 		eUsuario = servPersistencia.registrarEntidad(eUsuario);
@@ -128,11 +124,11 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		servPersistencia.eliminarPropiedadEntidad(eUsuario, "premium");
 		servPersistencia.anadirPropiedadEntidad(eUsuario, "premium", String.valueOf(usuario.isPremium()));
 
-		String lineas = obtenerCodigos(usuario.getContactos());
+		String lineas = Auxiliar.obtenerCodigos(usuario.getContactos());
 		servPersistencia.eliminarPropiedadEntidad(eUsuario, "contactos");
 		servPersistencia.anadirPropiedadEntidad(eUsuario, "contactos", lineas);
 
-		lineas = obtenerCodigos(usuario.getGrupos());
+		lineas = Auxiliar.obtenerCodigos(usuario.getGrupos());
 		servPersistencia.eliminarPropiedadEntidad(eUsuario, "grupos");
 		servPersistencia.anadirPropiedadEntidad(eUsuario, "grupos", lineas);
 
@@ -177,14 +173,14 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 
 		// recuperar propiedades que son objetos llamando a adaptadores
 		// contactos
-		List<ContactoIndividual> contactos = obtenerContactosDesdeCodigos(
+		List<ContactoIndividual> contactos = Auxiliar.obtenerContactosDesdeCodigos(
 				servPersistencia.recuperarPropiedadEntidad(eUsuario, "contactos"));
 
 		for (ContactoIndividual ci : contactos)
 			usu.addContacto(ci);
 		
 		// grupos
-		List<ContactoGrupo> grupos = obtenerGruposDesdeCodigos(
+		List<ContactoGrupo> grupos = Auxiliar.obtenerGruposDesdeCodigos(
 				servPersistencia.recuperarPropiedadEntidad(eUsuario, "grupos"));
 
 		for (ContactoGrupo cg : grupos)
@@ -205,6 +201,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 	}
 
 	// -------------------Funciones auxiliares-----------------------------
+	/*
 	private <T> String obtenerCodigos(List<T> t) {
 		String lineas = "";
 		for (T it : t) {
@@ -237,5 +234,6 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		}
 		return grupos;
 	}
+	*/
 
 }
