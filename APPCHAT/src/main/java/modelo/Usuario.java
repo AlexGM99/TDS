@@ -43,7 +43,7 @@ public class Usuario {
 		this.contactos = new LinkedList<ContactoIndividual>();
 		this.grupos = new LinkedList<ContactoGrupo>();
 	}
-	
+
 	// Constructor con saludo
 	public Usuario(String nombre, Date fechanacimiento, String email, String movil, String usuario, String contraseña,
 			String imagen, String saludo) {
@@ -78,11 +78,11 @@ public class Usuario {
 	public String getEmail() {
 		return this.email;
 	}
-	
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
+
 	public String getMovil() {
 		return movil;
 	}
@@ -114,7 +114,7 @@ public class Usuario {
 	public void setImagen(String imagen) {
 		this.imagen = imagen;
 	}
-	
+
 	public String getSaludo() {
 		return saludo;
 	}
@@ -146,12 +146,11 @@ public class Usuario {
 	public void addGrupo(ContactoGrupo g) {
 		this.grupos.add(g);
 	}
-	
+
 	public List<ContactoGrupo> getGrupos() {
 		return grupos;
 	}
 
-	// solo se compara el código porque es único
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -171,26 +170,79 @@ public class Usuario {
 		Usuario other = (Usuario) obj;
 		if (codigo != other.codigo)
 			return false;
+		if (contactos == null) {
+			if (other.contactos != null)
+				return false;
+		} else if (!contactos.equals(other.contactos))
+			return false;
+		if (contraseña == null) {
+			if (other.contraseña != null)
+				return false;
+		} else if (!contraseña.equals(other.contraseña))
+			return false;
+		if (email == null) {
+			if (other.email != null)
+				return false;
+		} else if (!email.equals(other.email))
+			return false;
+		if (fechaNacimiento == null) {
+			if (other.fechaNacimiento != null)
+				return false;
+		} else if (!fechaNacimiento.equals(other.fechaNacimiento))
+			return false;
+		if (grupos == null) {
+			if (other.grupos != null)
+				return false;
+		} else if (!grupos.equals(other.grupos))
+			return false;
+		if (imagen == null) {
+			if (other.imagen != null)
+				return false;
+		} else if (!imagen.equals(other.imagen))
+			return false;
+		if (movil == null) {
+			if (other.movil != null)
+				return false;
+		} else if (!movil.equals(other.movil))
+			return false;
+		if (nombre == null) {
+			if (other.nombre != null)
+				return false;
+		} else if (!nombre.equals(other.nombre))
+			return false;
+		if (premium != other.premium)
+			return false;
+		if (saludo == null) {
+			if (other.saludo != null)
+				return false;
+		} else if (!saludo.equals(other.saludo))
+			return false;
+		if (usuario == null) {
+			if (other.usuario != null)
+				return false;
+		} else if (!usuario.equals(other.usuario))
+			return false;
 		return true;
 	}
 
-	/*@Override
-	public String toString() {
-		return getClass().getSimpleName() + " [codigo=" + codigo + ", nombre=" + nombre + ", fechaNacimiento=" + fechaNacimiento + ", email="
-				+ email + ", movil=" + movil + ", usuario=" + usuario + ", contraseña=" + contraseña + ", imagen="
-				+ imagen + ", saludo=" + saludo + ", premium=" + premium + ", contactos=" + contactos + ", grupos="
-				+ grupos + ", mensajes=" + mensajes + "]";
-	}*/
-	
+	/*
+	 * @Override public String toString() { return getClass().getSimpleName() +
+	 * " [codigo=" + codigo + ", nombre=" + nombre + ", fechaNacimiento=" +
+	 * fechaNacimiento + ", email=" + email + ", movil=" + movil + ", usuario=" +
+	 * usuario + ", contraseña=" + contraseña + ", imagen=" + imagen + ", saludo=" +
+	 * saludo + ", premium=" + premium + ", contactos=" + contactos + ", grupos=" +
+	 * grupos + ", mensajes=" + mensajes + "]"; }
+	 */
+
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + " [\n\t codigo=" + codigo + "\n\t nombre=" + nombre + "\n\t fechaNacimiento=" + fechaNacimiento + "\n\t email="
-				+ email + "\n\t movil=" + movil + "\n\t usuario=" + usuario + "\n\t contraseña=" + contraseña + "\n\t imagen="
-				+ imagen + "\n\t saludo=" + saludo + "\n\t premium=" + premium + "\n\t contactos=" + contactos + "\n\t grupos="
-				+ grupos + "]";
+		return getClass().getSimpleName() + " [\n\t codigo=" + codigo + "\n\t nombre=" + nombre
+				+ "\n\t fechaNacimiento=" + fechaNacimiento + "\n\t email=" + email + "\n\t movil=" + movil
+				+ "\n\t usuario=" + usuario + "\n\t contraseña=" + contraseña + "\n\t imagen=" + imagen + "\n\t saludo="
+				+ saludo + "\n\t premium=" + premium + "\n\t contactos=" + contactos + "\n\t grupos=" + grupos + "]";
 	}
-	
-	public List<Integer> getMensajesPorMes(){
+
+	public List<Integer> getMensajesPorMes() {
 		// Creamos una lista con todos los contactos: contactosInd + grupos
 		List<Contacto> contacts = new LinkedList<Contacto>(this.contactos);
 		for (ContactoGrupo cg : this.grupos) {
@@ -204,15 +256,15 @@ public class Usuario {
 				LocalDate horaM = m.getHora().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 				if (m.getTlfEmisor().equals(this.movil) && horaM.getYear() == yearActual) {
 					mes = horaM.getMonthValue();
-					mensajesAnual.set(mes - 1, mensajesAnual.get(mes - 1)+ 1);
+					mensajesAnual.set(mes - 1, mensajesAnual.get(mes - 1) + 1);
 				}
 			}
 		}
 		return mensajesAnual;
 	}
-	
-	public Map<String, Integer> getMensajesPorGrupo(){
-		
+
+	public Map<String, Integer> getMensajesPorGrupo() {
+
 		Map<String, Integer> mensajesGrupo = new HashMap<String, Integer>(grupos.size());
 		int contador;
 		for (ContactoGrupo cg : grupos) {

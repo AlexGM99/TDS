@@ -4,11 +4,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 public abstract class Contacto {
-	
+
 	private int codigo;
 	private String nombre;
 	private List<Mensaje> mensajes;
-	
+
 	protected Contacto(String nombre) {
 		codigo = 0;
 		this.nombre = nombre;
@@ -34,7 +34,7 @@ public abstract class Contacto {
 	public void addMensaje(Mensaje mensaje) {
 		mensajes.add(mensaje);
 	}
-	
+
 	public List<Mensaje> getMensajes() {
 		return mensajes;
 	}
@@ -45,7 +45,8 @@ public abstract class Contacto {
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + " [codigo=" + codigo + ", nombre=" + nombre + ", mensajes=" + mensajes + "]";
+		return getClass().getSimpleName() + " [codigo=" + codigo + ", nombre=" + nombre + ", mensajes=" + mensajes
+				+ "]";
 	}
 
 	@Override
@@ -66,6 +67,16 @@ public abstract class Contacto {
 			return false;
 		Contacto other = (Contacto) obj;
 		if (codigo != other.codigo)
+			return false;
+		if (mensajes == null) {
+			if (other.mensajes != null)
+				return false;
+		} else if (!mensajes.equals(other.mensajes))
+			return false;
+		if (nombre == null) {
+			if (other.nombre != null)
+				return false;
+		} else if (!nombre.equals(other.nombre))
 			return false;
 		return true;
 	}

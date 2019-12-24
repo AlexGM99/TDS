@@ -95,21 +95,6 @@ public class Prueba {
 		adaptadorCI.actualizarContactoIndividual(ind1);
 		System.out.println("--modificado ind1: " + adaptadorCI.recuperarContactoIndividual(ind1.getCodigo()));
 		
-		
-		/*
-		// Usuarios
-		System.out.println("\nRegistrar usuarios");
-		adaptadorU.registrarUsuario(usu1);
-		System.out.println("-- usuarios 'usu1' registrado: " + usu1);
-		adaptadorU.registrarUsuario(usu2);
-		System.out.println("-- usuarios 'usu1' registrado: " + usu2);
-		
-		PoolDAO.getUnicaInstancia().mostrarTodos();
-		
-		System.out.println("\n Recuperar usuarios");
-		System.out.println("-- recuperado usu1: " + adaptadorU.recuperarUsuario(usu1.getCodigo()));
-		System.out.println("-- recuperado usu2: " + adaptadorU.recuperarUsuario(usu2.getCodigo()));*/
-		
 		// Grupos
 		System.out.println("\nRegistrar Grupos");
 		adaptadorCG.registrarContactoGrupo(gr1);

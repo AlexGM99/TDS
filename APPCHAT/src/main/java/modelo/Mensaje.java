@@ -97,6 +97,28 @@ public class Mensaje {
 		Mensaje other = (Mensaje) obj;
 		if (codigo != other.codigo)
 			return false;
+		if (grupo != other.grupo)
+			return false;
+		if (hora == null) {
+			if (other.hora != null)
+				return false;
+		} else if (!hora.equals(other.hora))
+			return false;
+		if (receptor == null) {
+			if (other.receptor != null)
+				return false;
+		} else if ( receptor.getCodigo() != (other.receptor.getCodigo()))
+			return false;
+		if (texto == null) {
+			if (other.texto != null)
+				return false;
+		} else if (!texto.equals(other.texto))
+			return false;
+		if (tlfEmisor == null) {
+			if (other.tlfEmisor != null)
+				return false;
+		} else if (!tlfEmisor.equals(other.tlfEmisor))
+			return false;
 		return true;
 	}
 	

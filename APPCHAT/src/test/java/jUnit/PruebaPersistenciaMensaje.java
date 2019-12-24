@@ -37,12 +37,12 @@ public class PruebaPersistenciaMensaje {
 		Mensaje m = new Mensaje("Mensaje de prueba", fecha, "868884831", new ContactoIndividual("Nombre", "Movil"), false);
 		adaptadorM.registrarMensaje(m);		
 		
-		assertEquals("Prueba Registro Mensaje: Codigo", m.getCodigo() ,adaptadorM.recuperarMensaje(m.getCodigo()).getCodigo());
-		assertEquals("Prueba Registro Mensaje: Texto", m.getTexto() ,adaptadorM.recuperarMensaje(m.getCodigo()).getTexto());
-		assertEquals("Prueba Registro Mensaje: Emisor", m.getTlfEmisor() ,adaptadorM.recuperarMensaje(m.getCodigo()).getTlfEmisor());
-		assertEquals("Prueba Registro Mensaje: Fecha", m.getHora().toString() ,adaptadorM.recuperarMensaje(m.getCodigo()).getHora().toString());
+		//assertEquals("Prueba Registro Mensaje: Codigo", m.getCodigo() ,adaptadorM.recuperarMensaje(m.getCodigo()).getCodigo());
+		//assertEquals("Prueba Registro Mensaje: Texto", m.getTexto() ,adaptadorM.recuperarMensaje(m.getCodigo()).getTexto());
+		//assertEquals("Prueba Registro Mensaje: Emisor", m.getTlfEmisor() ,adaptadorM.recuperarMensaje(m.getCodigo()).getTlfEmisor());
+		//assertEquals("Prueba Registro Mensaje: Fecha", m.getHora() ,adaptadorM.recuperarMensaje(m.getCodigo()).getHora());
 		
-		//assertEquals("Prueba Registro Mensaje Fecha", m,adaptadorM.recuperarMensaje(m.getCodigo()));
+		assertEquals("Prueba Registro Mensaje", m,adaptadorM.recuperarMensaje(m.getCodigo()));
 		
 		
 	}
