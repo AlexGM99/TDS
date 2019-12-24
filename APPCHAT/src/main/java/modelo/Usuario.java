@@ -276,7 +276,7 @@ public class Usuario {
 		return mensajesAnual;
 	}
 
-	public Map<String, Integer> getMensajesPorGrupo() {
+	public Map<String, Integer> getNumMensajesEnviadosPorGrupo() {
 
 		Map<String, Integer> mensajesGrupo = new HashMap<String, Integer>(grupos.size());
 		int contador;

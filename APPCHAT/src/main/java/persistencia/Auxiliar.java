@@ -3,7 +3,6 @@ package persistencia;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import java.util.StringTokenizer;
 
 import modelo.Contacto;
