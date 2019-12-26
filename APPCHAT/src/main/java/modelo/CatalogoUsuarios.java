@@ -38,6 +38,7 @@ public class CatalogoUsuarios {
 	}
 
 	public static CatalogoUsuarios getUnicaInstancia() {
+		//TODO implementar SINGLENTON
 		return unicaInstancia;
 	}
 

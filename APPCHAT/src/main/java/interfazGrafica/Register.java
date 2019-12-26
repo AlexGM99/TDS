@@ -444,15 +444,14 @@ public class Register implements InterfazVistas {
 					String phone = phoneField.getText();
 					String nick = nickField.getText();
 					String greeting = greetingField.getText();
-					String pass = passwordField.getPassword().toString();
+					@SuppressWarnings("deprecation")
+					String pass = passwordField.getText();
 					//String passAgain = passwordField_1.getPassword().toString();
 					//ImageIcon fotoPerfil = (ImageIcon)lblPhoto.getIcon();
 					String registrado =
 							controlador.RegisterUser(firts+" "+second, birth, email, phone, nick, pass, 
 									rutaAbsolutaAlaImagen, greeting);
 					JOptionPane.showMessageDialog(dateChooser,registrado, "Mensaje del servidor", JOptionPane.WARNING_MESSAGE);
-					if (registrado.equals(ControladorVistaAppChat.REGISTRO_CORRECTO))
-						controlador.changeToChatWindow();
 				}
 			}
 			// TO DO Comprobar fecha != null

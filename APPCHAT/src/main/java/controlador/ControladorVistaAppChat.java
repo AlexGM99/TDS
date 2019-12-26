@@ -2,7 +2,6 @@ package controlador;
 
 import java.time.LocalDate;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -74,13 +73,15 @@ public class ControladorVistaAppChat {
 	}
 
 	public boolean loginUser(String name, String pass) {
-		// TODO loguear el usuario
-		
+		// TO DO loguear el usuario
+		if (catalogoUsuarios.logIn(name , pass) == CatalogoUsuarios.CODIGO_LOG_IN_OK)
+			usuarioActual = catalogoUsuarios.getUsuario(name);
+		else return false;
 		// Cambiamos la interfaz
 		changeToChatWindow();
 		// TODO obtener los datos: chats, foto de perfil e inicializar la ventana
 		
-		return false;
+		return true;
 	}
 
 	public String RegisterUser(String nombre, Date fechanacimiento, String email, String movil, String usuario,
@@ -96,7 +97,8 @@ public class ControladorVistaAppChat {
 		
 		catalogoUsuarios.addUsuario(user);
 		adaptadorUsuario.registrarUsuario(user);
-		
+		usuarioActual = user;
+		changeToChatWindow();
 		return REGISTRO_CORRECTO;
 	}
 
