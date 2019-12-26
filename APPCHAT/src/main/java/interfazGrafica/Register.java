@@ -451,7 +451,7 @@ public class Register implements InterfazVistas {
 					String registrado =
 							controlador.RegisterUser(firts+" "+second, birth, email, phone, nick, pass, 
 									rutaAbsolutaAlaImagen, greeting);
-					JOptionPane.showMessageDialog(dateChooser,registrado, "Mensaje del servidor", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(dateChooser,registrado, "Server Message", JOptionPane.WARNING_MESSAGE);
 				}
 			}
 			// TO DO Comprobar fecha != null

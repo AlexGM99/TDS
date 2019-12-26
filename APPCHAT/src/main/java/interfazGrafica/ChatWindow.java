@@ -63,7 +63,6 @@ public class ChatWindow implements InterfazVistas{
 	 */
 	public ChatWindow(ControladorVistaAppChat controlador) {
 		initialize();
-		initialize();
 		this.controlador = controlador;
 		this.frmAppchat.setVisible(true);
 	}
@@ -90,9 +89,9 @@ public class ChatWindow implements InterfazVistas{
 		});
 		frmAppchat.getContentPane().add(panel, BorderLayout.CENTER);
 		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[]{1, 0, 0, 0, 75, 165, 0, 35, 0, 0};
+		gbl_panel.columnWidths = new int[]{1, 0, 0, 0, 21, 75, 165, 0, 35, 0, 0};
 		gbl_panel.rowHeights = new int[]{0, 28, 0, 37, 0, 0};
-		gbl_panel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
@@ -144,7 +143,7 @@ public class ChatWindow implements InterfazVistas{
 		gbc_nombreChat.gridheight = 2;
 		gbc_nombreChat.insets = new Insets(0, 0, 5, 5);
 		gbc_nombreChat.fill = GridBagConstraints.BOTH;
-		gbc_nombreChat.gridx = 4;
+		gbc_nombreChat.gridx = 5;
 		gbc_nombreChat.gridy = 0;
 		panel.add(nombreChat, gbc_nombreChat);
 		GridBagLayout gbl_nombreChat = new GridBagLayout();
@@ -180,7 +179,7 @@ public class ChatWindow implements InterfazVistas{
 		gbc_buscadorMensjs.gridheight = 2;
 		gbc_buscadorMensjs.insets = new Insets(0, 0, 5, 5);
 		gbc_buscadorMensjs.fill = GridBagConstraints.BOTH;
-		gbc_buscadorMensjs.gridx = 5;
+		gbc_buscadorMensjs.gridx = 6;
 		gbc_buscadorMensjs.gridy = 0;
 		panel.add(buscadorMensjs, gbc_buscadorMensjs);
 		
@@ -199,7 +198,7 @@ public class ChatWindow implements InterfazVistas{
 		gbc_opciones_usuario.gridheight = 2;
 		gbc_opciones_usuario.insets = new Insets(0, 0, 5, 5);
 		gbc_opciones_usuario.fill = GridBagConstraints.BOTH;
-		gbc_opciones_usuario.gridx = 6;
+		gbc_opciones_usuario.gridx = 7;
 		gbc_opciones_usuario.gridy = 0;
 		panel.add(opciones_usuario, gbc_opciones_usuario);
 		
@@ -240,6 +239,15 @@ public class ChatWindow implements InterfazVistas{
 			}
 		});
 		
+		JPanel panel_opciones_user = new JPanel();
+		GridBagConstraints gbc_panel_opciones_user = new GridBagConstraints();
+		gbc_panel_opciones_user.gridheight = 2;
+		gbc_panel_opciones_user.insets = new Insets(0, 0, 5, 5);
+		gbc_panel_opciones_user.fill = GridBagConstraints.VERTICAL;
+		gbc_panel_opciones_user.gridx = 4;
+		gbc_panel_opciones_user.gridy = 0;
+		panel.add(panel_opciones_user, gbc_panel_opciones_user);
+		
 		JPanel panel_1 = new JPanel();
 		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
 		gbc_panel_1.gridwidth = 2;
@@ -275,12 +283,12 @@ public class ChatWindow implements InterfazVistas{
 		});
 		txtChat.setText("chat");
 		buscadorChats.add(txtChat);
-		txtChat.setColumns(10);
+		txtChat.setColumns(20);
 		
 		JScrollPane scrollChats = new JScrollPane();
 		GridBagConstraints gbc_scrollChats = new GridBagConstraints();
 		gbc_scrollChats.gridheight = 2;
-		gbc_scrollChats.gridwidth = 3;
+		gbc_scrollChats.gridwidth = 4;
 		gbc_scrollChats.insets = new Insets(0, 0, 0, 5);
 		gbc_scrollChats.fill = GridBagConstraints.BOTH;
 		gbc_scrollChats.gridx = 1;
@@ -296,7 +304,7 @@ public class ChatWindow implements InterfazVistas{
 		gbc_scroll_chat.gridwidth = 5;
 		gbc_scroll_chat.insets = new Insets(0, 0, 5, 0);
 		gbc_scroll_chat.fill = GridBagConstraints.BOTH;
-		gbc_scroll_chat.gridx = 4;
+		gbc_scroll_chat.gridx = 5;
 		gbc_scroll_chat.gridy = 2;
 		panel.add(scroll_chat, gbc_scroll_chat);
 		
@@ -308,7 +316,7 @@ public class ChatWindow implements InterfazVistas{
 		gbc_scrollmensaje.gridwidth = 2;
 		gbc_scrollmensaje.insets = new Insets(0, 0, 0, 5);
 		gbc_scrollmensaje.fill = GridBagConstraints.BOTH;
-		gbc_scrollmensaje.gridx = 4;
+		gbc_scrollmensaje.gridx = 5;
 		gbc_scrollmensaje.gridy = 4;
 		panel.add(scrollmensaje, gbc_scrollmensaje);
 		
@@ -328,7 +336,7 @@ public class ChatWindow implements InterfazVistas{
 		GridBagConstraints gbc_panel_emoji = new GridBagConstraints();
 		gbc_panel_emoji.insets = new Insets(0, 0, 0, 5);
 		gbc_panel_emoji.fill = GridBagConstraints.BOTH;
-		gbc_panel_emoji.gridx = 6;
+		gbc_panel_emoji.gridx = 7;
 		gbc_panel_emoji.gridy = 4;
 		panel.add(panel_emoji, gbc_panel_emoji);
 		panel_emoji.setLayout(new BorderLayout(0, 0));
@@ -348,7 +356,7 @@ public class ChatWindow implements InterfazVistas{
 		GridBagConstraints gbc_enviarMensaje = new GridBagConstraints();
 		gbc_enviarMensaje.insets = new Insets(0, 0, 0, 5);
 		gbc_enviarMensaje.fill = GridBagConstraints.BOTH;
-		gbc_enviarMensaje.gridx = 7;
+		gbc_enviarMensaje.gridx = 8;
 		gbc_enviarMensaje.gridy = 4;
 		panel.add(enviarMensaje, gbc_enviarMensaje);
 		enviarMensaje.setLayout(new BorderLayout(0, 0));
