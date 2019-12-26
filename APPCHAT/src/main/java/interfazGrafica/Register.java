@@ -1,6 +1,5 @@
 package interfazGrafica;
 
-import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import java.awt.GridBagLayout;
@@ -45,7 +44,8 @@ import java.awt.Color;
 import java.awt.BorderLayout;
 
 public class Register implements InterfazVistas {
-
+	public static final String FECHA_NO_DEFINIDA = "Non defined";
+	
 	private JFrame frmAppchatregister;
 	private JTextField firtsNamefield;
 	private JTextField secondNamefield;
@@ -439,21 +439,23 @@ public class Register implements InterfazVistas {
 					String second = secondNamefield.getText();
 					Date birth = dateChooser.getDate();
 					String email = emailField.getText();
+					if (email == null) 
+						email = FECHA_NO_DEFINIDA;
 					String phone = phoneField.getText();
 					String nick = nickField.getText();
 					String greeting = greetingField.getText();
 					String pass = passwordField.getPassword().toString();
-					String passAgain = passwordField_1.getPassword().toString();
-					ImageIcon fotoPerfil = (ImageIcon)lblPhoto.getIcon();
+					//String passAgain = passwordField_1.getPassword().toString();
+					//ImageIcon fotoPerfil = (ImageIcon)lblPhoto.getIcon();
 					String registrado =
 							controlador.RegisterUser(firts+" "+second, birth, email, phone, nick, pass, 
 									rutaAbsolutaAlaImagen, greeting);
-					if (!registrado.equals("")) {
-						JOptionPane.showMessageDialog(dateChooser,registrado, "Mensaje del servidor", JOptionPane.WARNING_MESSAGE);
-					}
+					JOptionPane.showMessageDialog(dateChooser,registrado, "Mensaje del servidor", JOptionPane.WARNING_MESSAGE);
+					if (registrado.equals(ControladorVistaAppChat.REGISTRO_CORRECTO))
+						controlador.changeToChatWindow();
 				}
 			}
-			// TODO Comprobar fecha != null
+			// TO DO Comprobar fecha != null
 		});
 		
 		lblPassMustMatch = new JLabel("pass must match");

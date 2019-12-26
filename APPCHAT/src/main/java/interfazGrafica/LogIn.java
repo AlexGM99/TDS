@@ -1,23 +1,15 @@
 package interfazGrafica;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-
 import java.awt.GridBagConstraints;
 import javax.swing.JTextField;
-
 import controlador.ControladorVistaAppChat;
-
 import java.awt.Insets;
 import javax.swing.JPasswordField;
 import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Toolkit;
-
 import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -126,12 +118,13 @@ public class LogIn implements InterfazVistas {
 		btnLogin.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				//TODO funcionalidad del login
+				//TO DO funcionalidad del login
 				String usuario = textField.getText();
+				@SuppressWarnings("deprecation")
 				String contrasena = passwordField.getText();
 				boolean logeado = controlador.loginUser(usuario, contrasena);
 				if (!logeado) {
-					JOptionPane.showMessageDialog(lblPass, "Hey, u made a mistake, i dont't know why, but u can't login", "CHECK YOUR LOGIN" , 0);
+					JOptionPane.showMessageDialog(lblPass, "Hey, u made a mistake, i dont't know why, but u can't login", "CHECK YOUR LOGIN" , JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		});

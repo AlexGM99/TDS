@@ -1,6 +1,5 @@
 package interfazGrafica;
 
-import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
@@ -12,6 +11,9 @@ import javax.swing.JButton;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.border.SoftBevelBorder;
+
+import controlador.ControladorVistaAppChat;
+
 import javax.swing.border.BevelBorder;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -37,11 +39,13 @@ public class ChatWindow implements InterfazVistas{
 	private JTextField txtBuscar;
 	private JTextField txtChat;
 	private JTextField textmensaje;
+	
+	private ControladorVistaAppChat controlador;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -52,13 +56,16 @@ public class ChatWindow implements InterfazVistas{
 				}
 			}
 		});
-	}
+	}*/
 
 	/**
 	 * Create the application.
 	 */
-	public ChatWindow() {
+	public ChatWindow(ControladorVistaAppChat controlador) {
 		initialize();
+		initialize();
+		this.controlador = controlador;
+		this.frmAppchat.setVisible(true);
 	}
 
 	/**
@@ -327,7 +334,7 @@ public class ChatWindow implements InterfazVistas{
 		panel_emoji.setLayout(new BorderLayout(0, 0));
 		
 		JLabel labelemoji = new JLabel("");
-		labelemoji.setIcon(new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/emoji_20*20.png")));
+		labelemoji.setIcon(new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/emoji20x20.png")));
 		panel_emoji.add(labelemoji, BorderLayout.CENTER);
 		
 		JPanel enviarMensaje = new JPanel();

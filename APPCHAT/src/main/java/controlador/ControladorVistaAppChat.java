@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import interfazGrafica.ChatWindow;
 import interfazGrafica.InterfazVistas;
 import interfazGrafica.LogIn;
 import interfazGrafica.Register;
@@ -23,6 +24,9 @@ import persistencia.IAdaptadorMensajeDAO;
 import persistencia.IAdaptadorUsuarioDAO;
 
 public class ControladorVistaAppChat {
+	public static final String REGISTRO_CORRECTO = "U've been registered into the Dark Lord Army!!!!!!!!!";
+	public static final String REGISTRO_NOMBRE_YA_USADO = "User already registered";
+	
 	private static ControladorVistaAppChat unicaInstancia;
 	private IAdaptadorUsuarioDAO adaptadorUsuario;
 	private IAdaptadorContactoIndividualDAO adaptadorContacto;
@@ -70,8 +74,12 @@ public class ControladorVistaAppChat {
 	}
 
 	public boolean loginUser(String name, String pass) {
-		System.out.println(name + " " + pass);
 		// TODO loguear el usuario
+		
+		// Cambiamos la interfaz
+		changeToChatWindow();
+		// TODO obtener los datos: chats, foto de perfil e inicializar la ventana
+		
 		return false;
 	}
 
@@ -79,17 +87,17 @@ public class ControladorVistaAppChat {
 			String contraseña, String imagen, String saludo) {
 		Usuario user;
 		if (catalogoUsuarios.getUsuario(movil) != null)
-			return "User already registered";
+			return REGISTRO_NOMBRE_YA_USADO;
 		
 		if (saludo.equals(""))
 			user = new Usuario(nombre, fechanacimiento, email, movil, usuario, contraseña, imagen);
 		else
 			user = new Usuario(nombre, fechanacimiento, email, movil, usuario, contraseña, imagen, saludo);
 		
-		adaptadorUsuario.registrarUsuario(user);
 		catalogoUsuarios.addUsuario(user);
+		adaptadorUsuario.registrarUsuario(user);
 		
-		return "U've been registered into the Dark Lord Army!!!!!!!!!";
+		return REGISTRO_CORRECTO;
 	}
 
 	public void changeToRegister() {
@@ -104,7 +112,12 @@ public class ControladorVistaAppChat {
 		antigua.exit();
 	}
 	
-	
+	public void changeToChatWindow()
+	{
+		InterfazVistas antigua = interfaz;
+		interfaz = new ChatWindow(this);
+		antigua.exit();
+	}
 	// TODO Funcion para buscar mensajes en un grupo
 	public List<Mensaje> buscarMensajeGrupo(String usuario, String texto, LocalDate fecha1, LocalDate fecha2) {
 		// Cualquiera de los parámetros puede ser opcional
