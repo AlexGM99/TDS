@@ -100,6 +100,8 @@ public class Register implements InterfazVistas {
 				mailmatch = false;
 			}
 		}
+		if(dateChooser.getDate() == null)
+			salida = false;
 		if(phoneField.getText().trim().isEmpty()) {
 			salida = false;
 		}
@@ -299,7 +301,7 @@ public class Register implements InterfazVistas {
 		frmAppchatregister.getContentPane().add(secondNamefield, gbc_secondNamefield);
 		secondNamefield.setColumns(10);
 		
-		JLabel lblNewLabel_1 = new JLabel("birthday");
+		JLabel lblNewLabel_1 = new JLabel("birthday*");
 		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
 		gbc_lblNewLabel_1.anchor = GridBagConstraints.WEST;
 		gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 5);

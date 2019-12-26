@@ -13,16 +13,24 @@ import java.awt.Insets;
 import javax.swing.border.SoftBevelBorder;
 
 import controlador.ControladorVistaAppChat;
+import modelo.Usuario;
 
 import javax.swing.border.BevelBorder;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Scanner;
 
 import javax.swing.JTextField;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
+
 import java.awt.Component;
 import java.awt.Dimension;
 
@@ -30,6 +38,7 @@ import javax.swing.JPopupMenu;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import java.awt.FlowLayout;
 
@@ -40,8 +49,25 @@ public class ChatWindow implements InterfazVistas{
 	private JTextField txtChat;
 	private JTextField textmensaje;
 	
+	private JLabel lblMiNombre;
+	private JPanel panel;
+	private JPanel mostrarPerfil;
+	private JLabel label_MifotoPerfil;
+	private JPanel nombreChat;
+	private JPanel panelimage;
+	private JLabel lblImage;
+	private JLabel lblnombrechat;
+	private JPanel opciones_usuario;
+	private JPanel buscadorMensjs;
+	private JButton btnopciones;
+	private JPanel panel_opciones_user;
+	private JScrollPane scrollChats;
+	private JList chatslist;
+	private JScrollPane scroll_chat;
+	private JList chat_list;
+	
+	
 	private ControladorVistaAppChat controlador;
-
 	/**
 	 * Launch the application.
 	 */
@@ -61,9 +87,44 @@ public class ChatWindow implements InterfazVistas{
 	/**
 	 * Create the application.
 	 */
-	public ChatWindow(ControladorVistaAppChat controlador) {
+	public ChatWindow(ControladorVistaAppChat controlador, Usuario user) {
 		initialize();
 		this.controlador = controlador;
+		lblMiNombre.setText(user.getUsuario());
+		Scanner entrada = null;
+		 try {
+	            String ruta = user.getImagen();
+	            File f = new File(ruta);
+	            entrada = new Scanner(f);
+	            while (entrada.hasNext()) {
+	                System.out.println(entrada.nextLine());
+	            }
+	            BufferedImage myPicture;
+	            try { 
+	    			myPicture = ImageIO.read(f);			
+	    			Image aux=myPicture.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+	    			label_MifotoPerfil.setIcon(new ImageIcon(aux));
+	    			label_MifotoPerfil.repaint();
+	    		} catch (IOException e1) {
+	    			//e1.printStackTrace();
+	    			JOptionPane.showConfirmDialog(chat_list, "Ha habido un error al cargar la imagen, "
+	    					+ "la moviste de sitio :(", "error al recuperar la imagen", JOptionPane.WARNING_MESSAGE);
+	    		}
+	        } catch (FileNotFoundException e0) {
+	            //System.out.println(e0.getMessage());
+	        	JOptionPane.showConfirmDialog(chat_list, "Ha habido un error al cargar la imagen, "
+    					+ "la moviste de sitio :(", "error al recuperar la imagen", JOptionPane.WARNING_MESSAGE);
+	        } catch (NullPointerException e1) {
+	            //System.out.println("No se ha seleccionado ningún fichero");
+	        } catch (Exception e2) {
+	            //System.out.println(e2.getMessage());
+	        	JOptionPane.showConfirmDialog(chat_list, "Ha habido un error al cargar la imagen, "
+    					+ "la moviste de sitio :(", "error al recuperar la imagen", JOptionPane.WARNING_MESSAGE);
+	        } finally {
+	            if (entrada != null) {
+	                entrada.close();
+	            }
+	        }
 		this.frmAppchat.setVisible(true);
 	}
 
@@ -79,7 +140,7 @@ public class ChatWindow implements InterfazVistas{
 		frmAppchat.setLocationRelativeTo(null);
 		frmAppchat.getContentPane().setLayout(new BorderLayout(0, 0));
 		
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		panel.setAutoscrolls(true);
 		panel.addMouseListener(new MouseAdapter() {
 			@Override
@@ -95,7 +156,7 @@ public class ChatWindow implements InterfazVistas{
 		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
-		JPanel mostrarPerfil = new JPanel();
+		mostrarPerfil = new JPanel();
 		mostrarPerfil.setMaximumSize(new Dimension(50, 50));
 		mostrarPerfil.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		mostrarPerfil.addMouseListener(new MouseAdapter() {
@@ -120,7 +181,7 @@ public class ChatWindow implements InterfazVistas{
 		gbl_mostrarPerfil.rowWeights = new double[]{0.0, Double.MIN_VALUE};
 		mostrarPerfil.setLayout(gbl_mostrarPerfil);
 		
-		JLabel label_MifotoPerfil = new JLabel("");
+		label_MifotoPerfil = new JLabel("");
 		Image img= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/usuarioDefecto.png")).getImage();
 		ImageIcon img2=new ImageIcon(img.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
 		label_MifotoPerfil.setIcon(img2);
@@ -130,14 +191,14 @@ public class ChatWindow implements InterfazVistas{
 		gbc_label_MifotoPerfil.gridy = 0;
 		mostrarPerfil.add(label_MifotoPerfil, gbc_label_MifotoPerfil);
 		
-		JLabel lblMiNombre = new JLabel("MI NOMBRE");
+		lblMiNombre = new JLabel("MI NOMBRE");
 		GridBagConstraints gbc_lblMiNombre = new GridBagConstraints();
 		gbc_lblMiNombre.insets = new Insets(0, 0, 0, 5);
 		gbc_lblMiNombre.gridx = 2;
 		gbc_lblMiNombre.gridy = 0;
 		mostrarPerfil.add(lblMiNombre, gbc_lblMiNombre);
 		
-		JPanel nombreChat = new JPanel();
+		nombreChat = new JPanel();
 		nombreChat.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		GridBagConstraints gbc_nombreChat = new GridBagConstraints();
 		gbc_nombreChat.gridheight = 2;
@@ -153,7 +214,7 @@ public class ChatWindow implements InterfazVistas{
 		gbl_nombreChat.rowWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
 		nombreChat.setLayout(gbl_nombreChat);
 		
-		JPanel panelimage = new JPanel();
+		panelimage = new JPanel();
 		GridBagConstraints gbc_panelimage = new GridBagConstraints();
 		gbc_panelimage.insets = new Insets(0, 0, 5, 5);
 		gbc_panelimage.fill = GridBagConstraints.BOTH;
@@ -161,19 +222,19 @@ public class ChatWindow implements InterfazVistas{
 		gbc_panelimage.gridy = 0;
 		nombreChat.add(panelimage, gbc_panelimage);
 		
-		JLabel lblImage = new JLabel("");
+		lblImage = new JLabel("");
 		panelimage.add(lblImage);
 		
-		JLabel lblnombrechat = new JLabel("");
+		lblnombrechat = new JLabel("");
 		GridBagConstraints gbc_lblnombrechat = new GridBagConstraints();
 		gbc_lblnombrechat.gridx = 1;
 		gbc_lblnombrechat.gridy = 1;
 		nombreChat.add(lblnombrechat, gbc_lblnombrechat);
 		
-		JPanel opciones_usuario = new JPanel();
+		opciones_usuario = new JPanel();
 		opciones_usuario.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		
-		JPanel buscadorMensjs = new JPanel();
+		buscadorMensjs = new JPanel();
 		buscadorMensjs.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		GridBagConstraints gbc_buscadorMensjs = new GridBagConstraints();
 		gbc_buscadorMensjs.gridheight = 2;
@@ -202,14 +263,14 @@ public class ChatWindow implements InterfazVistas{
 		gbc_opciones_usuario.gridy = 0;
 		panel.add(opciones_usuario, gbc_opciones_usuario);
 		
-		JButton btnopciones = new JButton("options");
+		btnopciones = new JButton("options");
 		btnopciones.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
 		btnopciones.setActionCommand("");
 		opciones_usuario.add(btnopciones);
-		
+		//botones de opciones de chat
 		final JPopupMenu popupMenu_1 = new JPopupMenu();
 		addPopup(btnopciones, popupMenu_1);
 		
@@ -239,7 +300,7 @@ public class ChatWindow implements InterfazVistas{
 			}
 		});
 		
-		JPanel panel_opciones_user = new JPanel();
+		panel_opciones_user = new JPanel();
 		GridBagConstraints gbc_panel_opciones_user = new GridBagConstraints();
 		gbc_panel_opciones_user.gridheight = 2;
 		gbc_panel_opciones_user.insets = new Insets(0, 0, 5, 5);
@@ -248,20 +309,20 @@ public class ChatWindow implements InterfazVistas{
 		gbc_panel_opciones_user.gridy = 0;
 		panel.add(panel_opciones_user, gbc_panel_opciones_user);
 		
-		JPanel panel_1 = new JPanel();
-		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
-		gbc_panel_1.gridwidth = 2;
-		gbc_panel_1.insets = new Insets(0, 0, 5, 5);
-		gbc_panel_1.fill = GridBagConstraints.BOTH;
-		gbc_panel_1.gridx = 1;
-		gbc_panel_1.gridy = 2;
-		panel.add(panel_1, gbc_panel_1);
+		JPanel panel_lupaDeco = new JPanel();
+		GridBagConstraints gbc_panel_lupaDeco = new GridBagConstraints();
+		gbc_panel_lupaDeco.gridwidth = 2;
+		gbc_panel_lupaDeco.insets = new Insets(0, 0, 5, 5);
+		gbc_panel_lupaDeco.fill = GridBagConstraints.BOTH;
+		gbc_panel_lupaDeco.gridx = 1;
+		gbc_panel_lupaDeco.gridy = 2;
+		panel.add(panel_lupaDeco, gbc_panel_lupaDeco);
 		
-		JLabel label_1 = new JLabel("");
+		JLabel label_lupaDeco = new JLabel("");
 		Image img5= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/lupitaRed.png")).getImage();
 		ImageIcon img6=new ImageIcon(img5.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
-		label_1.setIcon(img6);
-		panel_1.add(label_1);
+		label_lupaDeco.setIcon(img6);
+		panel_lupaDeco.add(label_lupaDeco);
 		JPanel buscadorChats = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) buscadorChats.getLayout();
 		flowLayout.setAlignOnBaseline(true);
@@ -285,7 +346,7 @@ public class ChatWindow implements InterfazVistas{
 		buscadorChats.add(txtChat);
 		txtChat.setColumns(20);
 		
-		JScrollPane scrollChats = new JScrollPane();
+		scrollChats = new JScrollPane();
 		GridBagConstraints gbc_scrollChats = new GridBagConstraints();
 		gbc_scrollChats.gridheight = 2;
 		gbc_scrollChats.gridwidth = 4;
@@ -295,10 +356,10 @@ public class ChatWindow implements InterfazVistas{
 		gbc_scrollChats.gridy = 3;
 		panel.add(scrollChats, gbc_scrollChats);
 		
-		JList chatslist = new JList();
+		chatslist = new JList();
 		scrollChats.setViewportView(chatslist);
 		
-		JScrollPane scroll_chat = new JScrollPane();
+		scroll_chat = new JScrollPane();
 		GridBagConstraints gbc_scroll_chat = new GridBagConstraints();
 		gbc_scroll_chat.gridheight = 2;
 		gbc_scroll_chat.gridwidth = 5;
@@ -308,7 +369,7 @@ public class ChatWindow implements InterfazVistas{
 		gbc_scroll_chat.gridy = 2;
 		panel.add(scroll_chat, gbc_scroll_chat);
 		
-		JList chat_list = new JList();
+		chat_list = new JList();
 		scroll_chat.setViewportView(chat_list);
 		
 		JScrollPane scrollmensaje = new JScrollPane();
@@ -361,11 +422,11 @@ public class ChatWindow implements InterfazVistas{
 		panel.add(enviarMensaje, gbc_enviarMensaje);
 		enviarMensaje.setLayout(new BorderLayout(0, 0));
 		
-		JLabel label = new JLabel("");
+		JLabel labelEnviarMensaje = new JLabel("");
 		Image img3= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/envioAdap.png")).getImage();
 		ImageIcon img4=new ImageIcon(img3.getScaledInstance(50, 27, Image.SCALE_SMOOTH));
-		label.setIcon(img4);
-		enviarMensaje.add(label, BorderLayout.CENTER);
+		labelEnviarMensaje.setIcon(img4);
+		enviarMensaje.add(labelEnviarMensaje, BorderLayout.CENTER);
 	}
 	private static void addPopup(Component component, final JPopupMenu popup) {
 		component.addMouseListener(new MouseAdapter() {

@@ -117,7 +117,7 @@ public class ControladorVistaAppChat {
 	public void changeToChatWindow()
 	{
 		InterfazVistas antigua = interfaz;
-		interfaz = new ChatWindow(this);
+		interfaz = new ChatWindow(this, usuarioActual);
 		antigua.exit();
 	}
 	// TODO Funcion para buscar mensajes en un grupo
