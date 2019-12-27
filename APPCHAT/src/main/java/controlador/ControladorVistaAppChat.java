@@ -79,7 +79,7 @@ public class ControladorVistaAppChat {
 		else return false;
 		// Cambiamos la interfaz
 		changeToChatWindow();
-		// TODO obtener los datos: chats, foto de perfil e inicializar la ventana
+		// TODO obtener los datos de chats e inicializar la ventana
 		
 		return true;
 	}
@@ -100,6 +100,22 @@ public class ControladorVistaAppChat {
 		usuarioActual = user;
 		changeToChatWindow();
 		return REGISTRO_CORRECTO;
+	}
+	
+	public boolean changePhoto(String ruta) {
+		usuarioActual.setImagen(ruta);
+		//TO DO cambiar en la bbdd la imagen
+		adaptadorUsuario.actualizarUsuario(usuarioActual);
+		return true;
+	}
+	
+	public boolean changeGreeting(String greeting) {
+		usuarioActual.setSaludo(greeting);
+		adaptadorUsuario.actualizarUsuario(usuarioActual);
+		return true;
+	}
+	public String getGreeting() {
+		return usuarioActual.getSaludo();
 	}
 
 	public void changeToRegister() {
@@ -141,9 +157,6 @@ public class ControladorVistaAppChat {
 		// Obtener el % que representan del total
 		
 	}
-	
-	
-	
 	
 	
 }

@@ -8,9 +8,12 @@ import java.awt.GridBagLayout;
 import java.awt.Image;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
+
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.border.SoftBevelBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import controlador.ControladorVistaAppChat;
 import modelo.Usuario;
@@ -68,6 +71,9 @@ public class ChatWindow implements InterfazVistas{
 	
 	
 	private ControladorVistaAppChat controlador;
+	private JPopupMenu popupMenu_2;
+	private JButton btnChangePhoto;
+	private JButton btnChangeGreeting;
 	/**
 	 * Launch the application.
 	 */
@@ -91,7 +97,8 @@ public class ChatWindow implements InterfazVistas{
 		initialize();
 		this.controlador = controlador;
 		lblMiNombre.setText(user.getUsuario());
-		Scanner entrada = null;
+		if (!user.getImagen().trim().isEmpty()) {
+		 Scanner entrada = null;
 		 try {
 	            String ruta = user.getImagen();
 	            File f = new File(ruta);
@@ -102,7 +109,7 @@ public class ChatWindow implements InterfazVistas{
 	            BufferedImage myPicture;
 	            try { 
 	    			myPicture = ImageIO.read(f);			
-	    			Image aux=myPicture.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+	    			Image aux=myPicture.getScaledInstance(60, 60, Image.SCALE_SMOOTH);
 	    			label_MifotoPerfil.setIcon(new ImageIcon(aux));
 	    			label_MifotoPerfil.repaint();
 	    		} catch (IOException e1) {
@@ -125,6 +132,7 @@ public class ChatWindow implements InterfazVistas{
 	                entrada.close();
 	            }
 	        }
+		}
 		this.frmAppchat.setVisible(true);
 	}
 
@@ -156,6 +164,7 @@ public class ChatWindow implements InterfazVistas{
 		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
+		
 		mostrarPerfil = new JPanel();
 		mostrarPerfil.setMaximumSize(new Dimension(50, 50));
 		mostrarPerfil.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -163,9 +172,12 @@ public class ChatWindow implements InterfazVistas{
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				//TODO mostrar el perfil del usuario
+					popupMenu_2.setLocation(mostrarPerfil.getLocationOnScreen());
+					popupMenu_2.setVisible(!popupMenu_2.isVisible());
 				System.out.println("perfil");
 			}
 		});
+			
 		GridBagConstraints gbc_mostrarPerfil = new GridBagConstraints();
 		gbc_mostrarPerfil.gridheight = 2;
 		gbc_mostrarPerfil.gridwidth = 3;
@@ -181,10 +193,84 @@ public class ChatWindow implements InterfazVistas{
 		gbl_mostrarPerfil.rowWeights = new double[]{0.0, Double.MIN_VALUE};
 		mostrarPerfil.setLayout(gbl_mostrarPerfil);
 		
-		label_MifotoPerfil = new JLabel("");
+		label_MifotoPerfil =    new JLabel("");
 		Image img= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/usuarioDefecto.png")).getImage();
 		ImageIcon img2=new ImageIcon(img.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
 		label_MifotoPerfil.setIcon(img2);
+		
+		popupMenu_2 = new JPopupMenu();
+		addPopup(mostrarPerfil, popupMenu_2);
+		
+		btnChangePhoto = new JButton("Change photo");
+		btnChangePhoto.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				//TODO cambiar la foto de perfil por la elegida por el usuario -> copiar de register + 
+				Scanner entrada = null;
+				popupMenu_2.setVisible(false);
+		        JFileChooser fileChooser = new JFileChooser();
+		        FileNameExtensionFilter imgFilter = new FileNameExtensionFilter("JPG & PNG Images", "jpg", "png"); 
+		        fileChooser.setFileFilter(imgFilter);
+		        fileChooser.showOpenDialog(fileChooser);
+		        String ruta = "";
+		        try {
+		            ruta = fileChooser.getSelectedFile().getAbsolutePath();
+		            File f = new File(ruta);
+		            entrada = new Scanner(f);
+		            while (entrada.hasNext()) {
+		                System.out.println(entrada.nextLine());
+		            }
+		            BufferedImage myPicture;
+		            try { 
+		    			myPicture = ImageIO.read(f);			
+		    			Image aux=myPicture.getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+		    			label_MifotoPerfil.setIcon(new ImageIcon(aux));
+		    			label_MifotoPerfil.repaint();
+		    			//TODO llamar al controlador que actualice el usuario y analizar error
+		    			boolean changed = controlador.changePhoto(ruta);
+				        if (!changed) {
+				        	JOptionPane.showConfirmDialog(chat_list, "There where an error in the process to become a dark boss with an appropiate image",
+				        			"Couldn't change the image", JOptionPane.ERROR_MESSAGE);
+				        }
+		    		} catch (IOException e1) {
+		    			//e1.printStackTrace();
+		    			JOptionPane.showConfirmDialog(chat_list, "Ha habido un error al cargar la imagen, "
+		    					+ "la moviste de sitio :(", "error al recuperar la imagen", JOptionPane.WARNING_MESSAGE);
+		    		}
+		        } catch (FileNotFoundException e0) {
+		            //System.out.println(e0.getMessage());
+		        	JOptionPane.showConfirmDialog(chat_list, "Ha habido un error al cargar la imagen, "
+	    					+ "la moviste de sitio :(", "error al recuperar la imagen", JOptionPane.WARNING_MESSAGE);
+		        } catch (NullPointerException e1) {
+		            //System.out.println("No se ha seleccionado ningún fichero");
+		        } catch (Exception e2) {
+		            //System.out.println(e2.getMessage());
+		        	JOptionPane.showConfirmDialog(chat_list, "Ha habido un error al cargar la imagen, "
+	    					+ "la moviste de sitio :(", "error al recuperar la imagen", JOptionPane.WARNING_MESSAGE);
+		        } finally {
+		            if (entrada != null) {
+		                entrada.close();
+		            }
+		        }
+			}
+		});
+		popupMenu_2.add(btnChangePhoto);
+		
+		btnChangeGreeting = new JButton("change greeting");
+		btnChangeGreeting.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//TODO cambiar el saludo y llamar al controlador que lo cambie en la BBDD 
+				popupMenu_2.setVisible(false);
+				String newGreeting = JOptionPane.showInputDialog(btnChangeGreeting, 
+						"Your actual greeting: " + controlador.getGreeting(),
+						"Change your greeting to please our lord!",
+						JOptionPane.PLAIN_MESSAGE); 
+				if (newGreeting !=null)
+					controlador.changeGreeting(newGreeting);
+			}
+		});
+		popupMenu_2.add(btnChangeGreeting);
 		GridBagConstraints gbc_label_MifotoPerfil = new GridBagConstraints();
 		gbc_label_MifotoPerfil.insets = new Insets(0, 0, 0, 5);
 		gbc_label_MifotoPerfil.gridx = 0;
