@@ -74,6 +74,7 @@ public class ChatWindow implements InterfazVistas{
 	private JPopupMenu popupMenu_2;
 	private JButton btnChangePhoto;
 	private JButton btnChangeGreeting;
+	private JButton btnPremium;
 	/**
 	 * Launch the application.
 	 */
@@ -94,8 +95,8 @@ public class ChatWindow implements InterfazVistas{
 	 * Create the application.
 	 */
 	public ChatWindow(ControladorVistaAppChat controlador, Usuario user) {
-		initialize();
 		this.controlador = controlador;
+		initialize();
 		lblMiNombre.setText(user.getUsuario());
 		if (!user.getImagen().trim().isEmpty()) {
 		 Scanner entrada = null;
@@ -260,7 +261,7 @@ public class ChatWindow implements InterfazVistas{
 		btnChangeGreeting.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				//TODO cambiar el saludo y llamar al controlador que lo cambie en la BBDD 
+				//TO DO cambiar el saludo y llamar al controlador que lo cambie en la BBDD 
 				popupMenu_2.setVisible(false);
 				String newGreeting = JOptionPane.showInputDialog(btnChangeGreeting, 
 						"Your actual greeting: " + controlador.getGreeting(),
@@ -271,6 +272,24 @@ public class ChatWindow implements InterfazVistas{
 			}
 		});
 		popupMenu_2.add(btnChangeGreeting);
+		
+		if (!controlador.soypremium()) {
+			btnPremium = new JButton("Ascenso a premium");
+			btnPremium.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					popupMenu_2.setVisible(false);
+					int opt = JOptionPane.showConfirmDialog(btnPremium, "your soul will belong to our Lord and u'll be a captain of the premium army", "soul sale contract", 
+							JOptionPane.NO_OPTION, JOptionPane.OK_OPTION);
+					if (opt==JOptionPane.OK_OPTION) {
+						controlador.vendoMiAlmaPorPremium();
+						popupMenu_2.remove(btnPremium);
+					}
+				}
+			});
+			popupMenu_2.add(btnPremium);
+		}
+			
 		GridBagConstraints gbc_label_MifotoPerfil = new GridBagConstraints();
 		gbc_label_MifotoPerfil.insets = new Insets(0, 0, 0, 5);
 		gbc_label_MifotoPerfil.gridx = 0;
@@ -468,6 +487,14 @@ public class ChatWindow implements InterfazVistas{
 		panel.add(scrollmensaje, gbc_scrollmensaje);
 		
 		textmensaje = new JTextField();
+		textmensaje.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				if (e.getKeyChar() == '\n' || e.getKeyChar() == '\r') {
+					controlador.enviarMensaje(textmensaje.getText());
+				}
+			}
+		});
 		scrollmensaje.setViewportView(textmensaje);
 		textmensaje.setColumns(10);
 		
@@ -509,6 +536,12 @@ public class ChatWindow implements InterfazVistas{
 		enviarMensaje.setLayout(new BorderLayout(0, 0));
 		
 		JLabel labelEnviarMensaje = new JLabel("");
+		labelEnviarMensaje.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				controlador.enviarMensaje(textmensaje.getText());
+			}
+		});
 		Image img3= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/envioAdap.png")).getImage();
 		ImageIcon img4=new ImageIcon(img3.getScaledInstance(50, 27, Image.SCALE_SMOOTH));
 		labelEnviarMensaje.setIcon(img4);

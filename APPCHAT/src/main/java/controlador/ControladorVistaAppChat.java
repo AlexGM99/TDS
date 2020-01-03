@@ -94,10 +94,9 @@ public class ControladorVistaAppChat {
 			user = new Usuario(nombre, fechanacimiento, email, movil, usuario, contraseña, imagen);
 		else
 			user = new Usuario(nombre, fechanacimiento, email, movil, usuario, contraseña, imagen, saludo);
-		
+		usuarioActual = user;
 		catalogoUsuarios.addUsuario(user);
 		adaptadorUsuario.registrarUsuario(user);
-		usuarioActual = user;
 		changeToChatWindow();
 		return REGISTRO_CORRECTO;
 	}
@@ -136,10 +135,18 @@ public class ControladorVistaAppChat {
 		interfaz = new ChatWindow(this, usuarioActual);
 		antigua.exit();
 	}
-	// TODO Funcion para buscar mensajes en un grupo
-	public List<Mensaje> buscarMensajeGrupo(String usuario, String texto, LocalDate fecha1, LocalDate fecha2) {
-		// Cualquiera de los parámetros puede ser opcional
-		return null;
+	
+	public boolean soypremium() {
+		return usuarioActual.isPremium();
+	}
+	
+	public void vendoMiAlmaPorPremium() {
+		usuarioActual.setPremium(true);
+		adaptadorUsuario.actualizarUsuario(usuarioActual);
+	}
+	
+	public void enviarMensaje(String mensaje) {
+		//TODO coger el usuario que envio el mensaje
 	}
 	
 	// TODO Funcion para buscar un mensaje en un chat normal
