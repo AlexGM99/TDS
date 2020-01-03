@@ -2,6 +2,7 @@ package controlador;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -80,7 +81,9 @@ public class ControladorVistaAppChat {
 		// Cambiamos la interfaz
 		changeToChatWindow();
 		// TODO obtener los datos de chats e inicializar la ventana
-		
+		ChatWindow chat = (ChatWindow) interfaz;
+		LinkedList<Contacto> lista = (LinkedList<Contacto>)getContactos();
+		chat.setChats(lista);
 		return true;
 	}
 
@@ -143,7 +146,26 @@ public class ControladorVistaAppChat {
 	public void vendoMiAlmaPorPremium() {
 		usuarioActual.setPremium(true);
 		adaptadorUsuario.actualizarUsuario(usuarioActual);
-		
+		catalogoUsuarios.addUsuario(usuarioActual);
+	}
+	
+	public String getImage(int code) {
+		return catalogoUsuarios.getUsuario(code).getImagen();
+	}
+	
+	public String getUserNick(int code) {
+		return catalogoUsuarios.getUsuario(code).getUsuario();
+	}
+	
+	public List<Contacto> getContactos(){
+		LinkedList<Contacto> contactos = new LinkedList<Contacto>();
+		usuarioActual.getContactos().stream().
+									forEach(cont -> contactos.add(cont));
+		Usuario usu = new Usuario("hola" , new Date(), "H", "H", "hola", "hola", "");
+		catalogoUsuarios.addUsuario(usu);
+		contactos.add(new Contacto("hola") {
+		});
+		return contactos;
 	}
 	
 	public void enviarMensaje(String mensaje) {

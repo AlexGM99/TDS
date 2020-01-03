@@ -16,6 +16,9 @@ import javax.swing.border.SoftBevelBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import controlador.ControladorVistaAppChat;
+import modelo.Contacto;
+import modelo.ContactoGrupo;
+import modelo.ContactoIndividual;
 import modelo.Usuario;
 
 import javax.swing.border.BevelBorder;
@@ -25,9 +28,12 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
+
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.JScrollPane;
@@ -42,8 +48,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 import javax.imageio.ImageIO;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import java.awt.FlowLayout;
+import java.awt.ComponentOrientation;
 
 public class ChatWindow implements InterfazVistas{
 
@@ -57,18 +65,18 @@ public class ChatWindow implements InterfazVistas{
 	private JPanel mostrarPerfil;
 	private JLabel label_MifotoPerfil;
 	private JPanel nombreChat;
-	private JPanel panelimage;
-	private JLabel lblImage;
 	private JLabel lblnombrechat;
 	private JPanel opciones_usuario;
 	private JPanel buscadorMensjs;
 	private JButton btnopciones;
 	private JPanel panel_opciones_user;
 	private JScrollPane scrollChats;
-	private JList chatslist;
+	private JList<Contacto> chatslist;
 	private JScrollPane scroll_chat;
 	private JList chat_list;
+	private DefaultListModel<Contacto> listModel;
 	
+	private int codigoActivo;
 	
 	private ControladorVistaAppChat controlador;
 	private JPopupMenu popupMenu_2;
@@ -312,29 +320,14 @@ public class ChatWindow implements InterfazVistas{
 		gbc_nombreChat.gridx = 5;
 		gbc_nombreChat.gridy = 0;
 		panel.add(nombreChat, gbc_nombreChat);
-		GridBagLayout gbl_nombreChat = new GridBagLayout();
-		gbl_nombreChat.columnWidths = new int[]{0, 0, 0};
-		gbl_nombreChat.rowHeights = new int[]{0, 0, 0};
-		gbl_nombreChat.columnWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
-		gbl_nombreChat.rowWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
-		nombreChat.setLayout(gbl_nombreChat);
-		
-		panelimage = new JPanel();
-		GridBagConstraints gbc_panelimage = new GridBagConstraints();
-		gbc_panelimage.insets = new Insets(0, 0, 5, 5);
-		gbc_panelimage.fill = GridBagConstraints.BOTH;
-		gbc_panelimage.gridx = 0;
-		gbc_panelimage.gridy = 0;
-		nombreChat.add(panelimage, gbc_panelimage);
-		
-		lblImage = new JLabel("");
-		panelimage.add(lblImage);
+		FlowLayout fl_nombreChat = new FlowLayout(FlowLayout.LEFT, 5, 5);
+		fl_nombreChat.setAlignOnBaseline(true);
+		nombreChat.setLayout(fl_nombreChat);
 		
 		lblnombrechat = new JLabel("");
-		GridBagConstraints gbc_lblnombrechat = new GridBagConstraints();
-		gbc_lblnombrechat.gridx = 1;
-		gbc_lblnombrechat.gridy = 1;
-		nombreChat.add(lblnombrechat, gbc_lblnombrechat);
+		lblnombrechat.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+		nombreChat.add(lblnombrechat);
+		lblnombrechat.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
 		opciones_usuario = new JPanel();
 		opciones_usuario.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -380,6 +373,11 @@ public class ChatWindow implements InterfazVistas{
 		addPopup(btnopciones, popupMenu_1);
 		
 		JButton btnDeleteContact = new JButton("Delete contact");
+		btnDeleteContact.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			}
+		});
 		btnDeleteContact.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -461,8 +459,10 @@ public class ChatWindow implements InterfazVistas{
 		gbc_scrollChats.gridy = 3;
 		panel.add(scrollChats, gbc_scrollChats);
 		
-		chatslist = new JList();
+		listModel = new DefaultListModel<Contacto>();
+		chatslist = new JList<Contacto>(listModel);
 		scrollChats.setViewportView(chatslist);
+		chatslist.setCellRenderer(new chatListRender());
 		
 		scroll_chat = new JScrollPane();
 		GridBagConstraints gbc_scroll_chat = new GridBagConstraints();
@@ -567,5 +567,67 @@ public class ChatWindow implements InterfazVistas{
 
 	public void exit() {
 		frmAppchat.dispose();
+	}
+	
+	private class chatListRender extends JLabel implements ListCellRenderer<Contacto> {
+		public chatListRender() {
+		    setOpaque(true);
+		}
+	    public Component getListCellRendererComponent(JList<? extends Contacto> list, Contacto cont, int index,
+	        boolean isSelected, boolean cellHasFocus) {
+	    	this.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+	    		String ruta = controlador.getImage(cont.getCodigo());
+	        	if (!ruta.trim().isEmpty()) {
+	        		File f = new File(ruta);
+	        		BufferedImage myPicture = null;
+					try {
+						myPicture = ImageIO.read(f);
+					} catch (IOException e) {
+						//TODO ADVERTENCIA
+					}			
+	        		Image aux=myPicture.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+	        		this.setIcon(new ImageIcon(aux));
+	        	} else {
+	        		Image img5= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/usuarioDefecto.png")).getImage();
+	        		ImageIcon img6=new ImageIcon(img5.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+	        		this.setIcon(img6);
+	        	}
+	        	this.setText(controlador.getUserNick(cont.getCodigo()));
+	    	if (isSelected) {
+	    	    setBackground(list.getSelectionBackground());
+	    	    setForeground(list.getSelectionForeground());
+	    	    codigoActivo = cont.getCodigo();
+	    	    ponerChat();
+	    	} else {
+	    	    setBackground(list.getBackground());
+	    	    setForeground(list.getForeground());
+	    	}
+	        return this;
+	    }
+	}
+	
+	private void ponerChat() {
+		String ruta = controlador.getImage(codigoActivo);
+    	if (!ruta.trim().isEmpty()) {
+    		File f = new File(ruta);
+    		BufferedImage myPicture = null;
+			try {
+				myPicture = ImageIO.read(f);
+			} catch (IOException e) {
+				//TODO ADVERTENCIA
+			}			
+    		Image aux=myPicture.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+    		lblnombrechat.setIcon(new ImageIcon(aux));
+    	} else {
+    		Image img5= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/usuarioDefecto.png")).getImage();
+    		ImageIcon img6=new ImageIcon(img5.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+    		lblnombrechat.setIcon(img6);
+    	}
+    	lblnombrechat.setText(controlador.getUserNick(codigoActivo));
+	}
+	
+	public void setChats(LinkedList<Contacto> listaModel) {
+		listaModel.stream().forEach(cont -> listModel.addElement(cont));
+		chatslist.setCellRenderer(new chatListRender());
 	}
 }
