@@ -69,6 +69,10 @@ public class CatalogoUsuarios {
 	public void removeUsuario(Usuario user) {
 		usuarios.remove(user.getMovil());
 	}
+	
+	public void actualizarUsuario(Usuario user) {
+		usuarios.put(user.getMovil(), user);
+	}
 
 	public int logIn(String movil, String contraseña) {
 		Usuario user = usuarios.get(movil);
