@@ -17,6 +17,14 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 
 	private static ServicioPersistencia servPersistencia;
 	private static AdaptadorContactoGrupoTDS unicaInstancia;
+	
+	private static final String NOMBRE_ENTIDAD = "contactoGrupo";
+	private static final String NOMBRE_PROP_NOMBRE = "nombre";
+	private static final String NOMBRE_PROP_MENSAJES = "mensajes";
+	private static final String NOMBRE_PROP_ADMIN = "admin";
+	private static final String NOMBRE_PROP_MIEMBROS = "miembros";
+	
+	
 
 	public static AdaptadorContactoGrupoTDS getUnicaInstancia() { // patron singleton
 		if (unicaInstancia == null) {
@@ -53,12 +61,12 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 		// crear entidad contactoGrupo
 		eContactoGr = new Entidad();
 
-		eContactoGr.setNombre("contactoGrupo");
+		eContactoGr.setNombre(NOMBRE_ENTIDAD);
 		eContactoGr.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(
-				new Propiedad("nombre", contacto.getNombre()),
-				new Propiedad("mensajes", Auxiliar.obtenerCodigos(contacto.getMensajes())),
-				new Propiedad("admin", String.valueOf(contacto.getAdmin().getCodigo())),
-				new Propiedad("miembros", Auxiliar.obtenerCodigos(contacto.getMiembros())))));
+				new Propiedad(NOMBRE_PROP_NOMBRE, contacto.getNombre()),
+				new Propiedad(NOMBRE_PROP_MENSAJES, Auxiliar.obtenerCodigos(contacto.getMensajes())),
+				new Propiedad(NOMBRE_PROP_ADMIN, String.valueOf(contacto.getAdmin().getCodigo())),
+				new Propiedad(NOMBRE_PROP_MIEMBROS, Auxiliar.obtenerCodigos(contacto.getMiembros())))));
 
 		// registrar entidad contactoGrupo
 		eContactoGr = servPersistencia.registrarEntidad(eContactoGr);
@@ -84,18 +92,18 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 		Entidad eContactoGr;
 
 		eContactoGr = servPersistencia.recuperarEntidad(contacto.getCodigo());
-		servPersistencia.eliminarPropiedadEntidad(eContactoGr, "nombre");
-		servPersistencia.anadirPropiedadEntidad(eContactoGr, "nombre", contacto.getNombre());
-		servPersistencia.eliminarPropiedadEntidad(eContactoGr, "admin");
-		servPersistencia.anadirPropiedadEntidad(eContactoGr, "admin", String.valueOf(contacto.getAdmin().getCodigo()));
+		servPersistencia.eliminarPropiedadEntidad(eContactoGr, NOMBRE_PROP_NOMBRE);
+		servPersistencia.anadirPropiedadEntidad(eContactoGr, NOMBRE_PROP_NOMBRE, contacto.getNombre());
+		servPersistencia.eliminarPropiedadEntidad(eContactoGr, NOMBRE_PROP_ADMIN);
+		servPersistencia.anadirPropiedadEntidad(eContactoGr, NOMBRE_PROP_ADMIN, String.valueOf(contacto.getAdmin().getCodigo()));
 		
 		String lineas = Auxiliar.obtenerCodigos(contacto.getMensajes());
-		servPersistencia.eliminarPropiedadEntidad(eContactoGr, "mensajes");
-		servPersistencia.anadirPropiedadEntidad(eContactoGr, "mensajes", lineas);
+		servPersistencia.eliminarPropiedadEntidad(eContactoGr, NOMBRE_PROP_MENSAJES);
+		servPersistencia.anadirPropiedadEntidad(eContactoGr, NOMBRE_PROP_MENSAJES, lineas);
 		
 		lineas = Auxiliar.obtenerCodigos(contacto.getMiembros());
-		servPersistencia.eliminarPropiedadEntidad(eContactoGr, "miembros");
-		servPersistencia.anadirPropiedadEntidad(eContactoGr, "miembros", lineas);
+		servPersistencia.eliminarPropiedadEntidad(eContactoGr, NOMBRE_PROP_MIEMBROS);
+		servPersistencia.anadirPropiedadEntidad(eContactoGr, NOMBRE_PROP_MIEMBROS, lineas);
 		
 		if (PoolDAO.getUnicaInstancia().contiene(contacto.getCodigo()))
 			PoolDAO.getUnicaInstancia().addObjeto(contacto.getCodigo(), contacto);
@@ -113,10 +121,10 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 
 		// recuperar propiedades que no son objetos
 		// nombre
-		String nombre = servPersistencia.recuperarPropiedadEntidad(eContactoGr, "nombre");
+		String nombre = servPersistencia.recuperarPropiedadEntidad(eContactoGr, NOMBRE_PROP_NOMBRE);
 
 		// miembrosList
-		String lineas = servPersistencia.recuperarPropiedadEntidad(eContactoGr, "miembros");
+		String lineas = servPersistencia.recuperarPropiedadEntidad(eContactoGr, NOMBRE_PROP_MIEMBROS);
 		List<String> aux = Arrays.asList(lineas);
 		String[] miembros = new String[aux.size()];
 		for (int i = 0; i < miembros.length; i++) {
@@ -132,14 +140,14 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 		// recuperar propiedades que son objetos llamando a adaptadores
 		// admin
 		AdaptadorUsuarioTDS adaptadorUsuario = AdaptadorUsuarioTDS.getUnicaInstancia();
-		int codigoUsuario = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eContactoGr, "admin"));
+		int codigoUsuario = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eContactoGr, NOMBRE_PROP_ADMIN));
 		
 		Usuario admin = adaptadorUsuario.recuperarUsuario(codigoUsuario);
 		grupo.setAdmin(admin);
 
 		// mensajes
 		List<Mensaje> mensajes = Auxiliar.obtenerMensajesDesdeCodigos(
-				servPersistencia.recuperarPropiedadEntidad(eContactoGr, "mensajes"));
+				servPersistencia.recuperarPropiedadEntidad(eContactoGr, NOMBRE_PROP_MENSAJES));
 		
 		for (Mensaje mensaje : mensajes) {
 			grupo.addMensaje(mensaje);
@@ -151,7 +159,7 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 
 	public List<ContactoGrupo> recuperarTodosContactoGrupos() {
 		List<ContactoGrupo> contactos = new LinkedList<ContactoGrupo>();
-		List<Entidad> entidades = servPersistencia.recuperarEntidades("contactoGrupo");
+		List<Entidad> entidades = servPersistencia.recuperarEntidades(NOMBRE_ENTIDAD);
 
 		for (Entidad eContactoGr : entidades) {
 			contactos.add(recuperarContactoGrupo(eContactoGr.getId()));

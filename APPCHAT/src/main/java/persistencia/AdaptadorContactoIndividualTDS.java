@@ -16,7 +16,12 @@ public class AdaptadorContactoIndividualTDS implements IAdaptadorContactoIndivid
 
 	private static ServicioPersistencia servPersistencia;
 	private static AdaptadorContactoIndividualTDS unicaInstancia = null;
-
+	
+	private static final String NOMBRE_ENTIDAD = "contactoIndividual";
+	private static final String NOMBRE_PROP_NOMBRE = "nombre";
+	private static final String NOMBRE_PROP_MENSAJES = "mensajes";
+	private static final String NOMBRE_PROP_MOVIL = "movil";
+	
 	public static AdaptadorContactoIndividualTDS getUnicaInstancia() { // patron singleton
 		if (unicaInstancia == null) {
 			return new AdaptadorContactoIndividualTDS();
@@ -49,11 +54,12 @@ public class AdaptadorContactoIndividualTDS implements IAdaptadorContactoIndivid
 
 		// crear entidad contactoIndividual
 		eContactoInd = new Entidad();
-		eContactoInd.setNombre("contactoIndividual");
+		eContactoInd.setNombre(NOMBRE_ENTIDAD);
 		eContactoInd
-				.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(new Propiedad("nombre", contacto.getNombre()),
-						new Propiedad("mensajes", Auxiliar.obtenerCodigos(contacto.getMensajes())),
-						new Propiedad("movil", contacto.getMovil()))));
+				.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(
+						new Propiedad(NOMBRE_PROP_NOMBRE, contacto.getNombre()),
+						new Propiedad(NOMBRE_PROP_MENSAJES, Auxiliar.obtenerCodigos(contacto.getMensajes())),
+						new Propiedad(NOMBRE_PROP_MOVIL, contacto.getMovil()))));
 
 		// registrar entidad contactoIndividual
 		eContactoInd = servPersistencia.registrarEntidad(eContactoInd);
@@ -76,14 +82,14 @@ public class AdaptadorContactoIndividualTDS implements IAdaptadorContactoIndivid
 			System.err.println("ERROR: No se puede modificar un 'ContactoIndividual' no registrado");
 			return;
 		}
-		servPersistencia.eliminarPropiedadEntidad(eContactoInd, "nombre");
-		servPersistencia.anadirPropiedadEntidad(eContactoInd, "nombre", contacto.getNombre());
-		servPersistencia.eliminarPropiedadEntidad(eContactoInd, "movil");
-		servPersistencia.anadirPropiedadEntidad(eContactoInd, "movil", contacto.getMovil());
+		servPersistencia.eliminarPropiedadEntidad(eContactoInd, NOMBRE_PROP_NOMBRE);
+		servPersistencia.anadirPropiedadEntidad(eContactoInd, NOMBRE_PROP_NOMBRE, contacto.getNombre());
+		servPersistencia.eliminarPropiedadEntidad(eContactoInd, NOMBRE_PROP_MOVIL);
+		servPersistencia.anadirPropiedadEntidad(eContactoInd, NOMBRE_PROP_MOVIL, contacto.getMovil());
 
 		String lineas = Auxiliar.obtenerCodigos(contacto.getMensajes());
-		servPersistencia.eliminarPropiedadEntidad(eContactoInd, "mensajes");
-		servPersistencia.anadirPropiedadEntidad(eContactoInd, "mUsuarioensajes", lineas);
+		servPersistencia.eliminarPropiedadEntidad(eContactoInd, NOMBRE_PROP_MENSAJES);
+		servPersistencia.anadirPropiedadEntidad(eContactoInd, NOMBRE_PROP_MENSAJES, lineas);
 
 		if (PoolDAO.getUnicaInstancia().contiene(contacto.getCodigo()))
 			PoolDAO.getUnicaInstancia().addObjeto(contacto.getCodigo(), contacto);
@@ -101,8 +107,8 @@ public class AdaptadorContactoIndividualTDS implements IAdaptadorContactoIndivid
 		// recuperar propiedades que no son objetos
 		String nombre;
 		String movil;
-		nombre = servPersistencia.recuperarPropiedadEntidad(eContactoInd, "nombre");
-		movil = servPersistencia.recuperarPropiedadEntidad(eContactoInd, "movil");
+		nombre = servPersistencia.recuperarPropiedadEntidad(eContactoInd, NOMBRE_PROP_NOMBRE);
+		movil = servPersistencia.recuperarPropiedadEntidad(eContactoInd, NOMBRE_PROP_MOVIL);
 
 		ContactoIndividual contacto = new ContactoIndividual(nombre, movil);
 		contacto.setCodigo(codigo);
@@ -113,7 +119,7 @@ public class AdaptadorContactoIndividualTDS implements IAdaptadorContactoIndivid
 		// recuperar propiedades que son objetos llamando a adaptadores
 		// mensajes
 		List<Mensaje> mensajes = Auxiliar.obtenerMensajesDesdeCodigos(
-				servPersistencia.recuperarPropiedadEntidad(eContactoInd, "mensajes"));
+				servPersistencia.recuperarPropiedadEntidad(eContactoInd, NOMBRE_PROP_MENSAJES));
 
 		for (Mensaje mensaje : mensajes) {
 			contacto.addMensaje(mensaje);
@@ -124,7 +130,7 @@ public class AdaptadorContactoIndividualTDS implements IAdaptadorContactoIndivid
 
 	public List<ContactoIndividual> recuperarTodosContactoIndividuals() {
 		List<ContactoIndividual> contactos = new LinkedList<ContactoIndividual>();
-		List<Entidad> entidades = servPersistencia.recuperarEntidades("contactoIndividual");
+		List<Entidad> entidades = servPersistencia.recuperarEntidades(NOMBRE_ENTIDAD);
 
 		for (Entidad eContactoInd : entidades) {
 			contactos.add(recuperarContactoIndividual(eContactoInd.getId()));

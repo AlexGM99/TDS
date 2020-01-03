@@ -50,6 +50,14 @@ public class Usuario {
 		this(nombre, fechanacimiento, email, movil, usuario, contraseña, imagen);
 		this.saludo = saludo;
 	}
+	
+	// Constructor con saludo y premium
+	public Usuario(String nombre, Date fechanacimiento, String email, String movil, String usuario, String contraseña,
+			String imagen, String saludo, boolean premium) {
+		this(nombre, fechanacimiento, email, movil, usuario, contraseña, imagen);
+		this.saludo = saludo;
+		this.premium = premium;
+	}
 
 	public int getCodigo() {
 		return codigo;

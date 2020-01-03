@@ -38,36 +38,38 @@ public class PruebaPersistenciaMensaje {
 		Mensaje m = new Mensaje("Mensaje de prueba", fecha, "868884831", new ContactoIndividual("Nombre", "Movil"), TipoContacto.INDIVIDUAL);
 		adaptadorM.registrarMensaje(m);		
 		
-		//assertEquals("Prueba Registro Mensaje: Codigo", m.getCodigo() ,adaptadorM.recuperarMensaje(m.getCodigo()).getCodigo());
-		//assertEquals("Prueba Registro Mensaje: Texto", m.getTexto() ,adaptadorM.recuperarMensaje(m.getCodigo()).getTexto());
-		//assertEquals("Prueba Registro Mensaje: Emisor", m.getTlfEmisor() ,adaptadorM.recuperarMensaje(m.getCodigo()).getTlfEmisor());
-		//assertEquals("Prueba Registro Mensaje: Fecha", m.getHora() ,adaptadorM.recuperarMensaje(m.getCodigo()).getHora());
+		assertEquals("Prueba Registro Mensaje", m.toString(),adaptadorM.recuperarMensaje(m.getCodigo()).toString());
 		
-		// TODO No funciona, corregir
-		assertEquals("Prueba Registro Mensaje", m,adaptadorM.recuperarMensaje(m.getCodigo()));
-		
-		
+		adaptadorM.borrarMensaje(m);
 	}
 
-	/*
-	@Test
+	/*@Test
 	public void testBorrarMensaje() {
 		fail("Not yet implemented");
-	}
+	}*/
 
 	@Test
 	public void testActualizarMensaje() {
-		fail("Not yet implemented");
+		Mensaje m = new Mensaje("Texto Antes", Date.from(Instant.now()), "TlfEmisorAntes", new ContactoIndividual("ContactoAntes", "MoovilContactoAntes"), TipoContacto.INDIVIDUAL);
+		Mensaje m2 = new Mensaje("Texto Despues", Date.from(Instant.now()), "TlfEmisorDespues", new ContactoIndividual("ContactoDespues", "MoovilContactoDespues"), TipoContacto.INDIVIDUAL);
+		
+		adaptadorM.registrarMensaje(m);
+		
+		m2.setCodigo(m.getCodigo());
+		m.setTexto(m2.getTexto());
+		m.setHora(m2.getHora());
+		m.setTlfEmisor(m2.getTlfEmisor());
+		m.setReceptor(m2.getReceptor());
+		adaptadorM.actualizarMensaje(m);
+		
+		assertEquals("Prueba Actualizar Mensaje", m2.toString(),adaptadorM.recuperarMensaje(m.getCodigo()).toString());
 	}
 
-	@Test
-	public void testRecuperarMensaje() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testRecuperarTodosMensajes() {
-		fail("Not yet implemented");
-	}*/
+	/*
+	 * @Test public void testRecuperarMensaje() { fail("Not yet implemented"); }
+	 * 
+	 * @Test public void testRecuperarTodosMensajes() { fail("Not yet implemented");
+	 * }
+	 */
 
 }

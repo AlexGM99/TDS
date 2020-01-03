@@ -75,7 +75,7 @@ public class Mensaje {
 	@Override
 	public String toString() {
 		return getClass().getSimpleName() + " [codigo=" + codigo + ", texto=" + texto + ", tlfEmisor=" + tlfEmisor + ", hora=" + hora
-				+ ", emoticon=" + emoticon + ", receptor=" + receptor.getNombre() + ", grupo=" + tipoReceptor + "]";
+				+ ", emoticon=" + emoticon + ", receptor=" + receptor.getCodigo() + "-" + receptor.getNombre() + ", grupo=" + tipoReceptor + "]";
 	}
 
 	@Override
