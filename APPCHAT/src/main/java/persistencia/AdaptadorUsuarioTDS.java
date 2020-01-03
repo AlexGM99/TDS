@@ -26,6 +26,19 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 
 	private static AdaptadorUsuarioTDS unicaInstancia;
 
+	private static final String NOMBRE_ENTIDAD = "usuario";
+	private static final String NOMBRE_PROP_NOMBRE = "nombre";
+	private static final String NOMBRE_PROP_FECHANACIMIENTO = "fechaNacimiento";
+	private static final String NOMBRE_PROP_EMAIL = "email";
+	private static final String NOMBRE_PROP_MOVIL = "movil";
+	private static final String NOMBRE_PROP_USUARIO = "usuario";
+	private static final String NOMBRE_PROP_CONTRASEÑA = "contraseña";
+	private static final String NOMBRE_PROP_IMAGEN = "imagen";
+	private static final String NOMBRE_PROP_SALUDO = "saludo";
+	private static final String NOMBRE_PROP_PREMIUM = "premium";
+	private static final String NOMBRE_PROP_CONTACTOS = "contactos";
+	private static final String NOMBRE_PROP_GRUPOS = "grupos";	
+	
 	public static AdaptadorUsuarioTDS getUnicaInstancia() { // patron singleton
 		if (unicaInstancia == null)
 			return new AdaptadorUsuarioTDS();
@@ -65,19 +78,19 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		// Crear entidad usuario
 		eUsuario = new Entidad();
 
-		eUsuario.setNombre("usuario");
+		eUsuario.setNombre(NOMBRE_ENTIDAD);
 		eUsuario.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(
-				new Propiedad("nombre", usuario.getNombre()),
-				new Propiedad("fechaNacimiento", dateFormat.format(usuario.getFechaNacimiento())),
-				new Propiedad("email", usuario.getEmail()),
-				new Propiedad("movil", usuario.getMovil()),
-				new Propiedad("usuario", usuario.getUsuario()),
-				new Propiedad("contraseña", usuario.getContraseña()),
-				new Propiedad("imagen", usuario.getImagen()),
-				new Propiedad("saludo", usuario.getSaludo()),
-				new Propiedad("premium", String.valueOf(usuario.isPremium())),
-				new Propiedad("contactos", Auxiliar.obtenerCodigos(usuario.getContactos())),
-				new Propiedad("grupos", Auxiliar.obtenerCodigos(usuario.getGrupos())))));
+				new Propiedad(NOMBRE_PROP_NOMBRE, usuario.getNombre()),
+				new Propiedad(NOMBRE_PROP_FECHANACIMIENTO, dateFormat.format(usuario.getFechaNacimiento())),
+				new Propiedad(NOMBRE_PROP_EMAIL, usuario.getEmail()),
+				new Propiedad(NOMBRE_PROP_MOVIL, usuario.getMovil()),
+				new Propiedad(NOMBRE_PROP_USUARIO, usuario.getUsuario()),
+				new Propiedad(NOMBRE_PROP_CONTRASEÑA, usuario.getContraseña()),
+				new Propiedad(NOMBRE_PROP_IMAGEN, usuario.getImagen()),
+				new Propiedad(NOMBRE_PROP_SALUDO, usuario.getSaludo()),
+				new Propiedad(NOMBRE_PROP_PREMIUM, String.valueOf(usuario.isPremium())),
+				new Propiedad(NOMBRE_PROP_CONTACTOS, Auxiliar.obtenerCodigos(usuario.getContactos())),
+				new Propiedad(NOMBRE_PROP_GRUPOS, Auxiliar.obtenerCodigos(usuario.getGrupos())))));
 
 		// registrar entidad usuario
 		eUsuario = servPersistencia.registrarEntidad(eUsuario);
@@ -104,33 +117,33 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		Entidad eUsuario;
 
 		eUsuario = servPersistencia.recuperarEntidad(usuario.getCodigo());
-		servPersistencia.eliminarPropiedadEntidad(eUsuario, "nombre");
-		servPersistencia.anadirPropiedadEntidad(eUsuario, "nombre", usuario.getNombre());
-		servPersistencia.eliminarPropiedadEntidad(eUsuario, "fechaNacimiento");
-		servPersistencia.anadirPropiedadEntidad(eUsuario, "fechaNacimiento",
+		servPersistencia.eliminarPropiedadEntidad(eUsuario, NOMBRE_PROP_NOMBRE);
+		servPersistencia.anadirPropiedadEntidad(eUsuario, NOMBRE_PROP_NOMBRE, usuario.getNombre());
+		servPersistencia.eliminarPropiedadEntidad(eUsuario, NOMBRE_PROP_FECHANACIMIENTO);
+		servPersistencia.anadirPropiedadEntidad(eUsuario, NOMBRE_PROP_FECHANACIMIENTO,
 				dateFormat.format(usuario.getFechaNacimiento()));
-		servPersistencia.eliminarPropiedadEntidad(eUsuario, "email");
-		servPersistencia.anadirPropiedadEntidad(eUsuario, "email", usuario.getEmail());
-		servPersistencia.eliminarPropiedadEntidad(eUsuario, "movil");
-		servPersistencia.anadirPropiedadEntidad(eUsuario, "movil", usuario.getMovil());
-		servPersistencia.eliminarPropiedadEntidad(eUsuario, "usuario");
-		servPersistencia.anadirPropiedadEntidad(eUsuario, "usuario", usuario.getUsuario());
-		servPersistencia.eliminarPropiedadEntidad(eUsuario, "contraseña");
-		servPersistencia.anadirPropiedadEntidad(eUsuario, "contraseña", usuario.getContraseña());
-		servPersistencia.eliminarPropiedadEntidad(eUsuario, "imagen");
-		servPersistencia.anadirPropiedadEntidad(eUsuario, "imagen", usuario.getImagen());
-		servPersistencia.eliminarPropiedadEntidad(eUsuario, "saludo");
-		servPersistencia.anadirPropiedadEntidad(eUsuario, "saludo", usuario.getSaludo());
-		servPersistencia.eliminarPropiedadEntidad(eUsuario, "premium");
-		servPersistencia.anadirPropiedadEntidad(eUsuario, "premium", String.valueOf(usuario.isPremium()));
+		servPersistencia.eliminarPropiedadEntidad(eUsuario, NOMBRE_PROP_EMAIL);
+		servPersistencia.anadirPropiedadEntidad(eUsuario, NOMBRE_PROP_EMAIL, usuario.getEmail());
+		servPersistencia.eliminarPropiedadEntidad(eUsuario, NOMBRE_PROP_MOVIL);
+		servPersistencia.anadirPropiedadEntidad(eUsuario, NOMBRE_PROP_MOVIL, usuario.getMovil());
+		servPersistencia.eliminarPropiedadEntidad(eUsuario, NOMBRE_PROP_USUARIO);
+		servPersistencia.anadirPropiedadEntidad(eUsuario, NOMBRE_PROP_USUARIO, usuario.getUsuario());
+		servPersistencia.eliminarPropiedadEntidad(eUsuario, NOMBRE_PROP_CONTRASEÑA);
+		servPersistencia.anadirPropiedadEntidad(eUsuario, NOMBRE_PROP_CONTRASEÑA, usuario.getContraseña());
+		servPersistencia.eliminarPropiedadEntidad(eUsuario, NOMBRE_PROP_IMAGEN);
+		servPersistencia.anadirPropiedadEntidad(eUsuario, NOMBRE_PROP_IMAGEN, usuario.getImagen());
+		servPersistencia.eliminarPropiedadEntidad(eUsuario, NOMBRE_PROP_SALUDO);
+		servPersistencia.anadirPropiedadEntidad(eUsuario, NOMBRE_PROP_SALUDO, usuario.getSaludo());
+		servPersistencia.eliminarPropiedadEntidad(eUsuario, NOMBRE_PROP_PREMIUM);
+		servPersistencia.anadirPropiedadEntidad(eUsuario, NOMBRE_PROP_PREMIUM, String.valueOf(usuario.isPremium()));
 
 		String lineas = Auxiliar.obtenerCodigos(usuario.getContactos());
-		servPersistencia.eliminarPropiedadEntidad(eUsuario, "contactos");
-		servPersistencia.anadirPropiedadEntidad(eUsuario, "contactos", lineas);
+		servPersistencia.eliminarPropiedadEntidad(eUsuario, NOMBRE_PROP_CONTACTOS);
+		servPersistencia.anadirPropiedadEntidad(eUsuario, NOMBRE_PROP_CONTACTOS, lineas);
 
 		lineas = Auxiliar.obtenerCodigos(usuario.getGrupos());
-		servPersistencia.eliminarPropiedadEntidad(eUsuario, "grupos");
-		servPersistencia.anadirPropiedadEntidad(eUsuario, "grupos", lineas);
+		servPersistencia.eliminarPropiedadEntidad(eUsuario, NOMBRE_PROP_GRUPOS);
+		servPersistencia.anadirPropiedadEntidad(eUsuario, NOMBRE_PROP_GRUPOS, lineas);
 
 		if (PoolDAO.getUnicaInstancia().contiene(usuario.getCodigo()))
 			PoolDAO.getUnicaInstancia().addObjeto(usuario.getCodigo(), usuario);
@@ -152,19 +165,19 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		Date fecha = null;
 
 		try {
-			fecha = dateFormat.parse(servPersistencia.recuperarPropiedadEntidad(eUsuario, "fechaNacimiento"));
+			fecha = dateFormat.parse(servPersistencia.recuperarPropiedadEntidad(eUsuario, NOMBRE_PROP_FECHANACIMIENTO));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 
-		nombre = servPersistencia.recuperarPropiedadEntidad(eUsuario, "nombre");
-		email = servPersistencia.recuperarPropiedadEntidad(eUsuario, "email");
-		movil = servPersistencia.recuperarPropiedadEntidad(eUsuario, "movil");
-		usuario = servPersistencia.recuperarPropiedadEntidad(eUsuario, "usuario");
-		contraseña = servPersistencia.recuperarPropiedadEntidad(eUsuario, "contraseña");
-		imagen = servPersistencia.recuperarPropiedadEntidad(eUsuario, "imagen");
-		saludo = servPersistencia.recuperarPropiedadEntidad(eUsuario, "saludo");
-		premium = Boolean.valueOf(servPersistencia.recuperarPropiedadEntidad(eUsuario, "premium"));
+		nombre = servPersistencia.recuperarPropiedadEntidad(eUsuario, NOMBRE_PROP_NOMBRE);
+		email = servPersistencia.recuperarPropiedadEntidad(eUsuario, NOMBRE_PROP_EMAIL);
+		movil = servPersistencia.recuperarPropiedadEntidad(eUsuario, NOMBRE_PROP_MOVIL);
+		usuario = servPersistencia.recuperarPropiedadEntidad(eUsuario, NOMBRE_PROP_USUARIO);
+		contraseña = servPersistencia.recuperarPropiedadEntidad(eUsuario, NOMBRE_PROP_CONTRASEÑA);
+		imagen = servPersistencia.recuperarPropiedadEntidad(eUsuario, NOMBRE_PROP_IMAGEN);
+		saludo = servPersistencia.recuperarPropiedadEntidad(eUsuario, NOMBRE_PROP_SALUDO);
+		premium = Boolean.valueOf(servPersistencia.recuperarPropiedadEntidad(eUsuario, NOMBRE_PROP_PREMIUM));
 
 		Usuario usu = new Usuario(nombre, fecha, email, movil, usuario, contraseña, imagen, saludo, premium);
 		usu.setCodigo(codigo);
@@ -176,14 +189,14 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		// recuperar propiedades que son objetos llamando a adaptadores
 		// contactos
 		List<ContactoIndividual> contactos = Auxiliar.obtenerContactosDesdeCodigos(
-				servPersistencia.recuperarPropiedadEntidad(eUsuario, "contactos"));
+				servPersistencia.recuperarPropiedadEntidad(eUsuario, NOMBRE_PROP_CONTACTOS));
 
 		for (ContactoIndividual ci : contactos)
 			usu.addContacto(ci);
 		
 		// grupos
 		List<ContactoGrupo> grupos = Auxiliar.obtenerGruposDesdeCodigos(
-				servPersistencia.recuperarPropiedadEntidad(eUsuario, "grupos"));
+				servPersistencia.recuperarPropiedadEntidad(eUsuario, NOMBRE_PROP_GRUPOS));
 
 		for (ContactoGrupo cg : grupos)
 			usu.addGrupo(cg);
@@ -194,7 +207,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 
 	public List<Usuario> recuperarTodosUsuarios() {
 		List<Usuario> usuarios = new LinkedList<Usuario>();
-		List<Entidad> eUsuarios = servPersistencia.recuperarEntidades("usuario");
+		List<Entidad> eUsuarios = servPersistencia.recuperarEntidades(NOMBRE_ENTIDAD);
 
 		for (Entidad eUsuario : eUsuarios) {
 			usuarios.add(recuperarUsuario(eUsuario.getId()));

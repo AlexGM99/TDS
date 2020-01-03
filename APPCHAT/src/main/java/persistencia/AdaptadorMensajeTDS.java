@@ -28,6 +28,13 @@ public class AdaptadorMensajeTDS implements IAdaptadorMensajeDAO {
 
 	private static AdaptadorMensajeTDS unicaInstancia;
 
+	private static final String NOMBRE_ENTIDAD = "mensaje";
+	private static final String NOMBRE_PROP_TEXTO = "texto";
+	private static final String NOMBRE_PROP_TLFEMISOR = "tlfEmisor";
+	private static final String NOMBRE_PROP_FECHA = "fecha";
+	private static final String NOMBRE_PROP_RECEPTOR = "receptor";
+	private static final String NOMBRE_PROP_TIPORECEPTOR = "tipoReceptor";
+	
 	public static AdaptadorMensajeTDS getUnicaInstancia() { // patron singleton
 		if (unicaInstancia == null)
 			return new AdaptadorMensajeTDS();
@@ -70,12 +77,13 @@ public class AdaptadorMensajeTDS implements IAdaptadorMensajeDAO {
 		// Crear entidad venta
 		eMensaje = new Entidad();
 
-		eMensaje.setNombre("mensaje");
-		eMensaje.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(new Propiedad("texto", mensaje.getTexto()),
-				new Propiedad("tlfEmisor", mensaje.getTlfEmisor()),
-				new Propiedad("fecha", dateFormat.format(mensaje.getHora())),
-				new Propiedad("receptor", String.valueOf(mensaje.getReceptor().getCodigo())),
-				new Propiedad("tipoReceptor", String.valueOf(mensaje.getTipoReceptor())))));
+		eMensaje.setNombre(NOMBRE_ENTIDAD);
+		eMensaje.setPropiedades(new ArrayList<Propiedad>(Arrays.asList(
+				new Propiedad(NOMBRE_PROP_TEXTO, mensaje.getTexto()),
+				new Propiedad(NOMBRE_PROP_TLFEMISOR, mensaje.getTlfEmisor()),
+				new Propiedad(NOMBRE_PROP_FECHA, dateFormat.format(mensaje.getHora())),
+				new Propiedad(NOMBRE_PROP_RECEPTOR, String.valueOf(mensaje.getReceptor().getCodigo())),
+				new Propiedad(NOMBRE_PROP_TIPORECEPTOR, String.valueOf(mensaje.getTipoReceptor())))));
 		// registrar entidad venta
 		eMensaje = servPersistencia.registrarEntidad(eMensaje);
 		// asignar identificador unico
@@ -95,17 +103,17 @@ public class AdaptadorMensajeTDS implements IAdaptadorMensajeDAO {
 		Entidad eMensaje;
 
 		eMensaje = servPersistencia.recuperarEntidad(mensaje.getCodigo());
-		servPersistencia.eliminarPropiedadEntidad(eMensaje, "texto");
-		servPersistencia.anadirPropiedadEntidad(eMensaje, "texto", mensaje.getTexto());
-		servPersistencia.eliminarPropiedadEntidad(eMensaje, "tlfEmisor");
-		servPersistencia.anadirPropiedadEntidad(eMensaje, "tlfEmisor", mensaje.getTlfEmisor());
-		servPersistencia.eliminarPropiedadEntidad(eMensaje, "fecha");
-		servPersistencia.anadirPropiedadEntidad(eMensaje, "fecha", dateFormat.format(mensaje.getHora()));
-		servPersistencia.eliminarPropiedadEntidad(eMensaje, "receptor");
-		servPersistencia.anadirPropiedadEntidad(eMensaje, "receptor",
+		servPersistencia.eliminarPropiedadEntidad(eMensaje, NOMBRE_PROP_TEXTO);
+		servPersistencia.anadirPropiedadEntidad(eMensaje, NOMBRE_PROP_TEXTO, mensaje.getTexto());
+		servPersistencia.eliminarPropiedadEntidad(eMensaje, NOMBRE_PROP_TLFEMISOR);
+		servPersistencia.anadirPropiedadEntidad(eMensaje, NOMBRE_PROP_TLFEMISOR, mensaje.getTlfEmisor());
+		servPersistencia.eliminarPropiedadEntidad(eMensaje, NOMBRE_PROP_FECHA);
+		servPersistencia.anadirPropiedadEntidad(eMensaje, NOMBRE_PROP_FECHA, dateFormat.format(mensaje.getHora()));
+		servPersistencia.eliminarPropiedadEntidad(eMensaje, NOMBRE_PROP_RECEPTOR);
+		servPersistencia.anadirPropiedadEntidad(eMensaje, NOMBRE_PROP_RECEPTOR,
 				String.valueOf(mensaje.getReceptor().getCodigo()));
-		servPersistencia.eliminarPropiedadEntidad(eMensaje, "tipoReceptor");
-		servPersistencia.anadirPropiedadEntidad(eMensaje, "tipoReceptor", String.valueOf(mensaje.getTipoReceptor()));
+		servPersistencia.eliminarPropiedadEntidad(eMensaje, NOMBRE_PROP_TIPORECEPTOR);
+		servPersistencia.anadirPropiedadEntidad(eMensaje, NOMBRE_PROP_TIPORECEPTOR, String.valueOf(mensaje.getTipoReceptor()));
 
 		if (PoolDAO.getUnicaInstancia().contiene(mensaje.getCodigo()))
 			PoolDAO.getUnicaInstancia().addObjeto(mensaje.getCodigo(), mensaje);
@@ -125,12 +133,12 @@ public class AdaptadorMensajeTDS implements IAdaptadorMensajeDAO {
 		String tlfEmisor;
 		Date hora = null;
 		TipoContacto tipoReceptor;
-		texto = servPersistencia.recuperarPropiedadEntidad(eMensaje, "texto");
-		tlfEmisor = servPersistencia.recuperarPropiedadEntidad(eMensaje, "tlfEmisor");
-		tipoReceptor = TipoContacto.valueOf(servPersistencia.recuperarPropiedadEntidad(eMensaje, "tipoReceptor"));
+		texto = servPersistencia.recuperarPropiedadEntidad(eMensaje, NOMBRE_PROP_TEXTO);
+		tlfEmisor = servPersistencia.recuperarPropiedadEntidad(eMensaje, NOMBRE_PROP_TLFEMISOR);
+		tipoReceptor = TipoContacto.valueOf(servPersistencia.recuperarPropiedadEntidad(eMensaje, NOMBRE_PROP_TIPORECEPTOR));
 
 		try {
-			hora = dateFormat.parse(servPersistencia.recuperarPropiedadEntidad(eMensaje, "fecha"));
+			hora = dateFormat.parse(servPersistencia.recuperarPropiedadEntidad(eMensaje, NOMBRE_PROP_FECHA));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -150,14 +158,14 @@ public class AdaptadorMensajeTDS implements IAdaptadorMensajeDAO {
 		switch (tipoReceptor) {
 		case GRUPO:
 			AdaptadorContactoGrupoTDS adaptadorCG = AdaptadorContactoGrupoTDS.getUnicaInstancia();
-			codigoReceptor = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eMensaje, "receptor"));
+			codigoReceptor = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eMensaje, NOMBRE_PROP_RECEPTOR));
 			receptor = adaptadorCG.recuperarContactoGrupo(codigoReceptor);
 			mensaje.setReceptor(receptor);
 			break;
 		
 		case INDIVIDUAL:
 			AdaptadorContactoIndividualTDS adaptadorCI = AdaptadorContactoIndividualTDS.getUnicaInstancia();
-			codigoReceptor = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eMensaje, "receptor"));
+			codigoReceptor = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eMensaje, NOMBRE_PROP_RECEPTOR));
 			receptor = adaptadorCI.recuperarContactoIndividual(codigoReceptor);
 			mensaje.setReceptor(receptor);
 			break;
@@ -169,7 +177,7 @@ public class AdaptadorMensajeTDS implements IAdaptadorMensajeDAO {
 
 	public List<Mensaje> recuperarTodosMensajes() {
 		List<Mensaje> mensajes = new LinkedList<Mensaje>();
-		List<Entidad> eMensajes = servPersistencia.recuperarEntidades("mensaje");
+		List<Entidad> eMensajes = servPersistencia.recuperarEntidades(NOMBRE_ENTIDAD);
 
 		for (Entidad eMensaje : eMensajes) {
 			mensajes.add(recuperarMensaje(eMensaje.getId()));
