@@ -143,6 +143,7 @@ public class ControladorVistaAppChat {
 	public void vendoMiAlmaPorPremium() {
 		usuarioActual.setPremium(true);
 		adaptadorUsuario.actualizarUsuario(usuarioActual);
+		
 	}
 	
 	public void enviarMensaje(String mensaje) {
