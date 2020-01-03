@@ -148,6 +148,7 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 
 		// recuperar propiedades que no son objetos
 		String nombre, email, movil, usuario, contraseña, imagen, saludo;
+		boolean premium;
 		Date fecha = null;
 
 		try {
@@ -163,8 +164,9 @@ public class AdaptadorUsuarioTDS implements IAdaptadorUsuarioDAO {
 		contraseña = servPersistencia.recuperarPropiedadEntidad(eUsuario, "contraseña");
 		imagen = servPersistencia.recuperarPropiedadEntidad(eUsuario, "imagen");
 		saludo = servPersistencia.recuperarPropiedadEntidad(eUsuario, "saludo");
+		premium = Boolean.valueOf(servPersistencia.recuperarPropiedadEntidad(eUsuario, "premium"));
 
-		Usuario usu = new Usuario(nombre, fecha, email, movil, usuario, contraseña, imagen, saludo);
+		Usuario usu = new Usuario(nombre, fecha, email, movil, usuario, contraseña, imagen, saludo, premium);
 		usu.setCodigo(codigo);
 
 		// IMPORTANTE:añadir la usuario al pool antes de llamar a otros
