@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import interfazGrafica.Datos_Chat_Actual;
 import persistencia.DAOException;
 import persistencia.FactoriaDAO;
 import persistencia.IAdaptadorUsuarioDAO;
@@ -85,6 +86,11 @@ public class CatalogoUsuarios {
 		List<Usuario> usuariosBD = adaptadorUsuario.recuperarTodosUsuarios();
 		for (Usuario usu : usuariosBD)
 			usuarios.put(usu.getMovil(), usu);
+	}
+	
+	public Datos_Chat_Actual getDatosVentana(int codigo) {
+		Usuario u = getUsuario(codigo);
+		return u.getMisDatosEnVentana();
 	}
 
 }

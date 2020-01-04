@@ -8,6 +8,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
+import interfazGrafica.Datos_Chat_Actual;
 
 // TODO Revisar implementación
 // TODO Faltan premium
@@ -158,6 +162,31 @@ public class Usuario {
 	public List<ContactoGrupo> getGrupos() {
 		return grupos;
 	}
+	
+	public List<Contacto> RecuperarContactosFiltrados(String text){
+		System.out.println(text);
+		System.out.println(contactos.toString());
+		LinkedList<Contacto> contactosFiltrados = new LinkedList<Contacto>();
+		contactos.stream().filter(cont -> contenido(cont.getNombre(), text))
+						  .forEach(cont -> contactosFiltrados.add(cont)); // Añadiendo con un for each
+		System.out.println(contactosFiltrados.toString());
+		contactosFiltrados.addAll(grupos.stream().filter(cont -> contenido(cont.getNombre(), text))
+										.collect(Collectors.toList())); // añadiendo como coleccion completa
+		return contactosFiltrados;
+	}
+	
+	public boolean contenido(String contenedorB, String contenidoB) {
+		int i = 0;
+		if (contenidoB.length() > contenedorB.length()) return false;
+		String contenedor = contenedorB.toLowerCase();
+		String contenido = contenidoB.toLowerCase();
+		for (; i< contenedor.length(); i++) {
+			if (contenedor.startsWith(contenido, i)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	@Override
 	public int hashCode() {
@@ -298,6 +327,10 @@ public class Usuario {
 			mensajesGrupo.put(cg.getNombre(), contador);
 		}
 		return mensajesGrupo;
+	}
+	
+	public Datos_Chat_Actual getMisDatosEnVentana() {
+		return new Datos_Chat_Actual(imagen,nombre, movil, saludo);
 	}
 
 }

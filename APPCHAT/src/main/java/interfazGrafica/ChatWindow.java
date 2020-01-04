@@ -12,6 +12,8 @@ import javax.swing.JFileChooser;
 
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.List;
+
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -76,7 +78,7 @@ public class ChatWindow implements InterfazVistas{
 	private JList chat_list;
 	private DefaultListModel<Contacto> listModel;
 	
-	private int codigoActivo;
+	private int codigoActivo = -1;
 	
 	private ControladorVistaAppChat controlador;
 	private JPopupMenu popupMenu_2;
@@ -180,7 +182,7 @@ public class ChatWindow implements InterfazVistas{
 		mostrarPerfil.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				//TODO mostrar el perfil del usuario
+				//TO DO mostrar el perfil del usuario
 					popupMenu_2.setLocation(mostrarPerfil.getLocationOnScreen());
 					popupMenu_2.setVisible(!popupMenu_2.isVisible());
 				System.out.println("perfil");
@@ -214,7 +216,7 @@ public class ChatWindow implements InterfazVistas{
 		btnChangePhoto.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				//TODO cambiar la foto de perfil por la elegida por el usuario -> copiar de register + 
+				//TO DO cambiar la foto de perfil por la elegida por el usuario -> copiar de register + 
 				Scanner entrada = null;
 				popupMenu_2.setVisible(false);
 		        JFileChooser fileChooser = new JFileChooser();
@@ -235,7 +237,7 @@ public class ChatWindow implements InterfazVistas{
 		    			Image aux=myPicture.getScaledInstance(60, 60, Image.SCALE_SMOOTH);
 		    			label_MifotoPerfil.setIcon(new ImageIcon(aux));
 		    			label_MifotoPerfil.repaint();
-		    			//TODO llamar al controlador que actualice el usuario y analizar error
+		    			//TO DO llamar al controlador que actualice el usuario y analizar error
 		    			boolean changed = controlador.changePhoto(ruta);
 				        if (!changed) {
 				        	JOptionPane.showConfirmDialog(chat_list, "There where an error in the process to become a dark boss with an appropiate image",
@@ -312,6 +314,19 @@ public class ChatWindow implements InterfazVistas{
 		mostrarPerfil.add(lblMiNombre, gbc_lblMiNombre);
 		
 		nombreChat = new JPanel();
+		nombreChat.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//Mostrar la info del usuario del chat actual
+				if (codigoActivo == -1) JOptionPane.showMessageDialog(chatslist, "U aren't in contac with no one know, select a chat to see the details of your ally",
+													"You are not alone on the dark!", JOptionPane.WARNING_MESSAGE);
+				else {
+					Datos_Chat_Actual info = controlador.getDatos(codigoActivo);
+					info.setLocationRelativeTo(nombreChat);
+					info.visible(true);
+				}
+			}
+		});
 		nombreChat.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		GridBagConstraints gbc_nombreChat = new GridBagConstraints();
 		gbc_nombreChat.gridheight = 2;
@@ -441,8 +456,9 @@ public class ChatWindow implements InterfazVistas{
 		txtChat.setAlignmentX(Component.LEFT_ALIGNMENT);
 		txtChat.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyTyped(KeyEvent e) {
-				// TODO buscador por pulsación al igual que los mensajes
+			public void keyPressed(KeyEvent e) {
+				// TO DO buscador por pulsación al igual que los mensajes
+				setChats((LinkedList<Contacto>)controlador.buscarChats(txtChat.getText()));
 			}
 		});
 		txtChat.setText("chat");
@@ -491,7 +507,7 @@ public class ChatWindow implements InterfazVistas{
 			@Override
 			public void keyTyped(KeyEvent e) {
 				if (e.getKeyChar() == '\n' || e.getKeyChar() == '\r') {
-					controlador.enviarMensaje(textmensaje.getText());
+					controlador.enviarMensaje(textmensaje.getText(), codigoActivo);
 				}
 			}
 		});
@@ -539,7 +555,7 @@ public class ChatWindow implements InterfazVistas{
 		labelEnviarMensaje.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				controlador.enviarMensaje(textmensaje.getText());
+				controlador.enviarMensaje(textmensaje.getText(), codigoActivo);
 			}
 		});
 		Image img3= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/envioAdap.png")).getImage();
@@ -586,7 +602,8 @@ public class ChatWindow implements InterfazVistas{
 						//TODO ADVERTENCIA
 					}			
 	        		Image aux=myPicture.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
-	        		this.setIcon(new ImageIcon(aux));
+	        		ImageIcon aux1 = new ImageIcon(aux);
+	        		this.setIcon(aux1);
 	        	} else {
 	        		Image img5= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/usuarioDefecto.png")).getImage();
 	        		ImageIcon img6=new ImageIcon(img5.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
@@ -627,7 +644,10 @@ public class ChatWindow implements InterfazVistas{
 	}
 	
 	public void setChats(LinkedList<Contacto> listaModel) {
+		listModel = new DefaultListModel<Contacto>();
 		listaModel.stream().forEach(cont -> listModel.addElement(cont));
+		chatslist = new JList<Contacto>(listModel);
+		scrollChats.setViewportView(chatslist);
 		chatslist.setCellRenderer(new chatListRender());
 	}
 }

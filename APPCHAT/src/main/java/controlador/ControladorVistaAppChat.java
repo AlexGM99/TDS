@@ -7,12 +7,14 @@ import java.util.List;
 import java.util.Map;
 
 import interfazGrafica.ChatWindow;
+import interfazGrafica.Datos_Chat_Actual;
 import interfazGrafica.InterfazVistas;
 import interfazGrafica.LogIn;
 import interfazGrafica.Register;
 import modelo.CatalogoUsuarios;
 import modelo.Contacto;
 import modelo.ContactoGrupo;
+import modelo.ContactoIndividual;
 import modelo.Mensaje;
 import modelo.TipoContacto;
 import modelo.Usuario;
@@ -80,7 +82,7 @@ public class ControladorVistaAppChat {
 		else return false;
 		// Cambiamos la interfaz
 		changeToChatWindow();
-		// TODO obtener los datos de chats e inicializar la ventana
+		// TO DO obtener los datos de chats e inicializar la ventana
 		ChatWindow chat = (ChatWindow) interfaz;
 		LinkedList<Contacto> lista = (LinkedList<Contacto>)getContactos();
 		chat.setChats(lista);
@@ -163,13 +165,26 @@ public class ControladorVistaAppChat {
 									forEach(cont -> contactos.add(cont));
 		Usuario usu = new Usuario("hola" , new Date(), "H", "H", "hola", "hola", "");
 		catalogoUsuarios.addUsuario(usu);
-		contactos.add(new Contacto("hola") {
-		});
+		ContactoIndividual cont = new ContactoIndividual(usu.getUsuario(), usu.getMovil());
+		usuarioActual.addContacto(cont);
+		contactos.add(cont);
 		return contactos;
 	}
 	
-	public void enviarMensaje(String mensaje) {
-		//TODO coger el usuario que envio el mensaje
+	public Datos_Chat_Actual getDatos(int codigo) {
+		return catalogoUsuarios.getDatosVentana(codigo);
+	}
+	
+	public void enviarMensaje(String mensaje, int codigo) {
+		//TODO coger el usuario que envio el mensaje y enviarlo
+	}
+	
+	//TODO patron observer para recoger un mensaje del bbdd
+	
+	
+	public List<Contacto> buscarChats(String text){
+		return usuarioActual.RecuperarContactosFiltrados(text);
+		
 	}
 	
 	// TODO Funcion para buscar un mensaje en un chat normal
