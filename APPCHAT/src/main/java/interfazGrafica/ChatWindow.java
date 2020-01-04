@@ -79,6 +79,7 @@ public class ChatWindow implements InterfazVistas{
 	private DefaultListModel<Contacto> listModel;
 	
 	private int codigoActivo = -1;
+	private String actNick = "";
 	
 	private ControladorVistaAppChat controlador;
 	private JPopupMenu popupMenu_2;
@@ -620,7 +621,7 @@ public class ChatWindow implements InterfazVistas{
 	    public Component getListCellRendererComponent(JList<? extends Contacto> list, Contacto cont, int index,
 	        boolean isSelected, boolean cellHasFocus) {
 	    	this.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-	    		String ruta = controlador.getImage(cont.getCodigo());
+	    		String ruta = controlador.getImage((ContactoIndividual)cont);
 	        	if (!ruta.trim().isEmpty()) {
 	        		File f = new File(ruta);
 	        		BufferedImage myPicture = null;
@@ -637,11 +638,12 @@ public class ChatWindow implements InterfazVistas{
 	        		ImageIcon img6=new ImageIcon(img5.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
 	        		this.setIcon(img6);
 	        	}
-	        	this.setText(controlador.getUserNick(cont.getCodigo()));
+	        	this.setText(cont.getNombre());
 	    	if (isSelected) {
 	    	    setBackground(list.getSelectionBackground());
 	    	    setForeground(list.getSelectionForeground());
-	    	    codigoActivo = cont.getCodigo();
+	    	    codigoActivo = controlador.getCode((ContactoIndividual)cont);
+	    	    actNick = cont.getNombre();
 	    	    ponerChat();
 	    	} else {
 	    	    setBackground(list.getBackground());
@@ -668,7 +670,7 @@ public class ChatWindow implements InterfazVistas{
     		ImageIcon img6=new ImageIcon(img5.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
     		lblnombrechat.setIcon(img6);
     	}
-    	lblnombrechat.setText(controlador.getUserNick(codigoActivo));
+    	lblnombrechat.setText(actNick);
 	}
 	
 	public void setChats(LinkedList<Contacto> listaModel) {

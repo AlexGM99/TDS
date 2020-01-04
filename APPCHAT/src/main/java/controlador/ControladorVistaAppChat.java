@@ -151,12 +151,27 @@ public class ControladorVistaAppChat {
 		catalogoUsuarios.addUsuario(usuarioActual);
 	}
 	
+	public String getImage(ContactoIndividual cont) {
+		String tel = cont.getMovil();
+		return catalogoUsuarios.getUsuario(tel).getImagen();
+	}
+	
 	public String getImage(int code) { 
 		return catalogoUsuarios.getUsuario(code).getImagen();
 	}
 	
+	public String getUserNick(ContactoIndividual cont) {
+		String tel = cont.getMovil();
+		return catalogoUsuarios.getUsuario(tel).getUsuario();
+	}
+	
 	public String getUserNick(int code) {
 		return catalogoUsuarios.getUsuario(code).getUsuario();
+	}
+	
+	public int getCode(ContactoIndividual cont) {
+		String tel = cont.getMovil();
+		return catalogoUsuarios.getUsuario(tel).getCodigo();
 	}
 	
 	public boolean existeUsuario(String telefono) {
@@ -178,8 +193,6 @@ public class ControladorVistaAppChat {
 	public void registrarContacto(String usuario, String telefono) {
 		ContactoIndividual cont = new ContactoIndividual(usuario, telefono);
 		adaptadorContacto.registrarContactoIndividual(cont);
-		cont.setCodigo(catalogoUsuarios.getUsuario(telefono).getCodigo());
-		adaptadorContacto.actualizarContactoIndividual(cont);
 		usuarioActual.addContacto(cont);
 		adaptadorUsuario.actualizarUsuario(usuarioActual);
 		ChatWindow chat = (ChatWindow) interfaz;
