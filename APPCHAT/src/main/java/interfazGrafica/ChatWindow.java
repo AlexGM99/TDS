@@ -85,6 +85,7 @@ public class ChatWindow implements InterfazVistas{
 	private JButton btnChangePhoto;
 	private JButton btnChangeGreeting;
 	private JButton btnPremium;
+	private JButton btnExit;
 	/**
 	 * Launch the application.
 	 */
@@ -282,6 +283,16 @@ public class ChatWindow implements InterfazVistas{
 			}
 		});
 		popupMenu_2.add(btnChangeGreeting);
+		
+		btnExit = new JButton("Exit");
+		btnExit.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				popupMenu_2.setVisible(false);
+				controlador.cerrarSesion();
+			}
+		});
+		popupMenu_2.add(btnExit);
 		
 		if (!controlador.soypremium()) {
 			btnPremium = new JButton("Ascenso a premium");

@@ -48,6 +48,7 @@ public class Datos_Chat_Actual extends JFrame {
 		lblNombre.setText(nombre);
 		lblTelefono.setText(tel);
 		lblEstado.setText(est);
+		
 	}
 	 public void visible(boolean i) {
 		 setVisible(i);
@@ -58,7 +59,7 @@ public class Datos_Chat_Actual extends JFrame {
 	 */
 	public void Datos_Chat_ActualIni() {
 		setTitle("APPCHAT");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 282, 343);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

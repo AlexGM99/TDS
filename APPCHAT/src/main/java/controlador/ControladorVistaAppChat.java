@@ -203,5 +203,10 @@ public class ControladorVistaAppChat {
 		
 	}
 	
-	
+	public void cerrarSesion()
+	{
+		InterfazVistas antigua = interfaz;
+		interfaz = new LogIn(this);
+		antigua.exit();
+	}
 }
