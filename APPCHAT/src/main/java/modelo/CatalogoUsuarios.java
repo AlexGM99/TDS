@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import interfazGrafica.Datos_Chat_Actual;
+import persistencia.AdaptadorContactoGrupoTDS;
 import persistencia.DAOException;
 import persistencia.FactoriaDAO;
 import persistencia.IAdaptadorUsuarioDAO;
@@ -39,8 +40,10 @@ public class CatalogoUsuarios {
 	}
 
 	public static CatalogoUsuarios getUnicaInstancia() {
-		//TODO implementar SINGLENTON
-		return unicaInstancia;
+		if (unicaInstancia == null) {
+			return new CatalogoUsuarios();
+		} else
+			return unicaInstancia;
 	}
 
 	// devuelve todos los usuarios
