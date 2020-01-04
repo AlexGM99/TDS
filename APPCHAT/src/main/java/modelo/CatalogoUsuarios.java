@@ -19,7 +19,7 @@ import persistencia.IAdaptadorUsuarioDAO;
  */
 public class CatalogoUsuarios {
 	private Map<String, Usuario> usuarios;
-	private static CatalogoUsuarios unicaInstancia = new CatalogoUsuarios();
+	private static CatalogoUsuarios unicaInstancia;
 
 	private FactoriaDAO dao;
 	private IAdaptadorUsuarioDAO adaptadorUsuario;
@@ -40,10 +40,9 @@ public class CatalogoUsuarios {
 	}
 
 	public static CatalogoUsuarios getUnicaInstancia() {
-		if (unicaInstancia == null) {
-			return new CatalogoUsuarios();
-		} else
-			return unicaInstancia;
+		if (unicaInstancia == null)
+			unicaInstancia = new CatalogoUsuarios();
+		return unicaInstancia;
 	}
 
 	// devuelve todos los usuarios
@@ -94,6 +93,10 @@ public class CatalogoUsuarios {
 	public Datos_Chat_Actual getDatosVentana(int codigo) {
 		Usuario u = getUsuario(codigo);
 		return u.getMisDatosEnVentana();
+	}
+	
+	public boolean existeUsuario(String telefono) {
+		return usuarios.containsKey(telefono);
 	}
 
 }

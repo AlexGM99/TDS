@@ -164,12 +164,9 @@ public class Usuario {
 	}
 	
 	public List<Contacto> RecuperarContactosFiltrados(String text){
-		System.out.println(text);
-		System.out.println(contactos.toString());
 		LinkedList<Contacto> contactosFiltrados = new LinkedList<Contacto>();
 		contactos.stream().filter(cont -> contenido(cont.getNombre(), text))
 						  .forEach(cont -> contactosFiltrados.add(cont)); // Añadiendo con un for each
-		System.out.println(contactosFiltrados.toString());
 		contactosFiltrados.addAll(grupos.stream().filter(cont -> contenido(cont.getNombre(), text))
 										.collect(Collectors.toList())); // añadiendo como coleccion completa
 		return contactosFiltrados;
@@ -330,7 +327,7 @@ public class Usuario {
 	}
 	
 	public Datos_Chat_Actual getMisDatosEnVentana() {
-		return new Datos_Chat_Actual(imagen,nombre, movil, saludo);
+		return new Datos_Chat_Actual(imagen,"nick: "+nombre, "number: " +movil, "greeting: " +saludo);
 	}
 
 }

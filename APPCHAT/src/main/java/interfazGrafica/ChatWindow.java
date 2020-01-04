@@ -86,6 +86,7 @@ public class ChatWindow implements InterfazVistas{
 	private JButton btnChangeGreeting;
 	private JButton btnPremium;
 	private JButton btnExit;
+	private JButton btnNewContact;
 	/**
 	 * Launch the application.
 	 */
@@ -162,12 +163,6 @@ public class ChatWindow implements InterfazVistas{
 		
 		panel = new JPanel();
 		panel.setAutoscrolls(true);
-		panel.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				System.out.println("hola, aqui tienes los datos de individuo/grupo");
-			}
-		});
 		frmAppchat.getContentPane().add(panel, BorderLayout.CENTER);
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[]{1, 0, 0, 0, 21, 75, 165, 0, 35, 0, 0};
@@ -292,6 +287,29 @@ public class ChatWindow implements InterfazVistas{
 				controlador.cerrarSesion();
 			}
 		});
+		
+		btnNewContact = new JButton("New Contact");
+		btnNewContact.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				popupMenu_2.setVisible(false);
+				String telefono = 
+						JOptionPane.showInputDialog(null, "Introduce the phone number of the new contact", "New Contact", JOptionPane.QUESTION_MESSAGE);
+				if (telefono != null && !controlador.existeUsuario(telefono)) {
+					JOptionPane.showMessageDialog(null, "We couldn't find the number " + telefono);
+				}else if (telefono != null){
+					String nick =
+							JOptionPane.showInputDialog(null, "Introduce how you would like to save it", "New Contact " + telefono, JOptionPane.QUESTION_MESSAGE);
+					if (nick != null) {
+						controlador.registrarContacto(nick, telefono);
+					} else {
+						JOptionPane.showMessageDialog(null, "this is not a name!");
+					}
+				}
+				
+			}
+		});
+		popupMenu_2.add(btnNewContact);
 		popupMenu_2.add(btnExit);
 		
 		if (!controlador.soypremium()) {
@@ -489,7 +507,6 @@ public class ChatWindow implements InterfazVistas{
 		listModel = new DefaultListModel<Contacto>();
 		chatslist = new JList<Contacto>(listModel);
 		scrollChats.setViewportView(chatslist);
-		chatslist.setCellRenderer(new chatListRender());
 		
 		scroll_chat = new JScrollPane();
 		GridBagConstraints gbc_scroll_chat = new GridBagConstraints();
@@ -661,4 +678,11 @@ public class ChatWindow implements InterfazVistas{
 		scrollChats.setViewportView(chatslist);
 		chatslist.setCellRenderer(new chatListRender());
 	}
+	public void addChat(Contacto cont) {
+		listModel.addElement(cont);
+		chatslist = new JList<Contacto>(listModel);
+		scrollChats.setViewportView(chatslist);
+		chatslist.setCellRenderer(new chatListRender());
+	}
+	
 }

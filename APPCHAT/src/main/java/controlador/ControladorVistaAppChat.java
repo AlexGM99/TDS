@@ -151,7 +151,7 @@ public class ControladorVistaAppChat {
 		catalogoUsuarios.addUsuario(usuarioActual);
 	}
 	
-	public String getImage(int code) {
+	public String getImage(int code) { 
 		return catalogoUsuarios.getUsuario(code).getImagen();
 	}
 	
@@ -159,20 +159,31 @@ public class ControladorVistaAppChat {
 		return catalogoUsuarios.getUsuario(code).getUsuario();
 	}
 	
+	public boolean existeUsuario(String telefono) {
+		if (telefono == null) return false;
+		return catalogoUsuarios.existeUsuario(telefono);
+	}
 	public List<Contacto> getContactos(){
 		LinkedList<Contacto> contactos = new LinkedList<Contacto>();
 		usuarioActual.getContactos().stream().
 									forEach(cont -> contactos.add(cont));
-		Usuario usu = new Usuario("hola" , new Date(), "H", "H", "hola", "hola", "");
-		catalogoUsuarios.addUsuario(usu);
-		ContactoIndividual cont = new ContactoIndividual(usu.getUsuario(), usu.getMovil());
-		usuarioActual.addContacto(cont);
-		contactos.add(cont);
+		//TODO poner los grupos
 		return contactos;
 	}
 	
 	public Datos_Chat_Actual getDatos(int codigo) {
 		return catalogoUsuarios.getDatosVentana(codigo);
+	}
+	
+	public void registrarContacto(String usuario, String telefono) {
+		ContactoIndividual cont = new ContactoIndividual(usuario, telefono);
+		adaptadorContacto.registrarContactoIndividual(cont);
+		cont.setCodigo(catalogoUsuarios.getUsuario(telefono).getCodigo());
+		adaptadorContacto.actualizarContactoIndividual(cont);
+		usuarioActual.addContacto(cont);
+		adaptadorUsuario.actualizarUsuario(usuarioActual);
+		ChatWindow chat = (ChatWindow) interfaz;
+		chat.addChat(cont);
 	}
 	
 	public void enviarMensaje(String mensaje, int codigo) {
