@@ -41,6 +41,7 @@ public class ControladorVistaAppChat {
 
 	private InterfazVistas interfaz;
 
+	// TERMINADO
 	private ControladorVistaAppChat() {
 		// Inicializar adaptadores
 		inicializarAdaptadores();
@@ -48,16 +49,19 @@ public class ControladorVistaAppChat {
 		inicializarCatalogos();
 	}
 
+	// TERMINADO
 	public static ControladorVistaAppChat getUnicaInstancia() {
 		if (unicaInstancia == null)
 			unicaInstancia = new ControladorVistaAppChat();
 		return unicaInstancia;
 	}
 
+	// TERMINADO
 	public void setInterface(InterfazVistas interfaz) {
 		this.interfaz = interfaz;
 	}
 
+	// TERMINADO
 	private void inicializarAdaptadores() {
 		FactoriaDAO factoria = null;
 		try {
@@ -71,24 +75,27 @@ public class ControladorVistaAppChat {
 		adaptadorMensaje = factoria.getMensajeDAO();
 	}
 
+	// TERMINADO
 	private void inicializarCatalogos() {
 		catalogoUsuarios = CatalogoUsuarios.getUnicaInstancia();
 	}
 
+	// TERMINADO
 	public boolean loginUser(String name, String pass) {
-		// TO DO loguear el usuario
+		// loguear el usuario
 		if (catalogoUsuarios.logIn(name , pass) == CatalogoUsuarios.CODIGO_LOG_IN_OK)
 			usuarioActual = catalogoUsuarios.getUsuario(name);
 		else return false;
 		// Cambiamos la interfaz
 		changeToChatWindow();
-		// TO DO obtener los datos de chats e inicializar la ventana
+		// obtener los datos de chats e inicializar la ventana
 		ChatWindow chat = (ChatWindow) interfaz;
 		LinkedList<Contacto> lista = (LinkedList<Contacto>)getContactos();
 		chat.setChats(lista);
 		return true;
 	}
 
+	// TERMINADO
 	public String RegisterUser(String nombre, Date fechanacimiento, String email, String movil, String usuario,
 			String contraseña, String imagen, String saludo) {
 		Usuario user;
@@ -106,34 +113,40 @@ public class ControladorVistaAppChat {
 		return REGISTRO_CORRECTO;
 	}
 	
+	// TERMINADO
 	public boolean changePhoto(String ruta) {
 		usuarioActual.setImagen(ruta);
-		//TO DO cambiar en la bbdd la imagen
+		// actualizamos en la bbdd
 		adaptadorUsuario.actualizarUsuario(usuarioActual);
 		return true;
 	}
 	
+	// TERMINADO
 	public boolean changeGreeting(String greeting) {
 		usuarioActual.setSaludo(greeting);
 		adaptadorUsuario.actualizarUsuario(usuarioActual);
 		return true;
 	}
+	// TERMINADO
 	public String getGreeting() {
 		return usuarioActual.getSaludo();
 	}
 
+	// TERMINADO
 	public void changeToRegister() {
 		InterfazVistas antigua = interfaz;
 		interfaz = new Register(this);
 		antigua.exit();
 	}
-
+	
+	// TERMINADO
 	public void changeToLogin() {
 		InterfazVistas antigua = interfaz;
 		interfaz = new LogIn(this);
 		antigua.exit();
 	}
 	
+	// TERMINADO
 	public void changeToChatWindow()
 	{
 		InterfazVistas antigua = interfaz;

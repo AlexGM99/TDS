@@ -145,7 +145,6 @@ public class LogIn implements InterfazVistas {
 		btnRegister.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
-			//TODO cambiar a la ventana de registro
 			controlador.changeToRegister();
 			}
 		});

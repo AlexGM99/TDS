@@ -435,7 +435,6 @@ public class Register implements InterfazVistas {
 		btnRegister.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				//TO DO implementar mensaje de registro al controlador
 				if(checkFields()) {
 					String firts = firtsNamefield.getText();
 					String second = secondNamefield.getText();
@@ -456,7 +455,6 @@ public class Register implements InterfazVistas {
 					JOptionPane.showMessageDialog(dateChooser,registrado, "Server Message", JOptionPane.WARNING_MESSAGE);
 				}
 			}
-			// TO DO Comprobar fecha != null
 		});
 		
 		lblPassMustMatch = new JLabel("pass must match");
@@ -493,7 +491,7 @@ public class Register implements InterfazVistas {
 		btnIveAnAccount.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-			//TODO cambiar a ventana de login
+			// cambiar a ventana de login
 				controlador.changeToLogin();
 			}
 		});
