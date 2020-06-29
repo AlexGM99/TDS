@@ -1,10 +1,14 @@
 package controlador;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import Descuentos.DescuentoCompuesto;
 import Descuentos.InterfazDescuentos;
@@ -246,13 +250,33 @@ public class ControladorVistaAppChat {
 	}
 	
 	public void informacionUso() {
-		// TODO Mensajes enviados a contactos y a grupos
-		List<Integer> mensajesGrupos = usuarioActual.getMensajesPorMes(LocalDate.now().getYear(), TipoContacto.GRUPO);
+		// Calcular mensajes enviados a contactos y a grupos en el año actual
+		List<Integer> numMensajesContactosYear = usuarioActual.getNumMensajesPorMes(LocalDate.now().getYear(), TipoContacto.INDIVIDUAL);
+		List<Integer> numMensajesGruposYear = usuarioActual.getNumMensajesPorMes(LocalDate.now().getYear(), TipoContacto.GRUPO);
+		List<Integer> numMensajesTotalYear = new ArrayList<Integer>(12);
+		for (int i = 0; i < 12; i++) {
+			numMensajesTotalYear.set(i, numMensajesContactosYear.get(i) + numMensajesGruposYear.get(i));
+		}
+		// TODO Crear histograma con los mensajes por mes del user
 		
-		// TODO Obtener los 6 grupos con más mensajes enviados por el user
+		// Obtener los 6 grupos con más mensajes enviados por el user
 		Map<String, Integer> mensajesPorGrupo = usuarioActual.getNumMensajesEnviadosPorGrupo();
-		// Obtener el % que representan del total
+		Map<String, Integer> mensajesGruposMasEnviados = mensajesPorGrupo.entrySet().stream()
+				.sorted(Map.Entry.comparingByValue(Collections.reverseOrder()))
+				.limit(6)
+				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));	
 		
+		// Obtener el % que representan del total
+		int numMensajesTotal = usuarioActual.getNumMensajes(TipoContacto.INDIVIDUAL) + usuarioActual.getNumMensajes(TipoContacto.GRUPO);
+		
+		Map<String, Double> porcentajesMensajesGrupos = new LinkedHashMap<String, Double>(mensajesGruposMasEnviados.size());
+		for (String it : mensajesGruposMasEnviados.keySet()) {
+			porcentajesMensajesGrupos.put(it, new Double(mensajesGruposMasEnviados.get(it)));
+		}
+		porcentajesMensajesGrupos.entrySet().stream()
+			.forEach(e -> e.setValue(e.getValue() * 100 / numMensajesTotal));
+		
+		// TODO Crear diagrama de tarta con los 6 grupos
 	}
 	
 	public void cerrarSesion()
