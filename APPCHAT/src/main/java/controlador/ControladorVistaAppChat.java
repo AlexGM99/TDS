@@ -171,9 +171,6 @@ public class ControladorVistaAppChat {
 	
 	public DescuentoCompuesto getDescuentos() {
 		DescuentoCompuesto descuentos = controladorDescuentos.getDescuentosActuales();
-		
-		
-		
 		return descuentos;
 	}
 	

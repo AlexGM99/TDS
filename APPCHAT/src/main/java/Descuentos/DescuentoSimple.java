@@ -1,6 +1,8 @@
 package Descuentos;
 
-public class DescuentoSimple implements InterfazDescuentos {
+import java.util.List;
+
+public class DescuentoSimple {
 
 	private String name;
 	private double cantidad;
@@ -18,13 +20,6 @@ public class DescuentoSimple implements InterfazDescuentos {
 		this.letraPequena = letraPequena;
 	}
 	
-	@Override
-	public String getdescuento() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	
 	public double getCantidad() {
 		return cantidad;
 	}
@@ -34,6 +29,4 @@ public class DescuentoSimple implements InterfazDescuentos {
 	public String getName() {
 		return name;
 	}
-	
-
 }

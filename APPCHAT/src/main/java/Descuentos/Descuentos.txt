@@ -1,2 +1,3 @@
 1;Descuento Verano;10;Entregas también tu alma a cambio
 0;Invierno;5;Tienes que ser muy guapo
+1;Oferta;5;Vendes tu cuerpecito al diablo

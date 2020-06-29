@@ -1,7 +1,9 @@
 package Descuentos;
 
+import java.util.List;
+
 public interface InterfazDescuentos {
 
-	public String getdescuento();
+	public List<DescuentoSimple> getdescuento();
 	
 }

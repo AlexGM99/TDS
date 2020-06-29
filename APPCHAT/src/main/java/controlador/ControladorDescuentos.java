@@ -18,8 +18,8 @@ public class ControladorDescuentos {
 
 	private static String ARCHIVO =  "..\\Descuentos\\Descuentos.txt";
 	
-	private List<InterfazDescuentos> getDescuentos(){
-		List<InterfazDescuentos> desc = new LinkedList<InterfazDescuentos>();
+	private List<DescuentoSimple> getDescuentos(){
+		List<DescuentoSimple> desc = new LinkedList<DescuentoSimple>();
 		File archivo = new File (ARCHIVO);
 		FileReader fr = null;
 		try {
@@ -29,7 +29,7 @@ public class ControladorDescuentos {
 				String linea = "";
 				while ((linea=br.readLine())!=null) {
 					String[] partes = linea.split(";");
-					if (partes.length == 3 && partes[0]=="1") {
+					if (partes.length >= 4 && partes[0]=="1") {
 						DescuentoSimple descuento = new DescuentoSimple(partes[1], Double.parseDouble(partes[2]), partes[3]);
 						desc.add(descuento);
 					}
@@ -54,10 +54,9 @@ public class ControladorDescuentos {
 	
 	public DescuentoCompuesto getDescuentosActuales(){
 		DescuentoCompuesto descuentos;
-		List<InterfazDescuentos> d = getDescuentos();
-				
-		descuentos = new DescuentoCompuesto()
-		
+		List<DescuentoSimple> d = getDescuentos();
+		descuentos = new DescuentoCompuesto();
+		d.stream().forEach( nuevo -> descuentos.nuevoDescuento(nuevo));
 		return descuentos;
 	}
 	
