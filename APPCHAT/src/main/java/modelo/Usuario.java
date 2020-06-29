@@ -276,7 +276,69 @@ public class Usuario {
 				+ saludo + "\n\t premium=" + premium + "\n\t contactos=" + contactos + "\n\t grupos=" + grupos + "]";
 	}
 
-	public List<Integer> getMensajesPorMes(int year, TipoContacto tipoContacto) {
+	public int getNumMensajes(TipoContacto tipoContacto) {
+		int contador = 0;
+		
+		switch (tipoContacto) {
+		case GRUPO:
+			for (Contacto c : grupos) {
+				for (Mensaje m : c.getMensajes()) {
+					if (m.getTlfEmisor().equals(this.movil)) {
+						contador++;
+					}
+				}
+			}
+			break;
+
+		case INDIVIDUAL:
+			for (Contacto c : contactos) {
+				for (Mensaje m : c.getMensajes()) {
+					if (m.getTlfEmisor().equals(this.movil)) {
+						contador++;
+					}
+				}
+			}
+			break;
+		}
+		
+		return contador;
+	}
+	
+	public List<Integer> getNumMensajesPorMes(TipoContacto tipoContacto) {
+		// Creamos una lista donde guardaremos los mensajes enviados en cada mes
+		List<Integer> mensajesAnual = new ArrayList<Integer>(12);
+		int mes;
+		switch (tipoContacto) {
+		case GRUPO:
+			for (Contacto c : grupos) {
+				for (Mensaje m : c.getMensajes()) {
+					// Obtenemos la hora del mensaje y la pasamos de Date a LocalDate
+					LocalDate horaM = m.getHora().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+					if (m.getTlfEmisor().equals(this.movil)) {
+						mes = horaM.getMonthValue();
+						mensajesAnual.set(mes - 1, mensajesAnual.get(mes - 1) + 1);
+					}
+				}
+			}
+			break;
+
+		case INDIVIDUAL:
+			for (Contacto c : contactos) {
+				for (Mensaje m : c.getMensajes()) {
+					// Obtenemos la hora del mensaje y la pasamos de Date a LocalDate
+					LocalDate horaM = m.getHora().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+					if (m.getTlfEmisor().equals(this.movil)) {
+						mes = horaM.getMonthValue();
+						mensajesAnual.set(mes - 1, mensajesAnual.get(mes - 1) + 1);
+					}
+				}
+			}
+			break;
+		}
+		return mensajesAnual;
+	}
+	
+	public List<Integer> getNumMensajesPorMes(int year, TipoContacto tipoContacto) {
 		// Creamos una lista donde guardaremos los mensajes enviados en cada mes
 		List<Integer> mensajesAnual = new ArrayList<Integer>(12);
 		int mes;
