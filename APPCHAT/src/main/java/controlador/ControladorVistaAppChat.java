@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import Descuentos.DescuentoCompuesto;
+import Descuentos.InterfazDescuentos;
 import interfazGrafica.ChatWindow;
 import interfazGrafica.Datos_Chat_Actual;
 import interfazGrafica.InterfazVistas;
@@ -41,12 +43,16 @@ public class ControladorVistaAppChat {
 
 	private InterfazVistas interfaz;
 
+	private ControladorDescuentos controladorDescuentos;
+	
 	// TERMINADO
 	private ControladorVistaAppChat() {
 		// Inicializar adaptadores
 		inicializarAdaptadores();
 		// inicializar catalogos
 		inicializarCatalogos();
+		
+		controladorDescuentos = new ControladorDescuentos();
 	}
 
 	// TERMINADO
@@ -154,8 +160,17 @@ public class ControladorVistaAppChat {
 		antigua.exit();
 	}
 	
+	// TERMINADO
 	public boolean soypremium() {
 		return usuarioActual.isPremium();
+	}
+	
+	public DescuentoCompuesto getDescuentos() {
+		DescuentoCompuesto descuentos = controladorDescuentos.getDescuentosActuales();
+		
+		
+		
+		return descuentos;
 	}
 	
 	public void vendoMiAlmaPorPremium() {

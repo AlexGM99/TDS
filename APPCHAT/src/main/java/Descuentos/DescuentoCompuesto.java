@@ -11,7 +11,6 @@ public class DescuentoCompuesto implements InterfazDescuentos{
 		
 	}
 	
-	
 	public DescuentoCompuesto getCompuesto() {
 		return compuesto;
 	}
