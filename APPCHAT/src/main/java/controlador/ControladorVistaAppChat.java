@@ -1,7 +1,10 @@
 package controlador;
 
+import java.awt.Color;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -10,9 +13,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.knowm.xchart.BitmapEncoder;
+import org.knowm.xchart.CategoryChart;
+import org.knowm.xchart.CategoryChartBuilder;
+import org.knowm.xchart.PieChart;
+import org.knowm.xchart.PieChartBuilder;
+import org.knowm.xchart.style.Styler.LegendPosition;
+import org.knowm.xchart.BitmapEncoder.BitmapFormat;
+
 import Descuentos.DescuentoCompuesto;
+<<<<<<< HEAD
 import Descuentos.DescuentoSimple;
 import Descuentos.InterfazDescuentos;
+=======
+>>>>>>> 2b0dab8f3497e1854bf711adc15afa8f6de8b4af
 import interfazGrafica.ChatWindow;
 import interfazGrafica.Datos_Chat_Actual;
 import interfazGrafica.InterfazVistas;
@@ -35,6 +49,15 @@ import persistencia.IAdaptadorUsuarioDAO;
 public class ControladorVistaAppChat {
 	public static final String REGISTRO_CORRECTO = "U've been registered into the Dark Lord Army!!!!!!!!!";
 	public static final String REGISTRO_NOMBRE_YA_USADO = "User already registered";
+	
+	
+	public static final List<String> MESES_YEAR = Arrays.asList(new String[] { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" });
+	public static final Color[] GRAFICA_HISTOGRAMA_COLOR = new Color[] { new Color(243, 180, 159) };
+	public static final String GRAFICA_HISTOGRAMA_PATH = "./Sample_Chart-H";
+	public static final BitmapFormat GRAFICA_HISTOGRAMA_FORMATO = BitmapFormat.PNG;
+	public static final Color[] GRAFICA_TARTA_COLORES = new Color[] { new Color(224, 68, 14), new Color(230, 105, 62), new Color(236, 143, 110), new Color(243, 180, 159), new Color(246, 199, 182) };
+	public static final String GRAFICA_TARTA_PATH = "./Sample_Chart-G";
+	public static final BitmapFormat GRAFICA_TARTA_FORMATO = BitmapFormat.PNG;
 	
 	private static ControladorVistaAppChat unicaInstancia;
 	private IAdaptadorUsuarioDAO adaptadorUsuario;
@@ -266,7 +289,22 @@ public class ControladorVistaAppChat {
 		for (int i = 0; i < 12; i++) {
 			numMensajesTotalYear.set(i, numMensajesContactosYear.get(i) + numMensajesGruposYear.get(i));
 		}
-		// TODO Crear histograma con los mensajes por mes del user
+		// Crear histograma con los mensajes por mes del user
+	    //CategoryChart graficaHistograma = new CategoryChartBuilder().width(800).height(600).title("Histograma de prueba").xAxisTitle("Mes").build();	 
+	    CategoryChart graficaHistograma = new CategoryChartBuilder().xAxisTitle("Mes").build();	 
+	    // Personalizar gráfico
+	    graficaHistograma.getStyler().setLegendPosition(LegendPosition.InsideNW);
+	    graficaHistograma.getStyler().setHasAnnotations(true);
+	    graficaHistograma.getStyler().setSeriesColors(GRAFICA_HISTOGRAMA_COLOR);
+	    // Valores
+	    graficaHistograma.addSeries("Mensajes enviados", MESES_YEAR, numMensajesTotalYear);	 
+	    // Guardar	    
+	    try {
+	    	BitmapEncoder.saveBitmap(graficaHistograma, GRAFICA_HISTOGRAMA_PATH, GRAFICA_HISTOGRAMA_FORMATO);
+		} catch (IOException e3) {
+			// TODO Manejar excepción
+			e3.printStackTrace();
+		}
 		
 		// Obtener los 6 grupos con más mensajes enviados por el user
 		Map<String, Integer> mensajesPorGrupo = usuarioActual.getNumMensajesEnviadosPorGrupo();
@@ -285,7 +323,23 @@ public class ControladorVistaAppChat {
 		porcentajesMensajesGrupos.entrySet().stream()
 			.forEach(e -> e.setValue(e.getValue() * 100 / numMensajesTotal));
 		
-		// TODO Crear diagrama de tarta con los 6 grupos
+		// Crear diagrama de tarta con los 6 grupos
+	    //PieChart graficaTarta = new PieChartBuilder().width(800).height(600).title("Tarta de prueba").build();
+	    PieChart graficaTarta = new PieChartBuilder().build();
+	    // Personalizar gráfico
+	    graficaTarta.getStyler().setSeriesColors(GRAFICA_TARTA_COLORES);
+	    graficaTarta.getStyler().setLegendPosition(LegendPosition.InsideNW);
+	    // Valores
+	    for (String it : porcentajesMensajesGrupos.keySet()) {
+	    	graficaTarta.addSeries(it, porcentajesMensajesGrupos.get(it));
+		}
+	    // Guardar	    
+	    try {
+			BitmapEncoder.saveBitmap(graficaTarta, GRAFICA_TARTA_PATH, GRAFICA_TARTA_FORMATO);
+		} catch (IOException e3) {
+			// TODO Manejar excepción
+			e3.printStackTrace();
+		}
 	}
 	
 	public void cerrarSesion()
