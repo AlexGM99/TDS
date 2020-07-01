@@ -16,7 +16,7 @@ import Descuentos.InterfazDescuentos;
 
 public class ControladorDescuentos {
 
-	private static String ARCHIVO =  "C:\\Users\\Usuario\\git\\TDS-APPCHAT\\APPCHAT\\src\\main\\java\\Descuentos\\Descuentos.txt";
+	private static String ARCHIVO =  "\\src\\main\\java\\Descuentos\\Descuentos.txt";
 	private static String DESCUENTOS = "1;Descuento Verano;10.0;Entregas también tu alma a cambio\n" + 
 			"0;Invierno;5.0;Tienes que ser muy guapo\n" + 
 			"1;Oferta;5.0;Vendes tu cuerpecito al diablo\n" + 
@@ -41,7 +41,16 @@ public class ControladorDescuentos {
 	
 	private List<DescuentoSimple> getDescuentosFromFile(){
 		List<DescuentoSimple> desc = new LinkedList<DescuentoSimple>();
-		File archivo = new File (ARCHIVO);
+		File miDir = new File (".");
+		String local="";
+	     try {
+	       local = miDir.getCanonicalPath();
+	     }
+	     catch(Exception e) {
+	       e.printStackTrace();
+	    }
+	    System.out.println(local+ARCHIVO);
+		File archivo = new File (local+ARCHIVO);
 		FileReader fr = null;
 		try {
 			fr = new FileReader (archivo);
@@ -50,7 +59,7 @@ public class ControladorDescuentos {
 				String linea = "";
 				while ((linea=br.readLine())!=null) {
 					String[] partes = linea.split(";");
-					if (partes.length >= 4 && partes[0]=="1") {
+					if (partes.length >= 4 && partes[0].equals("1")) {
 						DescuentoSimple descuento = new DescuentoSimple(partes[1], partes[2], partes[3]);
 						desc.add(descuento);
 					}
@@ -75,7 +84,7 @@ public class ControladorDescuentos {
 	
 	public DescuentoCompuesto getDescuentosActuales(){
 		DescuentoCompuesto descuentos;
-		List<DescuentoSimple> d = getDescuentos();
+		List<DescuentoSimple> d = getDescuentosFromFile();
 		descuentos = new DescuentoCompuesto();
 		d.stream().forEach( nuevo -> descuentos.nuevoDescuento(nuevo));
 		return descuentos;

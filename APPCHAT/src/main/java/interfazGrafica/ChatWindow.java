@@ -323,7 +323,7 @@ public class ChatWindow implements InterfazVistas{
 					DescuentoSimple descuentos = controlador.getMejorDescuento();
 					popupMenu_2.setVisible(false);
 					
-					int opt = JOptionPane.showConfirmDialog(btnPremium, descuentos!=null?descuentos.getLetraPequena()+" - Descuento "+descuentos.getCantidad()+"% de tu alma -" :"Vender tu alma completa", 
+					int opt = JOptionPane.showConfirmDialog(btnPremium, descuentos!=null?descuentos.getLetraPequena()+" - Descuento "+descuentos.getCantidad()+"% de tu alma " :"Vender tu alma completa", 
 							descuentos!=null?"Unirse a la orden premium" + " - promoción: "+descuentos.getName():"Unirse a la orden premium", 
 							JOptionPane.OK_OPTION);
 					if (opt==JOptionPane.OK_OPTION) {

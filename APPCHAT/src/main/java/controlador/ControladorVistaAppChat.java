@@ -22,11 +22,7 @@ import org.knowm.xchart.style.Styler.LegendPosition;
 import org.knowm.xchart.BitmapEncoder.BitmapFormat;
 
 import Descuentos.DescuentoCompuesto;
-<<<<<<< HEAD
 import Descuentos.DescuentoSimple;
-import Descuentos.InterfazDescuentos;
-=======
->>>>>>> 2b0dab8f3497e1854bf711adc15afa8f6de8b4af
 import interfazGrafica.ChatWindow;
 import interfazGrafica.Datos_Chat_Actual;
 import interfazGrafica.InterfazVistas;
