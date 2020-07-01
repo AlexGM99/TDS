@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import Descuentos.DescuentoCompuesto;
+import Descuentos.DescuentoSimple;
 import Descuentos.InterfazDescuentos;
 import interfazGrafica.ChatWindow;
 import interfazGrafica.Datos_Chat_Actual;
@@ -169,9 +170,20 @@ public class ControladorVistaAppChat {
 		return usuarioActual.isPremium();
 	}
 	
-	public DescuentoCompuesto getDescuentos() {
+	public DescuentoSimple getMejorDescuento() {
 		DescuentoCompuesto descuentos = controladorDescuentos.getDescuentosActuales();
-		return descuentos;
+		double max = 0.0;
+		DescuentoSimple mejorDescuento = null;
+		List<DescuentoSimple> simples = descuentos.getdescuento();
+		for(DescuentoSimple s: simples) {
+			if(Double.parseDouble(s.getCantidad())>max){
+				{
+					max = Double.parseDouble(s.getCantidad());
+					mejorDescuento = s;
+				}
+			}
+		}
+		return mejorDescuento;
 	}
 	
 	public void vendoMiAlmaPorPremium() {

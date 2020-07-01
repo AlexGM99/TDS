@@ -17,6 +17,8 @@ import java.awt.List;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import Descuentos.DescuentoCompuesto;
+import Descuentos.DescuentoSimple;
 import controlador.ControladorVistaAppChat;
 import modelo.Contacto;
 import modelo.ContactoGrupo;
@@ -318,9 +320,12 @@ public class ChatWindow implements InterfazVistas{
 			btnPremium.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
+					DescuentoSimple descuentos = controlador.getMejorDescuento();
 					popupMenu_2.setVisible(false);
-					int opt = JOptionPane.showConfirmDialog(btnPremium, "your soul will belong to our Lord and u'll be a captain of the premium army", "soul sale contract", 
-							JOptionPane.NO_OPTION, JOptionPane.OK_OPTION);
+					
+					int opt = JOptionPane.showConfirmDialog(btnPremium, descuentos!=null?descuentos.getLetraPequena()+" - Descuento "+descuentos.getCantidad()+"% de tu alma -" :"Vender tu alma completa", 
+							descuentos!=null?"Unirse a la orden premium" + " - promoción: "+descuentos.getName():"Unirse a la orden premium", 
+							JOptionPane.OK_OPTION);
 					if (opt==JOptionPane.OK_OPTION) {
 						controlador.vendoMiAlmaPorPremium();
 						popupMenu_2.remove(btnPremium);

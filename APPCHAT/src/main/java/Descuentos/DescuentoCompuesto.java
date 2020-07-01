@@ -29,8 +29,10 @@ public class DescuentoCompuesto implements InterfazDescuentos{
 
 	@Override
 	public String toString() {
-		return "DescuentoCompuesto [compuesto=" + compuesto!=null?compuesto.toString():"" 
-							+ ", simple=" + simple + "]";
+		String des = this.compuesto!=null?this.compuesto.toString():"";
+		String sim = this.simple!=null?this.simple.toString():"";
+		return "DescuentoCompuesto [compuesto=" + des 
+							+ ", simple=" + sim + "]";
 	}
 	
 	public void nuevoDescuento(DescuentoSimple d) {
@@ -45,7 +47,11 @@ public class DescuentoCompuesto implements InterfazDescuentos{
 	@Override
 	public List<DescuentoSimple> getdescuento() {
 		List<DescuentoSimple> simples = new LinkedList<DescuentoSimple>();
-		return null;
+		if (simple!= null)
+			simples.add(simple);
+		if (compuesto != null)
+		simples.addAll(compuesto.getdescuento());
+		return simples;
 	}
 
 }

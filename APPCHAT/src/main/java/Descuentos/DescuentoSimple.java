@@ -1,11 +1,10 @@
 package Descuentos;
 
-import java.util.List;
 
 public class DescuentoSimple {
 
 	private String name;
-	private double cantidad;
+	private String cantidad;
 	
 	private String letraPequena;
 	
@@ -14,13 +13,28 @@ public class DescuentoSimple {
 		return "DescuentoSimple [name=" + name + ", cantidad=" + cantidad + ", descuentoName=" + letraPequena + "]";
 	}
 
-	public DescuentoSimple(String name, double cantidad, String letraPequena) {
+	public DescuentoSimple(String name, String cantidad, String letraPequena) {
 		this.name = name;
 		this.cantidad = cantidad;
 		this.letraPequena = letraPequena;
 	}
+	public DescuentoSimple() {
+		
+	}
 	
-	public double getCantidad() {
+	public void setCantidad(String cantidad) {
+		this.cantidad = cantidad;
+	}
+	
+	public void setLetraPequena(String letraPequena) {
+		this.letraPequena = letraPequena;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public String getCantidad() {
 		return cantidad;
 	}
 	public String getLetraPequena() {
