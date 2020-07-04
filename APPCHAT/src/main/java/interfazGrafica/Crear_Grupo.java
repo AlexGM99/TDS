@@ -42,12 +42,16 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.border.LineBorder;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-public class Crear_Grupo extends JFrame {
+public class Crear_Grupo extends JFrame implements InterfazVistas {
 
-	JScrollPane scrollPane_contacts;
-	JList list_contacts;
-	private DefaultListModel<ContactoIndividual> listModel;
+	private JScrollPane scrollPane_contacts;
+	private JList list_contacts;
+	private DefaultListModel<ContactoIndividual> listModelContactos;
+	private DefaultListModel<ContactoIndividual> listModelSeleccionados;
 	private List<ContactoIndividual> contactos;
 	private String nombre_grupo;
 	private ControladorVistaAppChat controlador;
@@ -56,10 +60,17 @@ public class Crear_Grupo extends JFrame {
 	private JTextField txtNombreGrupo;
 	private int codigoActivo = -1;
 	private String actNick = "";
+	private LinkedList<Integer> seleccionados;
+	private LinkedList<Integer> contactosUsuario;
+	private JScrollPane scrollPanel_seleccionados;
+	private JList list_seleccionados;
 	/**
 	 * Create the panel.
 	 */
 	public Crear_Grupo(Usuario usuarioActual, List<ContactoIndividual> contactos, ControladorVistaAppChat controlador) {
+		contactosUsuario = new LinkedList<Integer>();
+		contactos.stream().forEach(p -> contactosUsuario.add(p.getCodigo()));
+		seleccionados = new LinkedList<Integer>();
 		setMaximumSize(new Dimension(760, 400));
 		setResizable(false);
 		setMinimumSize(new Dimension(760, 400));
@@ -181,39 +192,46 @@ public class Crear_Grupo extends JFrame {
 		Barra_de_búsqueda.setColumns(10);
 		
 		scrollPane_contacts = new JScrollPane();
+		scrollPane_contacts.setAutoscrolls(true);
+		scrollPane_contacts.setMinimumSize(new Dimension(265, 200));
+		scrollPane_contacts.setPreferredSize(new Dimension(265, 200));
 		getContentPane().add(scrollPane_contacts, BorderLayout.WEST);
 		
-		list_contacts = new JList();
-		scrollPane_contacts.setViewportView(list_contacts);
-		
-		listModel = new DefaultListModel<ContactoIndividual>();
-		list_contacts = new JList<ContactoIndividual>(listModel);
-		scrollPane_contacts.setViewportView(list_contacts);
-
+		listModelContactos = new DefaultListModel<ContactoIndividual>();
+		listModelSeleccionados = new DefaultListModel<ContactoIndividual>();
 		
 		JScrollPane scrollPanel_seleccionados = new JScrollPane();
+		scrollPanel_seleccionados.setAutoscrolls(true);
+		scrollPanel_seleccionados.setMinimumSize(new Dimension(260, 80));
+		scrollPanel_seleccionados.setPreferredSize(new Dimension(260, 200));
 		getContentPane().add(scrollPanel_seleccionados, BorderLayout.EAST);
 		
-		JList list_seleccionados = new JList();
+		list_seleccionados = new JList();
 		scrollPanel_seleccionados.setViewportView(list_seleccionados);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
 		getContentPane().add(panel_1, BorderLayout.CENTER);
 		
-		JButton button = new JButton("");
+		JButton button_quitarSeleccionado = new JButton("");
 		Image img5= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/flecha-izquierda.png")).getImage();
 		ImageIcon img6=new ImageIcon(img5.getScaledInstance(TAMAÑO_FLECHAS, TAMAÑO_FLECHAS, Image.SCALE_SMOOTH));
 		panel_1.setLayout(new BorderLayout(0, 0));
-		button.setIcon(img6);
+		button_quitarSeleccionado.setIcon(img6);
 
-		panel_1.add(button, BorderLayout.WEST);
+		panel_1.add(button_quitarSeleccionado, BorderLayout.WEST);
 		
-		JButton button_1 = new JButton("");
+		JButton button_nuevoSeleccionado = new JButton("");
+		button_nuevoSeleccionado.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				addChatSeleccionado();
+			}
+		});
 		Image img7= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/proximo.png")).getImage();
 		ImageIcon img8=new ImageIcon(img7.getScaledInstance(TAMAÑO_FLECHAS, TAMAÑO_FLECHAS, Image.SCALE_SMOOTH));
-		button_1.setIcon(img8);
-		panel_1.add(button_1, BorderLayout.EAST);
+		button_nuevoSeleccionado.setIcon(img8);
+		panel_1.add(button_nuevoSeleccionado, BorderLayout.EAST);
 		
 		txtNombreGrupo = new JTextField();
 		txtNombreGrupo.setHorizontalAlignment(JTextField.CENTER);
@@ -225,9 +243,23 @@ public class Crear_Grupo extends JFrame {
 		panel_1.add(panel_2, BorderLayout.SOUTH);
 		
 		JButton btnCancelar = new JButton("Cancelar");
+		btnCancelar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				exit();
+			}
+		});
+		btnCancelar.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		btnCancelar.setPreferredSize(new Dimension(100, 23));
+		btnCancelar.setMinimumSize(new Dimension(100, 23));
+		btnCancelar.setMaximumSize(new Dimension(100, 23));
 		panel_2.add(btnCancelar);
 		
 		JButton btnCrearGrupo = new JButton("Crear Grupo");
+		btnCrearGrupo.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		btnCrearGrupo.setPreferredSize(new Dimension(100, 23));
+		btnCrearGrupo.setMinimumSize(new Dimension(100, 23));
+		btnCrearGrupo.setMaximumSize(new Dimension(100, 23));
 		panel_2.add(btnCrearGrupo);
 		
 		
@@ -235,16 +267,28 @@ public class Crear_Grupo extends JFrame {
 
 	}
 	
-	public void addChat(ContactoIndividual cont) {
-		
+	public void addChatSeleccionado() {
+		contactosUsuario.remove((Integer)codigoActivo);
+		seleccionados.add((Integer)codigoActivo);
+		LinkedList<ContactoIndividual> contactos = new LinkedList<ContactoIndividual>(controlador.getContactosByCodigos(seleccionados));
+		setChatsSeleccionados(contactos);
 	}
 	
 	public void setChats(LinkedList<ContactoIndividual> listaModel) {
-		listModel = new DefaultListModel<ContactoIndividual>();
-		listaModel.stream().forEach(cont -> listModel.addElement(cont));
-		list_contacts = new JList<ContactoIndividual>(listModel);
+		listModelContactos = new DefaultListModel<ContactoIndividual>();
+		listaModel.stream().forEach(cont -> listModelContactos.addElement(cont));
+		list_contacts = new JList<ContactoIndividual>(listModelContactos);
+		list_contacts.setMinimumSize(new Dimension(240, 0));
 		scrollPane_contacts.setViewportView(list_contacts);
 		list_contacts.setCellRenderer(new chatListRender());
+	}
+	public void setChatsSeleccionados(LinkedList<ContactoIndividual> listaModel) {
+		listModelSeleccionados = new DefaultListModel<ContactoIndividual>();
+		listaModel.stream().forEach(cont -> listModelSeleccionados.addElement(cont));
+		list_seleccionados = new JList<ContactoIndividual>(listModelSeleccionados);
+		list_seleccionados.setMinimumSize(new Dimension(240, 0));
+		scrollPane_contacts.setViewportView(list_seleccionados);
+		list_seleccionados.setCellRenderer(new chatListRender());
 	}
 	
 
@@ -279,7 +323,7 @@ public class Crear_Grupo extends JFrame {
 	    	if (isSelected) {
 	    	    setBackground(list.getSelectionBackground());
 	    	    setForeground(list.getSelectionForeground());
-	    	    codigoActivo = controlador.getCode((ContactoIndividual)cont);
+	    	    codigoActivo = cont.getCodigo();
 	    	    actNick = cont.getNombre();
 	    	} else {
 	    	    setBackground(list.getBackground());
@@ -288,6 +332,8 @@ public class Crear_Grupo extends JFrame {
 	        return this;
 	    }
 	}
-	
+	public void exit() {
+		this.dispose();
+	}
 	
 }

@@ -11,8 +11,10 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import org.eclipse.persistence.internal.jpa.parsing.LikeNode;
 import org.knowm.xchart.BitmapEncoder;
 import org.knowm.xchart.CategoryChart;
 import org.knowm.xchart.CategoryChartBuilder;
@@ -125,6 +127,10 @@ public class ControladorVistaAppChat {
 		return true;
 	}
 
+	public List<ContactoIndividual> getContactosByCodigos(List<Integer> codes){
+		List<ContactoIndividual> contactos = usuarioActual.getContactos();
+		return contactos.stream().filter(p -> codes.contains(p.getCodigo())).collect(Collectors.toList());
+	}
 	// TERMINADO
 	public String RegisterUser(String nombre, Date fechanacimiento, String email, String movil, String usuario,
 			String contraseña, String imagen, String saludo) {
