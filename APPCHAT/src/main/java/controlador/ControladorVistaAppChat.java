@@ -255,6 +255,18 @@ public class ControladorVistaAppChat {
 		return contactos;
 	}
 	
+	public Usuario getUsuarioActual() {
+		return this.usuarioActual;
+	}
+	
+	// TERMINADO
+	public List<ContactoIndividual> getContactoIndividuales(){
+		LinkedList<ContactoIndividual> contactos = new LinkedList<ContactoIndividual>();
+		usuarioActual.getContactos().stream().
+									forEach(cont -> contactos.add(cont));
+		return contactos;
+	}
+	
 	// TODO wrapper de los datos de inicio y pasarlos a la vista
 	public Datos_Chat_Actual getDatos(int codigo) {
 		return catalogoUsuarios.getDatosVentana(codigo);

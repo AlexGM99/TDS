@@ -59,6 +59,8 @@ import java.awt.ComponentOrientation;
 
 public class ChatWindow implements InterfazVistas{
 
+	private Crear_Grupo crearGrupo;
+	
 	private JFrame frmAppchat;
 	private JTextField txtBuscar;
 	private JTextField txtChat;
@@ -90,6 +92,7 @@ public class ChatWindow implements InterfazVistas{
 	private JButton btnPremium;
 	private JButton btnExit;
 	private JButton btnNewContact;
+	private JButton btnNewGroup;
 	/**
 	 * Launch the application.
 	 */
@@ -184,7 +187,6 @@ public class ChatWindow implements InterfazVistas{
 				//TO DO mostrar el perfil del usuario
 					popupMenu_2.setLocation(mostrarPerfil.getLocationOnScreen());
 					popupMenu_2.setVisible(!popupMenu_2.isVisible());
-				System.out.println("perfil");
 			}
 		});
 			
@@ -313,6 +315,16 @@ public class ChatWindow implements InterfazVistas{
 			}
 		});
 		popupMenu_2.add(btnNewContact);
+		
+		btnNewGroup = new JButton("New group");
+		btnNewGroup.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				crearGrupo = new Crear_Grupo(controlador.getUsuarioActual() ,controlador.getContactoIndividuales(), controlador);
+				crearGrupo.setVisible(true);
+			}
+		});
+		popupMenu_2.add(btnNewGroup);
 		popupMenu_2.add(btnExit);
 		
 		if (!controlador.soypremium()) {
@@ -634,6 +646,9 @@ public class ChatWindow implements InterfazVistas{
 						myPicture = ImageIO.read(f);
 					} catch (IOException e) {
 						//TODO ADVERTENCIA
+						Image img5= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/usuarioDefecto.png")).getImage();
+		        		ImageIcon img6=new ImageIcon(img5.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+		        		this.setIcon(img6);
 					}			
 	        		Image aux=myPicture.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
 	        		ImageIcon aux1 = new ImageIcon(aux);
