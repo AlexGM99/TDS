@@ -320,6 +320,7 @@ public class ChatWindow implements InterfazVistas{
 		btnNewGroup.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				popupMenu_2.setVisible(false);
 				crearGrupo = new Crear_Grupo(controlador.getUsuarioActual() ,controlador.getContactoIndividuales(), controlador);
 				crearGrupo.setVisible(true);
 			}

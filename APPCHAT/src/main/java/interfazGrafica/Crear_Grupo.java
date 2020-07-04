@@ -2,6 +2,7 @@ package interfazGrafica;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Scanner;
 
 import javax.swing.JPanel;
 
@@ -17,6 +18,7 @@ import java.awt.BorderLayout;
 import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.swing.JLabel;
@@ -28,6 +30,8 @@ import javax.swing.ListCellRenderer;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
+
 import java.awt.Color;
 import javax.swing.JScrollPane;
 import java.awt.Component;
@@ -35,6 +39,9 @@ import javax.swing.border.MatteBorder;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.border.LineBorder;
+import java.awt.Dimension;
 
 public class Crear_Grupo extends JFrame {
 
@@ -50,7 +57,11 @@ public class Crear_Grupo extends JFrame {
 	/**
 	 * Create the panel.
 	 */
-	public Crear_Grupo(Usuario usuarioActual,List<ContactoIndividual> contactos, ControladorVistaAppChat controlador) {
+	public Crear_Grupo(Usuario usuarioActual, List<ContactoIndividual> contactos, ControladorVistaAppChat controlador) {
+		setMaximumSize(new Dimension(760, 400));
+		setResizable(false);
+		setMinimumSize(new Dimension(760, 400));
+		setLocationRelativeTo(null);
 		this.contactos = contactos;
 		this.controlador = controlador;
 		
@@ -61,48 +72,106 @@ public class Crear_Grupo extends JFrame {
 		getContentPane().add(panel, BorderLayout.NORTH);
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[]{0, 112, 137, 0, 344, 0};
-		gbl_panel.rowHeights = new int[]{61, 0};
-		gbl_panel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_panel.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+		gbl_panel.rowHeights = new int[]{63, -16, 0};
+		gbl_panel.columnWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.rowWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
-		String foto = "/ImagensDefault/usuarioDefecto.png";
-		if (usuarioActual.getImagen()!=null && !usuarioActual.getImagen().equals(""))
-		{
-			foto = usuarioActual.getImagen();
-		}
-		
-		JLabel MiFoto =    new JLabel("");
-		Image img= new ImageIcon(ChatWindow.class.getResource(foto)).getImage();
-		ImageIcon img2=new ImageIcon(img.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
-		MiFoto.setIcon(img2);
-		GridBagConstraints gbc_MiFoto = new GridBagConstraints();
-		gbc_MiFoto.insets = new Insets(0, 0, 0, 5);
-		gbc_MiFoto.gridx = 0;
-		gbc_MiFoto.gridy = 0;
-		panel.add(MiFoto, gbc_MiFoto);
-		
-		JLabel MiNombre = new JLabel(usuarioActual.getNombre());
-		GridBagConstraints gbc_MiNombre = new GridBagConstraints();
-		gbc_MiNombre.insets = new Insets(0, 0, 0, 5);
-		gbc_MiNombre.gridx = 1;
-		gbc_MiNombre.gridy = 0;
-		panel.add(MiNombre, gbc_MiNombre);
 		
 		JLabel buscador = new JLabel("");
 		buscador.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		Image img3= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/lupitaRed.png")).getImage();
 		ImageIcon img4=new ImageIcon(img3.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+		
+		JPanel panel_usuario = new JPanel();
+		panel_usuario.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		GridBagConstraints gbc_panel_usuario = new GridBagConstraints();
+		gbc_panel_usuario.gridwidth = 2;
+		gbc_panel_usuario.insets = new Insets(0, 0, 5, 5);
+		gbc_panel_usuario.fill = GridBagConstraints.BOTH;
+		gbc_panel_usuario.gridx = 0;
+		gbc_panel_usuario.gridy = 0;
+		panel.add(panel_usuario, gbc_panel_usuario);
+		GridBagLayout gbl_panel_usuario = new GridBagLayout();
+		gbl_panel_usuario.columnWidths = new int[]{1, 55, 0};
+		gbl_panel_usuario.rowHeights = new int[]{14, 0};
+		gbl_panel_usuario.columnWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_usuario.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+		panel_usuario.setLayout(gbl_panel_usuario);
+		
+		JLabel MiFoto = new JLabel("");
+		String foto = "";
+		if (usuarioActual.getImagen()!=null && !usuarioActual.getImagen().equals(""))
+		{
+			foto = usuarioActual.getImagen();
+		}
+		
+		if (!usuarioActual.getImagen().trim().isEmpty()) {
+			 Scanner entrada = null;
+			 try {
+		            String ruta = usuarioActual.getImagen();
+		            File f = new File(ruta);
+		            entrada = new Scanner(f);
+		            while (entrada.hasNext()) {
+		                System.out.println(entrada.nextLine());
+		            }
+		            BufferedImage myPicture;
+		            try { 
+		    			myPicture = ImageIO.read(f);			
+		    			Image aux=myPicture.getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+		    			MiFoto.setIcon(new ImageIcon(aux));
+		    			MiFoto.repaint();
+		    		} catch (IOException e1) {
+		    			//e1.printStackTrace();
+		    			JOptionPane.showConfirmDialog(MiFoto, "Ha habido un error al cargar la imagen, "
+		    					+ "la moviste de sitio :(", "error al recuperar la imagen", JOptionPane.WARNING_MESSAGE);
+		    		}
+		        } catch (FileNotFoundException e0) {
+		            //System.out.println(e0.getMessage());
+		        	JOptionPane.showConfirmDialog(MiFoto, "Ha habido un error al cargar la imagen, "
+	    					+ "la moviste de sitio :(", "error al recuperar la imagen", JOptionPane.WARNING_MESSAGE);
+		        } catch (NullPointerException e1) {
+		            //System.out.println("No se ha seleccionado ningún fichero");
+		        } catch (Exception e2) {
+		            //System.out.println(e2.getMessage());
+		        	JOptionPane.showConfirmDialog(MiFoto, "Ha habido un error al cargar la imagen, "
+	    					+ "la moviste de sitio :(", "error al recuperar la imagen", JOptionPane.WARNING_MESSAGE);
+		        } finally {
+		            if (entrada != null) {
+		                entrada.close();
+		            }
+		        }
+			}
+		else {
+			foto = "/ImagensDefault/usuarioDefecto.png";
+			Image img= new ImageIcon(ChatWindow.class.getResource(foto)).getImage();
+			ImageIcon img2=new ImageIcon(img.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+			MiFoto.setIcon(img2);
+		}
+		GridBagConstraints gbc_MiFoto = new GridBagConstraints();
+		gbc_MiFoto.anchor = GridBagConstraints.WEST;
+		gbc_MiFoto.insets = new Insets(0, 0, 0, 5);
+		gbc_MiFoto.gridx = 0;
+		gbc_MiFoto.gridy = 0;
+		panel_usuario.add(MiFoto, gbc_MiFoto);
+		
+		JLabel MiNombre = new JLabel(usuarioActual.getUsuario());
+		GridBagConstraints gbc_MiNombre = new GridBagConstraints();
+		gbc_MiNombre.anchor = GridBagConstraints.NORTHWEST;
+		gbc_MiNombre.gridx = 1;
+		gbc_MiNombre.gridy = 0;
+		panel_usuario.add(MiNombre, gbc_MiNombre);
 		buscador.setIcon(img4);
 		GridBagConstraints gbc_buscador = new GridBagConstraints();
 		gbc_buscador.anchor = GridBagConstraints.EAST;
-		gbc_buscador.insets = new Insets(0, 0, 0, 5);
+		gbc_buscador.insets = new Insets(0, 0, 5, 5);
 		gbc_buscador.gridx = 3;
 		gbc_buscador.gridy = 0;
 		panel.add(buscador, gbc_buscador);
 		
 		Barra_de_búsqueda = new JTextField();
 		GridBagConstraints gbc_Barra_de_búsqueda = new GridBagConstraints();
+		gbc_Barra_de_búsqueda.insets = new Insets(0, 0, 5, 0);
 		gbc_Barra_de_búsqueda.fill = GridBagConstraints.HORIZONTAL;
 		gbc_Barra_de_búsqueda.gridx = 4;
 		gbc_Barra_de_búsqueda.gridy = 0;
@@ -150,8 +219,14 @@ public class Crear_Grupo extends JFrame {
 		panel_1.add(txtNombreGrupo, BorderLayout.NORTH);
 		txtNombreGrupo.setColumns(10);
 		
+		JPanel panel_2 = new JPanel();
+		panel_1.add(panel_2, BorderLayout.SOUTH);
+		
+		JButton btnCancelar = new JButton("Cancelar");
+		panel_2.add(btnCancelar);
+		
 		JButton btnCrearGrupo = new JButton("Crear Grupo");
-		panel_1.add(btnCrearGrupo, BorderLayout.SOUTH);
+		panel_2.add(btnCrearGrupo);
 		
 	}
 	
