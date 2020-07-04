@@ -200,7 +200,7 @@ public class Crear_Grupo extends JFrame implements InterfazVistas {
 		listModelContactos = new DefaultListModel<ContactoIndividual>();
 		listModelSeleccionados = new DefaultListModel<ContactoIndividual>();
 		
-		JScrollPane scrollPanel_seleccionados = new JScrollPane();
+		scrollPanel_seleccionados = new JScrollPane();
 		scrollPanel_seleccionados.setAutoscrolls(true);
 		scrollPanel_seleccionados.setMinimumSize(new Dimension(260, 80));
 		scrollPanel_seleccionados.setPreferredSize(new Dimension(260, 200));
@@ -272,6 +272,8 @@ public class Crear_Grupo extends JFrame implements InterfazVistas {
 		seleccionados.add((Integer)codigoActivo);
 		LinkedList<ContactoIndividual> contactos = new LinkedList<ContactoIndividual>(controlador.getContactosByCodigos(seleccionados));
 		setChatsSeleccionados(contactos);
+		contactos = new LinkedList<ContactoIndividual>(controlador.getContactosByCodigos(contactosUsuario));
+		setChats(contactos);
 	}
 	
 	public void setChats(LinkedList<ContactoIndividual> listaModel) {
@@ -287,7 +289,7 @@ public class Crear_Grupo extends JFrame implements InterfazVistas {
 		listaModel.stream().forEach(cont -> listModelSeleccionados.addElement(cont));
 		list_seleccionados = new JList<ContactoIndividual>(listModelSeleccionados);
 		list_seleccionados.setMinimumSize(new Dimension(240, 0));
-		scrollPane_contacts.setViewportView(list_seleccionados);
+		scrollPanel_seleccionados.setViewportView(list_seleccionados);
 		list_seleccionados.setCellRenderer(new chatListRender());
 	}
 	
