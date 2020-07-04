@@ -189,6 +189,7 @@ public class ControladorVistaAppChat {
 		return usuarioActual.isPremium();
 	}
 	
+	// TERMINADO
 	public DescuentoSimple getMejorDescuento() {
 		DescuentoCompuesto descuentos = controladorDescuentos.getDescuentosActuales();
 		double max = 0.0;
@@ -205,39 +206,47 @@ public class ControladorVistaAppChat {
 		return mejorDescuento;
 	}
 	
+	// TERMINADO
 	public void vendoMiAlmaPorPremium() {
 		usuarioActual.setPremium(true);
 		adaptadorUsuario.actualizarUsuario(usuarioActual);
 		catalogoUsuarios.addUsuario(usuarioActual);
 	}
 	
+	// TERMINADO
 	public String getImage(ContactoIndividual cont) {
 		String tel = cont.getMovil();
 		return catalogoUsuarios.getUsuario(tel).getImagen();
 	}
 	
+	// TERMINADO
 	public String getImage(int code) { 
 		return catalogoUsuarios.getUsuario(code).getImagen();
 	}
 	
+	// TODO NO HABLES CON EXTRAÑOS
 	public String getUserNick(ContactoIndividual cont) {
 		String tel = cont.getMovil();
 		return catalogoUsuarios.getUsuario(tel).getUsuario();
 	}
 	
+	// TODO NO HABLES CON EXTRAÑOS
 	public String getUserNick(int code) {
 		return catalogoUsuarios.getUsuario(code).getUsuario();
 	}
 	
+	// TODO NO HABLES CON EXTRAÑOS
 	public int getCode(ContactoIndividual cont) {
 		String tel = cont.getMovil();
 		return catalogoUsuarios.getUsuario(tel).getCodigo();
 	}
 	
+	// TERMINADO
 	public boolean existeUsuario(String telefono) {
 		if (telefono == null) return false;
 		return catalogoUsuarios.existeUsuario(telefono);
 	}
+	
 	public List<Contacto> getContactos(){
 		LinkedList<Contacto> contactos = new LinkedList<Contacto>();
 		usuarioActual.getContactos().stream().
@@ -246,10 +255,12 @@ public class ControladorVistaAppChat {
 		return contactos;
 	}
 	
+	// TODO wrapper de los datos de inicio y pasarlos a la vista
 	public Datos_Chat_Actual getDatos(int codigo) {
 		return catalogoUsuarios.getDatosVentana(codigo);
 	}
 	
+	// TERMINADO
 	public void registrarContacto(String usuario, String telefono) {
 		ContactoIndividual cont = new ContactoIndividual(usuario, telefono);
 		adaptadorContacto.registrarContactoIndividual(cont);
@@ -261,6 +272,9 @@ public class ControladorVistaAppChat {
 	
 	public void enviarMensaje(String mensaje, int codigo) {
 		//TODO coger el usuario que envio el mensaje y enviarlo
+		
+		
+		
 	}
 	
 	//TODO patron observer para recoger un mensaje del bbdd
@@ -338,6 +352,7 @@ public class ControladorVistaAppChat {
 		}
 	}
 	
+	// TERMINADO
 	public void cerrarSesion()
 	{
 		InterfazVistas antigua = interfaz;

@@ -90,6 +90,8 @@ public class CatalogoUsuarios {
 			usuarios.put(usu.getMovil(), usu);
 	}
 	
+	// TODO wrapper de los datos de inicio y pasarlos a la vista
+	
 	public Datos_Chat_Actual getDatosVentana(int codigo) {
 		Usuario u = getUsuario(codigo);
 		return u.getMisDatosEnVentana();
