@@ -45,6 +45,8 @@ import java.awt.Dimension;
 
 public class Crear_Grupo extends JFrame {
 
+	JScrollPane scrollPane_contacts;
+	JList list_contacts;
 	private DefaultListModel<ContactoIndividual> listModel;
 	private List<ContactoIndividual> contactos;
 	private String nombre_grupo;
@@ -178,16 +180,16 @@ public class Crear_Grupo extends JFrame {
 		panel.add(Barra_de_búsqueda, gbc_Barra_de_búsqueda);
 		Barra_de_búsqueda.setColumns(10);
 		
-		JScrollPane scrollPane_contacts = new JScrollPane();
+		scrollPane_contacts = new JScrollPane();
 		getContentPane().add(scrollPane_contacts, BorderLayout.WEST);
 		
-		JList list_contacts = new JList();
+		list_contacts = new JList();
 		scrollPane_contacts.setViewportView(list_contacts);
 		
 		listModel = new DefaultListModel<ContactoIndividual>();
 		list_contacts = new JList<ContactoIndividual>(listModel);
 		scrollPane_contacts.setViewportView(list_contacts);
-		
+
 		
 		JScrollPane scrollPanel_seleccionados = new JScrollPane();
 		getContentPane().add(scrollPanel_seleccionados, BorderLayout.EAST);
@@ -228,20 +230,32 @@ public class Crear_Grupo extends JFrame {
 		JButton btnCrearGrupo = new JButton("Crear Grupo");
 		panel_2.add(btnCrearGrupo);
 		
+		
+		setChats(new LinkedList<ContactoIndividual>(contactos));
+
 	}
 	
 	public void addChat(ContactoIndividual cont) {
 		
 	}
+	
+	public void setChats(LinkedList<ContactoIndividual> listaModel) {
+		listModel = new DefaultListModel<ContactoIndividual>();
+		listaModel.stream().forEach(cont -> listModel.addElement(cont));
+		list_contacts = new JList<ContactoIndividual>(listModel);
+		scrollPane_contacts.setViewportView(list_contacts);
+		list_contacts.setCellRenderer(new chatListRender());
+	}
+	
 
-	private class chatListRender extends JLabel implements ListCellRenderer<Contacto> {
+	private class chatListRender extends JLabel implements ListCellRenderer<ContactoIndividual> {
 		public chatListRender() {
 		    setOpaque(true);
 		}
-	    public Component getListCellRendererComponent(JList<? extends Contacto> list, Contacto cont, int index,
+	    public Component getListCellRendererComponent(JList<? extends ContactoIndividual> list, ContactoIndividual cont, int index,
 	        boolean isSelected, boolean cellHasFocus) {
 	    	this.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-	    		String ruta = controlador.getImage((ContactoIndividual)cont);
+	    		String ruta = controlador.getImage(cont);
 	        	if (!ruta.trim().isEmpty()) {
 	        		File f = new File(ruta);
 	        		BufferedImage myPicture = null;
@@ -274,5 +288,6 @@ public class Crear_Grupo extends JFrame {
 	        return this;
 	    }
 	}
+	
 	
 }
