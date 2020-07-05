@@ -163,15 +163,15 @@ public class Usuario {
 		return grupos;
 	}
 	
-	public boolean registrarGrupo(String nombre, List<ContactoIndividual> contactos) {
+	public ContactoGrupo registrarGrupo(String nombre, List<ContactoIndividual> contactos) {
 		List<String> c = new LinkedList<String>();
 		contactos.stream().forEach(ci->c.add(ci.getMovil()));;
 		ContactoGrupo grupo = new ContactoGrupo(nombre, c);
 		if(grupos.contains(grupo))
-			return false;
+			return null;
 		grupos.add(grupo);
 		grupo.setAdmin(this);
-		return true;
+		return grupo;
 	}
 	
 	public List<Contacto> RecuperarContactosFiltrados(String text){

@@ -260,7 +260,7 @@ public class ControladorVistaAppChat {
 		LinkedList<Contacto> contactos = new LinkedList<Contacto>();
 		usuarioActual.getContactos().stream().
 									forEach(cont -> contactos.add(cont));
-		//TODO poner los grupos
+		//TO DO poner los grupos
 		usuarioActual.getGrupos().stream().forEach(cont -> contactos.add(cont));
 		return contactos;
 	}
@@ -316,7 +316,12 @@ public class ControladorVistaAppChat {
 	
 	//TERMINADO
 	public boolean crearGrupo(String nombre, List<Integer> contactos) {
-		return usuarioActual.registrarGrupo(nombre, getContactosByCodigos(contactos));
+		ContactoGrupo creado = usuarioActual.registrarGrupo(nombre, getContactosByCodigos(contactos));
+		if (creado!=null) {
+			adaptadorGrupo.registrarContactoGrupo(creado);
+			adaptadorUsuario.actualizarUsuario(usuarioActual);
+		}
+		return creado != null;
 	}
 	
 	public void enviarMensaje(String mensaje, int codigo) {
