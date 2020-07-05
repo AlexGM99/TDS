@@ -287,7 +287,12 @@ public class Crear_Grupo extends JFrame implements InterfazVistas {
 		btnCrearGrupo.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				
+				boolean creado = controlador.crearGrupo(txtNombreGrupo.getText(), seleccionados);
+				if (creado)
+					exit();
+				else
+					JOptionPane.showConfirmDialog(null, "Grupo ya existente",
+	    					"cambie el nombre del grupo o sus integrantes", JOptionPane.WARNING_MESSAGE);
 			}
 		});
 		btnCrearGrupo.setFont(new Font("Tahoma", Font.PLAIN, 9));

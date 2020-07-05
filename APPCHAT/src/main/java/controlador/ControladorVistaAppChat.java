@@ -129,6 +129,7 @@ public class ControladorVistaAppChat {
 		return true;
 	}
 
+	// TERMINADO
 	public List<ContactoIndividual> getContactosByCodigos(List<Integer> codes){
 		List<ContactoIndividual> contactos = usuarioActual.getContactos();
 		return contactos.stream().filter(p -> codes.contains(p.getCodigo())).collect(Collectors.toList());
@@ -260,6 +261,7 @@ public class ControladorVistaAppChat {
 		usuarioActual.getContactos().stream().
 									forEach(cont -> contactos.add(cont));
 		//TODO poner los grupos
+		usuarioActual.getGrupos().stream().forEach(cont -> contactos.add(cont));
 		return contactos;
 	}
 	
@@ -281,6 +283,7 @@ public class ControladorVistaAppChat {
 		return catalogoUsuarios.getDatosVentana(codigo);
 	}
 	
+	//TERMINADO
 	public List<ContactoIndividual> setContactosFilter(List<Integer> contactos, String nombre) {
 		LinkedList<ContactoIndividual> contactosI = new LinkedList<ContactoIndividual>(getContactosByCodigos(contactos));
 		return contactosI.stream()
@@ -309,6 +312,11 @@ public class ControladorVistaAppChat {
 		adaptadorUsuario.actualizarUsuario(usuarioActual);
 		ChatWindow chat = (ChatWindow) interfaz;
 		chat.addChat(cont);
+	}
+	
+	//TERMINADO
+	public boolean crearGrupo(String nombre, List<Integer> contactos) {
+		return usuarioActual.registrarGrupo(nombre, getContactosByCodigos(contactos));
 	}
 	
 	public void enviarMensaje(String mensaje, int codigo) {

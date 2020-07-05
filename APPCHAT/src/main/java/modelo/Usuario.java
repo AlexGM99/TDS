@@ -163,6 +163,17 @@ public class Usuario {
 		return grupos;
 	}
 	
+	public boolean registrarGrupo(String nombre, List<ContactoIndividual> contactos) {
+		List<String> c = new LinkedList<String>();
+		contactos.stream().forEach(ci->c.add(ci.getMovil()));;
+		ContactoGrupo grupo = new ContactoGrupo(nombre, c);
+		if(grupos.contains(grupo))
+			return false;
+		grupos.add(grupo);
+		grupo.setAdmin(this);
+		return true;
+	}
+	
 	public List<Contacto> RecuperarContactosFiltrados(String text){
 		LinkedList<Contacto> contactosFiltrados = new LinkedList<Contacto>();
 		contactos.stream().filter(cont -> contenido(cont.getNombre(), text))
