@@ -230,7 +230,10 @@ public class ControladorVistaAppChat {
 	
 	// TERMINADO
 	public String getImage(int code) { 
-		return catalogoUsuarios.getUsuario(code).getImagen();
+		Usuario usu = catalogoUsuarios.getUsuario(code);
+		if (usu != null)
+			return usu.getImagen();
+		return "GRUPO";
 	}
 	
 	// TODO NO HABLES CON EXTRAÑOS

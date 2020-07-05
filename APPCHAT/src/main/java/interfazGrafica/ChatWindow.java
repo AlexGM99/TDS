@@ -639,6 +639,7 @@ public class ChatWindow implements InterfazVistas{
 	    public Component getListCellRendererComponent(JList<? extends Contacto> list, Contacto cont, int index,
 	        boolean isSelected, boolean cellHasFocus) {
 	    	this.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+	    	if(cont instanceof ContactoIndividual) {
 	    		String ruta = controlador.getImage((ContactoIndividual)cont);
 	        	if (!ruta.trim().isEmpty()) {
 	        		File f = new File(ruta);
@@ -660,23 +661,57 @@ public class ChatWindow implements InterfazVistas{
 	        		this.setIcon(img6);
 	        	}
 	        	this.setText(cont.getNombre());
-	    	if (isSelected) {
-	    	    setBackground(list.getSelectionBackground());
-	    	    setForeground(list.getSelectionForeground());
-	    	    codigoActivo = controlador.getCode((ContactoIndividual)cont);
-	    	    actNick = cont.getNombre();
-	    	    ponerChat();
-	    	} else {
-	    	    setBackground(list.getBackground());
-	    	    setForeground(list.getForeground());
+	        	if (isSelected) {
+		    	    setBackground(list.getSelectionBackground());
+		    	    setForeground(list.getSelectionForeground());
+		    	    codigoActivo = controlador.getCode((ContactoIndividual)cont);
+		    	    actNick = cont.getNombre();
+		    	    ponerChat();
+		    	} else {
+		    	    setBackground(list.getBackground());
+		    	    setForeground(list.getForeground());
+		    	}
 	    	}
+	    	else if (cont instanceof ContactoGrupo){
+	    		Image img5= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/Grupo.png")).getImage();
+        		ImageIcon img6=new ImageIcon(img5.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+        		this.setIcon(img6);
+        		if (isSelected) {
+    	    	    setBackground(list.getSelectionBackground());
+    	    	    setForeground(list.getSelectionForeground());
+    	    	    codigoActivo = ((ContactoGrupo)cont).getCodigo();
+    	    	    actNick = cont.getNombre();
+    	    	    ponerChat();
+    	    	} else {
+    	    	    setBackground(list.getBackground());
+    	    	    setForeground(list.getForeground());
+    	    	}
+        		this.setText(cont.getNombre());
+	        	if (isSelected) {
+		    	    setBackground(list.getSelectionBackground());
+		    	    setForeground(list.getSelectionForeground());
+		    	    codigoActivo = ((ContactoGrupo)cont).getCodigo();
+		    	    actNick = cont.getNombre();
+		    	    ponerChat();
+		    	} else {
+		    	    setBackground(list.getBackground());
+		    	    setForeground(list.getForeground());
+		    	}
+	    	}
+	    	
 	        return this;
 	    }
 	}
 	
 	private void ponerChat() {
 		String ruta = controlador.getImage(codigoActivo);
-    	if (!ruta.trim().isEmpty()) {
+		if(ruta.equals("GRUPO"))
+		{
+			Image img5= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/Grupo.png")).getImage();
+    		ImageIcon img6=new ImageIcon(img5.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+    		lblnombrechat.setIcon(img6);
+		}
+		else if (!ruta.trim().isEmpty()) {
     		File f = new File(ruta);
     		BufferedImage myPicture = null;
 			try {
