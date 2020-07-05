@@ -45,6 +45,9 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class Crear_Grupo extends JFrame implements InterfazVistas {
 
@@ -59,11 +62,16 @@ public class Crear_Grupo extends JFrame implements InterfazVistas {
 	private static int TAMAÑO_FLECHAS = 75;
 	private JTextField txtNombreGrupo;
 	private int codigoActivo = -1;
+	private int codigoActivoContacto = -1;
+	private int codigoActivoSeleccionado = -1;
 	private String actNick = "";
 	private LinkedList<Integer> seleccionados;
 	private LinkedList<Integer> contactosUsuario;
 	private JScrollPane scrollPanel_seleccionados;
 	private JList list_seleccionados;
+	private int lastSeleccionado = -1;
+	private int lastContacto = -1;
+	private int numSelect = 0;
 	/**
 	 * Create the panel.
 	 */
@@ -92,6 +100,13 @@ public class Crear_Grupo extends JFrame implements InterfazVistas {
 		
 		
 		JLabel buscador = new JLabel("");
+		buscador.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				setChats(new LinkedList<ContactoIndividual>(controlador.setContactosFilter(contactosUsuario, Barra_de_búsqueda.getText())));
+				setChatsSeleccionados(new LinkedList<ContactoIndividual>(controlador.setContactosFilter(seleccionados, Barra_de_búsqueda.getText())));
+			}
+		});
 		buscador.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		Image img3= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/lupitaRed.png")).getImage();
 		ImageIcon img4=new ImageIcon(img3.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
@@ -183,6 +198,13 @@ public class Crear_Grupo extends JFrame implements InterfazVistas {
 		panel.add(buscador, gbc_buscador);
 		
 		Barra_de_búsqueda = new JTextField();
+		Barra_de_búsqueda.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				setChats(new LinkedList<ContactoIndividual>(controlador.setContactosFilter(contactosUsuario, Barra_de_búsqueda.getText())));
+				setChatsSeleccionados(new LinkedList<ContactoIndividual>(controlador.setContactosFilter(seleccionados, Barra_de_búsqueda.getText())));
+			}
+		});
 		GridBagConstraints gbc_Barra_de_búsqueda = new GridBagConstraints();
 		gbc_Barra_de_búsqueda.insets = new Insets(0, 0, 5, 0);
 		gbc_Barra_de_búsqueda.fill = GridBagConstraints.HORIZONTAL;
@@ -214,6 +236,12 @@ public class Crear_Grupo extends JFrame implements InterfazVistas {
 		getContentPane().add(panel_1, BorderLayout.CENTER);
 		
 		JButton button_quitarSeleccionado = new JButton("");
+		button_quitarSeleccionado.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				quitarChatSeleccionado();
+			}
+		});
 		Image img5= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/flecha-izquierda.png")).getImage();
 		ImageIcon img6=new ImageIcon(img5.getScaledInstance(TAMAÑO_FLECHAS, TAMAÑO_FLECHAS, Image.SCALE_SMOOTH));
 		panel_1.setLayout(new BorderLayout(0, 0));
@@ -256,6 +284,12 @@ public class Crear_Grupo extends JFrame implements InterfazVistas {
 		panel_2.add(btnCancelar);
 		
 		JButton btnCrearGrupo = new JButton("Crear Grupo");
+		btnCrearGrupo.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				
+			}
+		});
 		btnCrearGrupo.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		btnCrearGrupo.setPreferredSize(new Dimension(100, 23));
 		btnCrearGrupo.setMinimumSize(new Dimension(100, 23));
@@ -267,13 +301,26 @@ public class Crear_Grupo extends JFrame implements InterfazVistas {
 
 	}
 	
-	public void addChatSeleccionado() {
-		contactosUsuario.remove((Integer)codigoActivo);
-		seleccionados.add((Integer)codigoActivo);
-		LinkedList<ContactoIndividual> contactos = new LinkedList<ContactoIndividual>(controlador.getContactosByCodigos(seleccionados));
-		setChatsSeleccionados(contactos);
-		contactos = new LinkedList<ContactoIndividual>(controlador.getContactosByCodigos(contactosUsuario));
-		setChats(contactos);
+	private void addChatSeleccionado() {
+		if (contactosUsuario.contains(codigoActivoContacto) && !seleccionados.contains(codigoActivoContacto)) {
+			contactosUsuario.remove((Integer)codigoActivoContacto);
+			seleccionados.add((Integer)codigoActivoContacto);
+			LinkedList<ContactoIndividual> contactos = new LinkedList<ContactoIndividual>(controlador.getContactosByCodigos(seleccionados));
+			setChatsSeleccionados(contactos);
+			contactos = new LinkedList<ContactoIndividual>(controlador.getContactosByCodigos(contactosUsuario));
+			setChats(contactos);
+		}
+	}
+	
+	private void quitarChatSeleccionado() {
+		if (seleccionados.contains(codigoActivoSeleccionado) && !contactosUsuario.contains(codigoActivoSeleccionado)) {
+			seleccionados.remove((Integer)codigoActivoSeleccionado);
+			contactosUsuario.add((Integer)codigoActivoSeleccionado);
+			LinkedList<ContactoIndividual> contactos = new LinkedList<ContactoIndividual>(controlador.getContactosByCodigos(seleccionados));
+			setChatsSeleccionados(contactos);
+			contactos = new LinkedList<ContactoIndividual>(controlador.getContactosByCodigos(contactosUsuario));
+			setChats(contactos);
+		}
 	}
 	
 	public void setChats(LinkedList<ContactoIndividual> listaModel) {
@@ -298,6 +345,7 @@ public class Crear_Grupo extends JFrame implements InterfazVistas {
 		public chatListRender() {
 		    setOpaque(true);
 		}
+		
 	    public Component getListCellRendererComponent(JList<? extends ContactoIndividual> list, ContactoIndividual cont, int index,
 	        boolean isSelected, boolean cellHasFocus) {
 	    	this.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -307,26 +355,46 @@ public class Crear_Grupo extends JFrame implements InterfazVistas {
 	        		BufferedImage myPicture = null;
 					try {
 						myPicture = ImageIO.read(f);
+		        		Image aux=myPicture.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+		        		ImageIcon aux1 = new ImageIcon(aux);
+		        		this.setIcon(aux1);
 					} catch (IOException e) {
 						//TODO ADVERTENCIA
 						Image img5= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/usuarioDefecto.png")).getImage();
 		        		ImageIcon img6=new ImageIcon(img5.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
 		        		this.setIcon(img6);
-					}			
-	        		Image aux=myPicture.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
-	        		ImageIcon aux1 = new ImageIcon(aux);
-	        		this.setIcon(aux1);
+					}	
 	        	} else {
 	        		Image img5= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/usuarioDefecto.png")).getImage();
 	        		ImageIcon img6=new ImageIcon(img5.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
 	        		this.setIcon(img6);
 	        	}
 	        	this.setText(cont.getNombre());
+	        	
 	    	if (isSelected) {
 	    	    setBackground(list.getSelectionBackground());
 	    	    setForeground(list.getSelectionForeground());
 	    	    codigoActivo = cont.getCodigo();
 	    	    actNick = cont.getNombre();
+	    	    if (contactosUsuario.contains(codigoActivo)) {
+	    	    	numSelect++;
+	    	    	if (codigoActivo == codigoActivoContacto) {
+	    	    		//addChatSeleccionado();
+		    	    	numSelect = 0;
+	    	    	}
+	    	    	codigoActivoContacto = codigoActivo;
+	    	    	codigoActivoSeleccionado = -1;
+	    	    	numSelect++;
+	    	    }
+	    	    else if (seleccionados.contains(codigoActivo)) {
+	    	    	numSelect++;
+	    	    	if (codigoActivo == codigoActivoSeleccionado) {
+	    	    		//quitarChatSeleccionado();
+	    	    		numSelect = 0;
+	    	    	}
+	    	    	codigoActivoSeleccionado = codigoActivo;
+	    	    	codigoActivoContacto = -1;
+	    	    }
 	    	} else {
 	    	    setBackground(list.getBackground());
 	    	    setForeground(list.getForeground());

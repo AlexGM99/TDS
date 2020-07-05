@@ -15,6 +15,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.eclipse.persistence.internal.jpa.parsing.LikeNode;
+import org.eclipse.persistence.internal.queries.ListContainerPolicy;
 import org.knowm.xchart.BitmapEncoder;
 import org.knowm.xchart.CategoryChart;
 import org.knowm.xchart.CategoryChartBuilder;
@@ -26,6 +27,7 @@ import org.knowm.xchart.BitmapEncoder.BitmapFormat;
 import Descuentos.DescuentoCompuesto;
 import Descuentos.DescuentoSimple;
 import interfazGrafica.ChatWindow;
+import interfazGrafica.Crear_Grupo;
 import interfazGrafica.Datos_Chat_Actual;
 import interfazGrafica.InterfazVistas;
 import interfazGrafica.LogIn;
@@ -261,6 +263,7 @@ public class ControladorVistaAppChat {
 		return contactos;
 	}
 	
+	// TERMINADO
 	public Usuario getUsuarioActual() {
 		return this.usuarioActual;
 	}
@@ -276,6 +279,26 @@ public class ControladorVistaAppChat {
 	// TODO wrapper de los datos de inicio y pasarlos a la vista
 	public Datos_Chat_Actual getDatos(int codigo) {
 		return catalogoUsuarios.getDatosVentana(codigo);
+	}
+	
+	public List<ContactoIndividual> setContactosFilter(List<Integer> contactos, String nombre) {
+		LinkedList<ContactoIndividual> contactosI = new LinkedList<ContactoIndividual>(getContactosByCodigos(contactos));
+		return contactosI.stream()
+				.filter(cont -> contenido(cont.getNombre(), nombre))
+				.collect(Collectors.toList());
+	}
+	// TERMINADO
+	public boolean contenido(String contenedorB, String contenidoB) {
+		int i = 0;
+		if (contenidoB.length() > contenedorB.length()) return false;
+		String contenedor = contenedorB.toLowerCase();
+		String contenido = contenidoB.toLowerCase();
+		for (; i< contenedor.length(); i++) {
+			if (contenedor.startsWith(contenido, i)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	// TERMINADO

@@ -645,15 +645,15 @@ public class ChatWindow implements InterfazVistas{
 	        		BufferedImage myPicture = null;
 					try {
 						myPicture = ImageIO.read(f);
+		        		Image aux=myPicture.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+		        		ImageIcon aux1 = new ImageIcon(aux);
+		        		this.setIcon(aux1);
 					} catch (IOException e) {
 						//TODO ADVERTENCIA
 						Image img5= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/usuarioDefecto.png")).getImage();
 		        		ImageIcon img6=new ImageIcon(img5.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
 		        		this.setIcon(img6);
 					}			
-	        		Image aux=myPicture.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
-	        		ImageIcon aux1 = new ImageIcon(aux);
-	        		this.setIcon(aux1);
 	        	} else {
 	        		Image img5= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/usuarioDefecto.png")).getImage();
 	        		ImageIcon img6=new ImageIcon(img5.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
