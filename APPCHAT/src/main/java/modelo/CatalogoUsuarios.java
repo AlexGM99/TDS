@@ -60,9 +60,22 @@ public class CatalogoUsuarios {
 		}
 		return null;
 	}
+	
+	public String getUserName(int codigo) {
+		Usuario u = getUsuario(codigo);
+		return u != null?u.getUsuario():"";
+	}
 
 	public Usuario getUsuario(String movil) {
 		return usuarios.get(movil);
+	}
+	
+	public String getUserName(String movil) {
+		return usuarios.get(movil).getUsuario();
+	}
+	
+	public int getCodigo(String movil) {
+		return usuarios.get(movil).getCodigo();
 	}
 
 	public void addUsuario(Usuario user) {

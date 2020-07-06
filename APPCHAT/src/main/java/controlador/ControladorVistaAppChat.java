@@ -11,6 +11,8 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -46,7 +48,7 @@ import persistencia.IAdaptadorContactoIndividualDAO;
 import persistencia.IAdaptadorMensajeDAO;
 import persistencia.IAdaptadorUsuarioDAO;
 
-public class ControladorVistaAppChat {
+public class ControladorVistaAppChat{
 	public static final String REGISTRO_CORRECTO = "U've been registered into the Dark Lord Army!!!!!!!!!";
 	public static final String REGISTRO_NOMBRE_YA_USADO = "User already registered";
 	
@@ -59,6 +61,7 @@ public class ControladorVistaAppChat {
 	public static final String GRAFICA_TARTA_PATH = "./Sample_Chart-G";
 	public static final BitmapFormat GRAFICA_TARTA_FORMATO = BitmapFormat.PNG;
 	
+	private AuxRender rendericer;
 	private static ControladorVistaAppChat unicaInstancia;
 	private IAdaptadorUsuarioDAO adaptadorUsuario;
 	private IAdaptadorContactoIndividualDAO adaptadorContacto;
@@ -79,6 +82,8 @@ public class ControladorVistaAppChat {
 		inicializarAdaptadores();
 		// inicializar catalogos
 		inicializarCatalogos();
+		
+		rendericer = new AuxRender();
 		
 		controladorDescuentos = new ControladorDescuentos();
 	}
@@ -236,21 +241,21 @@ public class ControladorVistaAppChat {
 		return "GRUPO";
 	}
 	
-	// TODO NO HABLES CON EXTRAÑOS
+	// TERMINADO
 	public String getUserNick(ContactoIndividual cont) {
 		String tel = cont.getMovil();
-		return catalogoUsuarios.getUsuario(tel).getUsuario();
+		return catalogoUsuarios.getUserName(tel);
 	}
 	
-	// TODO NO HABLES CON EXTRAÑOS
+	// TERMINADO
 	public String getUserNick(int code) {
-		return catalogoUsuarios.getUsuario(code).getUsuario();
+		return catalogoUsuarios.getUserName(code);
 	}
 	
-	// TODO NO HABLES CON EXTRAÑOS
+	// TERMINADO
 	public int getCode(ContactoIndividual cont) {
 		String tel = cont.getMovil();
-		return catalogoUsuarios.getUsuario(tel).getCodigo();
+		return catalogoUsuarios.getCodigo(tel);
 	}
 	
 	// TERMINADO
@@ -259,6 +264,7 @@ public class ControladorVistaAppChat {
 		return catalogoUsuarios.existeUsuario(telefono);
 	}
 	
+	// TERMINADO
 	public List<Contacto> getContactos(){
 		LinkedList<Contacto> contactos = new LinkedList<Contacto>();
 		usuarioActual.getContactos().stream().
