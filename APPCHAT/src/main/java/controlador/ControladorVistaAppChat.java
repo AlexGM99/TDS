@@ -28,6 +28,7 @@ import org.knowm.xchart.BitmapEncoder.BitmapFormat;
 
 import Descuentos.DescuentoCompuesto;
 import Descuentos.DescuentoSimple;
+import ViewModels.ViewModelDatosChat;
 import interfazGrafica.ChatWindow;
 import interfazGrafica.Crear_Grupo;
 import interfazGrafica.Datos_Chat_Actual;
@@ -288,8 +289,8 @@ public class ControladorVistaAppChat{
 	}
 	
 	// TODO wrapper de los datos de inicio y pasarlos a la vista
-	public Datos_Chat_Actual getDatos(int codigo) {
-		return catalogoUsuarios.getDatosVentana(codigo);
+	public ViewModelDatosChat getDatos(int codigo) {
+		return catalogoUsuarios.getDatosVentana(codigo, usuarioActual);
 	}
 	
 	//TERMINADO

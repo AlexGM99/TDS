@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ViewModels.ViewModelDatosChat;
+import ViewModels.ViewModelUsuario;
 import interfazGrafica.Datos_Chat_Actual;
 import persistencia.AdaptadorContactoGrupoTDS;
 import persistencia.DAOException;
@@ -105,9 +107,10 @@ public class CatalogoUsuarios {
 	
 	// TODO wrapper de los datos de inicio y pasarlos a la vista
 	
-	public Datos_Chat_Actual getDatosVentana(int codigo) {
+	public ViewModelDatosChat getDatosVentana(int codigo, Usuario usu) {
 		Usuario u = getUsuario(codigo);
-		return u.getMisDatosEnVentana();
+		String nick = usu.getNombreContacto(u.getMovil());
+		return new ViewModelUsuario("", u.getNombre(), u.getMovil(), u.getSaludo(), nick);
 	}
 	
 	public boolean existeUsuario(String telefono) {

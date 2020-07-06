@@ -19,6 +19,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import Descuentos.DescuentoCompuesto;
 import Descuentos.DescuentoSimple;
+import ViewModels.ViewModelDatosChat;
+import ViewModels.ViewModelUsuario;
 import controlador.ControladorVistaAppChat;
 import modelo.Contacto;
 import modelo.ContactoGrupo;
@@ -369,9 +371,13 @@ public class ChatWindow implements InterfazVistas{
 				if (codigoActivo == -1) JOptionPane.showMessageDialog(chatslist, "U aren't in contac with no one know, select a chat to see the details of your ally",
 													"You are not alone on the dark!", JOptionPane.WARNING_MESSAGE);
 				else {
-					Datos_Chat_Actual info = controlador.getDatos(codigoActivo);
-					info.setLocationRelativeTo(nombreChat);
-					info.visible(true);
+					ViewModelDatosChat informacion = controlador.getDatos(codigoActivo);
+					if (informacion instanceof ViewModelUsuario)
+					{
+						Datos_Chat_Actual info = new Datos_Chat_Actual((ViewModelUsuario)informacion);
+						info.setLocationRelativeTo(nombreChat);
+						info.visible(true);
+					}
 				}
 			}
 		});
