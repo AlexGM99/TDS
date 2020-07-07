@@ -20,6 +20,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import Descuentos.DescuentoCompuesto;
 import Descuentos.DescuentoSimple;
 import ViewModels.ViewModelDatosChat;
+import ViewModels.ViewModelGrupo;
 import ViewModels.ViewModelUsuario;
 import controlador.ControladorVistaAppChat;
 import modelo.Contacto;
@@ -375,6 +376,12 @@ public class ChatWindow implements InterfazVistas{
 					if (informacion instanceof ViewModelUsuario)
 					{
 						Datos_Chat_Actual info = new Datos_Chat_Actual((ViewModelUsuario)informacion);
+						info.setLocationRelativeTo(nombreChat);
+						info.visible(true);
+					}
+					else if (informacion instanceof ViewModelGrupo)
+					{
+						Datos_Grupo info = new Datos_Grupo((ViewModelGrupo)informacion);
 						info.setLocationRelativeTo(nombreChat);
 						info.visible(true);
 					}

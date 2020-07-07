@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 import ViewModels.ViewModelDatosChat;
+import ViewModels.ViewModelGrupo;
 import ViewModels.ViewModelUsuario;
+import controlador.ControladorVistaAppChat;
 import interfazGrafica.Datos_Chat_Actual;
 import persistencia.AdaptadorContactoGrupoTDS;
 import persistencia.DAOException;
@@ -108,9 +110,17 @@ public class CatalogoUsuarios {
 	// TODO wrapper de los datos de inicio y pasarlos a la vista
 	
 	public ViewModelDatosChat getDatosVentana(int codigo, Usuario usu) {
-		Usuario u = getUsuario(codigo);
+		ContactoIndividual u = usu.getContactoI(codigo);
 		String nick = usu.getNombreContacto(u.getMovil());
-		return new ViewModelUsuario("", u.getNombre(), u.getMovil(), u.getSaludo(), nick);
+		Usuario uI = getUsuario(u.getMovil());
+		return new ViewModelUsuario(uI.getImagen()!=null?uI.getImagen():"", uI.getNombre(), u.getMovil(), uI.getSaludo(), nick);
+	}
+	public ViewModelDatosChat getDatosVentanaGrupo(int codigo, Usuario usu, ControladorVistaAppChat c) {
+		ContactoGrupo u = usu.getContactoG(codigo);
+		Usuario admin = u.getAdmin();
+		List<ContactoIndividual> contactos = usu.getContactos(u.getMiembros());
+		ContactoIndividual contAd = usu.getContactoODefault(admin);
+		return new ViewModelGrupo(contactos, contAd, u.getNombre(), c);
 	}
 	
 	public boolean existeUsuario(String telefono) {

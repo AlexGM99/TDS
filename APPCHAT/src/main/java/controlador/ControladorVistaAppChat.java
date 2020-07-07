@@ -298,7 +298,7 @@ public class ControladorVistaAppChat{
 		if (usuarioActual.existContactoI(codigo))
 			return catalogoUsuarios.getDatosVentana(codigo, usuarioActual);
 		else if (usuarioActual.existContactoG(codigo))
-			return null;
+			return catalogoUsuarios.getDatosVentanaGrupo(codigo, usuarioActual, unicaInstancia);
 		return null;
 	}
 	

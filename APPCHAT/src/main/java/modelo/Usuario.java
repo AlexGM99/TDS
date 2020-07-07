@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -235,6 +236,33 @@ public class Usuario {
 			return null;
 		}
 	}
+	public List<ContactoIndividual> getContactos(Set<String> moviles){
+		List<ContactoIndividual> contactosG = contactos.stream().filter(p -> moviles.contains(p.getMovil())).collect(Collectors.toList());
+		List<String> Asignados = new LinkedList<String>();
+		for (ContactoIndividual contactoIndividual : contactosG) {
+			Asignados.add(contactoIndividual.getMovil());
+		}
+		moviles.stream().filter(p -> !Asignados.contains(p)).forEach( c -> contactosG.add(new ContactoIndividual(c, c)));
+		return contactosG;
+	}
+	
+	public ContactoIndividual GetSitieneContactoByMovil(String movil) {
+		try {
+		return contactos.stream().filter(p -> p.getMovil().equals(movil)).collect(Collectors.toList()).get(0);
+		}
+		catch (Exception e) {
+		}
+		return null;
+	}
+	
+	public ContactoIndividual getContactoODefault(Usuario u) {
+		ContactoIndividual c;
+		if ((c = GetSitieneContactoByMovil(u.movil))!= null)
+			return c;
+		else 
+			return new ContactoIndividual(u.getMovil()+"-"+u.getNombre(), u.getMovil());
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
