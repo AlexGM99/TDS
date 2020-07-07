@@ -42,6 +42,7 @@ import modelo.ContactoIndividual;
 import modelo.Mensaje;
 import modelo.TipoContacto;
 import modelo.Usuario;
+import persistencia.AdaptadorContactoGrupoTDS;
 import persistencia.DAOException;
 import persistencia.FactoriaDAO;
 import persistencia.IAdaptadorContactoGrupoDAO;
@@ -339,6 +340,7 @@ public class ControladorVistaAppChat{
 		if (creado!=null) {
 			adaptadorGrupo.registrarContactoGrupo(creado);
 			adaptadorUsuario.actualizarUsuario(usuarioActual);
+			adaptadorGrupo.registrarContactoGrupo(creado);
 		}
 		ChatWindow chat = (ChatWindow) interfaz;
 		chat.addChat(creado);

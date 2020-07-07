@@ -66,7 +66,7 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 				new Propiedad(NOMBRE_PROP_NOMBRE, contacto.getNombre()),
 				new Propiedad(NOMBRE_PROP_MENSAJES, Auxiliar.obtenerCodigos(contacto.getMensajes())),
 				new Propiedad(NOMBRE_PROP_ADMIN, String.valueOf(contacto.getAdmin().getCodigo())),
-				new Propiedad(NOMBRE_PROP_MIEMBROS, Auxiliar.obtenerCodigos(contacto.getMiembros())))));
+				new Propiedad(NOMBRE_PROP_MIEMBROS, Auxiliar.obtenerCodigosSimples(contacto.getMiembros())))));
 
 		// registrar entidad contactoGrupo
 		eContactoGr = servPersistencia.registrarEntidad(eContactoGr);

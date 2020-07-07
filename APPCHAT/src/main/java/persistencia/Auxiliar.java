@@ -23,6 +23,15 @@ public abstract class Auxiliar {
 		return lineas.trim();
 	}
 	
+	static <T> String obtenerCodigosSimples(Collection<T> t) {
+		String lineas = "";
+		for (T it : t) {
+			if (it instanceof String)
+				lineas+=((String)it).trim() + " ";
+		}
+		return lineas.trim();
+	}
+	
 	static List<ContactoIndividual> obtenerContactosDesdeCodigos(String lineas) {
 
 		List<ContactoIndividual> contactos = new LinkedList<ContactoIndividual>();
