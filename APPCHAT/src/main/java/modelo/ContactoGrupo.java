@@ -2,6 +2,7 @@ package modelo;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class ContactoGrupo extends Contacto {
@@ -16,6 +17,12 @@ public class ContactoGrupo extends Contacto {
 		Collections.addAll(this.miembros, miembros);
 	}
 
+	public ContactoGrupo(String nombre, List<String> miembros) {
+		super(nombre);
+		this.admin = null;
+		this.miembros = new HashSet<String>(miembros);
+	}
+	
 	public Usuario getAdmin() {
 		return admin;
 	}

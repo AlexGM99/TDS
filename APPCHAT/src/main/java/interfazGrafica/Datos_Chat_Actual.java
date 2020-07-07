@@ -8,6 +8,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import ViewModels.ViewModelUsuario;
+
 import java.awt.GridBagLayout;
 import java.awt.Image;
 
@@ -26,8 +29,14 @@ public class Datos_Chat_Actual extends JFrame {
 	JLabel lblNombre;
 	JLabel lblTelefono;
 	JLabel lblEstado;
+	private JLabel lblContacto;
 	
-	public Datos_Chat_Actual (String ruta, String nombre, String tel, String est) {
+	public Datos_Chat_Actual (ViewModelUsuario info) {
+		String ruta = info.getRuta();
+		String nombre = info.getNombre();
+		String tel = info.getTel();
+		String est = info.getEst();
+		String nick = info.getNick();
 		this.Datos_Chat_ActualIni();
 		if (!ruta.trim().isEmpty()) {
     		File f = new File(ruta);
@@ -48,6 +57,8 @@ public class Datos_Chat_Actual extends JFrame {
 		lblNombre.setText(nombre);
 		lblTelefono.setText(tel);
 		lblEstado.setText(est);
+		lblContacto.setText(nick);
+		
 		
 	}
 	 public void visible(boolean i) {
@@ -66,9 +77,9 @@ public class Datos_Chat_Actual extends JFrame {
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
 		gbl_contentPane.columnWidths = new int[]{50, 0, 0, 0, 50, 0};
-		gbl_contentPane.rowHeights = new int[]{50, 0, 0, 0, 0, 50, 0};
+		gbl_contentPane.rowHeights = new int[]{50, 0, 0, 0, 0, 26, 0, 0};
 		gbl_contentPane.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		contentPane.setLayout(gbl_contentPane);
 		
 		labelFoto = new JLabel("");
@@ -78,7 +89,7 @@ public class Datos_Chat_Actual extends JFrame {
 		gbc_labelFoto.gridy = 1;
 		contentPane.add(labelFoto, gbc_labelFoto);
 		
-		lblNombre = new JLabel("nombre");
+		lblNombre = new JLabel("nombre: ");
 		lblNombre.setFont(new Font("Arial Black", Font.PLAIN, 20));
 		GridBagConstraints gbc_lblNombre = new GridBagConstraints();
 		gbc_lblNombre.insets = new Insets(0, 0, 5, 5);
@@ -86,19 +97,25 @@ public class Datos_Chat_Actual extends JFrame {
 		gbc_lblNombre.gridy = 2;
 		contentPane.add(lblNombre, gbc_lblNombre);
 		
-		lblTelefono = new JLabel("telefono:");
+		lblTelefono = new JLabel("telefono: ");
 		GridBagConstraints gbc_lblTelefono = new GridBagConstraints();
 		gbc_lblTelefono.insets = new Insets(0, 0, 5, 5);
 		gbc_lblTelefono.gridx = 2;
 		gbc_lblTelefono.gridy = 3;
 		contentPane.add(lblTelefono, gbc_lblTelefono);
 		
-		lblEstado = new JLabel("estado:");
+		lblEstado = new JLabel("estado: ");
 		GridBagConstraints gbc_lblEstado = new GridBagConstraints();
 		gbc_lblEstado.insets = new Insets(0, 0, 5, 5);
 		gbc_lblEstado.gridx = 2;
 		gbc_lblEstado.gridy = 4;
 		contentPane.add(lblEstado, gbc_lblEstado);
+		lblContacto = new JLabel("Contacto");
+		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
+		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel.gridx = 2;
+		gbc_lblNewLabel.gridy = 5;
+		contentPane.add(lblContacto, gbc_lblNewLabel);
 	}
 
 }

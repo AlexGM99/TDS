@@ -17,6 +17,10 @@ import java.awt.List;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import Descuentos.DescuentoCompuesto;
+import Descuentos.DescuentoSimple;
+import ViewModels.ViewModelDatosChat;
+import ViewModels.ViewModelUsuario;
 import controlador.ControladorVistaAppChat;
 import modelo.Contacto;
 import modelo.ContactoGrupo;
@@ -57,6 +61,8 @@ import java.awt.ComponentOrientation;
 
 public class ChatWindow implements InterfazVistas{
 
+	private Crear_Grupo crearGrupo;
+	
 	private JFrame frmAppchat;
 	private JTextField txtBuscar;
 	private JTextField txtChat;
@@ -88,6 +94,7 @@ public class ChatWindow implements InterfazVistas{
 	private JButton btnPremium;
 	private JButton btnExit;
 	private JButton btnNewContact;
+	private JButton btnNewGroup;
 	/**
 	 * Launch the application.
 	 */
@@ -182,7 +189,6 @@ public class ChatWindow implements InterfazVistas{
 				//TO DO mostrar el perfil del usuario
 					popupMenu_2.setLocation(mostrarPerfil.getLocationOnScreen());
 					popupMenu_2.setVisible(!popupMenu_2.isVisible());
-				System.out.println("perfil");
 			}
 		});
 			
@@ -311,6 +317,17 @@ public class ChatWindow implements InterfazVistas{
 			}
 		});
 		popupMenu_2.add(btnNewContact);
+		
+		btnNewGroup = new JButton("New group");
+		btnNewGroup.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				popupMenu_2.setVisible(false);
+				crearGrupo = new Crear_Grupo(controlador.getUsuarioActual() ,controlador.getContactoIndividuales(), controlador);
+				crearGrupo.setVisible(true);
+			}
+		});
+		popupMenu_2.add(btnNewGroup);
 		popupMenu_2.add(btnExit);
 		
 		if (!controlador.soypremium()) {
@@ -318,9 +335,12 @@ public class ChatWindow implements InterfazVistas{
 			btnPremium.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
+					DescuentoSimple descuentos = controlador.getMejorDescuento();
 					popupMenu_2.setVisible(false);
-					int opt = JOptionPane.showConfirmDialog(btnPremium, "your soul will belong to our Lord and u'll be a captain of the premium army", "soul sale contract", 
-							JOptionPane.NO_OPTION, JOptionPane.OK_OPTION);
+					
+					int opt = JOptionPane.showConfirmDialog(btnPremium, descuentos!=null?descuentos.getLetraPequena()+" - Descuento "+descuentos.getCantidad()+"% de tu alma " :"Vender tu alma completa", 
+							descuentos!=null?"Unirse a la orden premium" + " - promoción: "+descuentos.getName():"Unirse a la orden premium", 
+							JOptionPane.OK_OPTION);
 					if (opt==JOptionPane.OK_OPTION) {
 						controlador.vendoMiAlmaPorPremium();
 						popupMenu_2.remove(btnPremium);
@@ -351,9 +371,13 @@ public class ChatWindow implements InterfazVistas{
 				if (codigoActivo == -1) JOptionPane.showMessageDialog(chatslist, "U aren't in contac with no one know, select a chat to see the details of your ally",
 													"You are not alone on the dark!", JOptionPane.WARNING_MESSAGE);
 				else {
-					Datos_Chat_Actual info = controlador.getDatos(codigoActivo);
-					info.setLocationRelativeTo(nombreChat);
-					info.visible(true);
+					ViewModelDatosChat informacion = controlador.getDatos(codigoActivo);
+					if (informacion instanceof ViewModelUsuario)
+					{
+						Datos_Chat_Actual info = new Datos_Chat_Actual((ViewModelUsuario)informacion);
+						info.setLocationRelativeTo(nombreChat);
+						info.visible(true);
+					}
 				}
 			}
 		});
@@ -621,41 +645,79 @@ public class ChatWindow implements InterfazVistas{
 	    public Component getListCellRendererComponent(JList<? extends Contacto> list, Contacto cont, int index,
 	        boolean isSelected, boolean cellHasFocus) {
 	    	this.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+	    	if(cont instanceof ContactoIndividual) {
 	    		String ruta = controlador.getImage((ContactoIndividual)cont);
 	        	if (!ruta.trim().isEmpty()) {
 	        		File f = new File(ruta);
 	        		BufferedImage myPicture = null;
 					try {
 						myPicture = ImageIO.read(f);
+		        		Image aux=myPicture.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+		        		ImageIcon aux1 = new ImageIcon(aux);
+		        		this.setIcon(aux1);
 					} catch (IOException e) {
 						//TODO ADVERTENCIA
+						Image img5= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/usuarioDefecto.png")).getImage();
+		        		ImageIcon img6=new ImageIcon(img5.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+		        		this.setIcon(img6);
 					}			
-	        		Image aux=myPicture.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
-	        		ImageIcon aux1 = new ImageIcon(aux);
-	        		this.setIcon(aux1);
 	        	} else {
 	        		Image img5= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/usuarioDefecto.png")).getImage();
 	        		ImageIcon img6=new ImageIcon(img5.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
 	        		this.setIcon(img6);
 	        	}
 	        	this.setText(cont.getNombre());
-	    	if (isSelected) {
-	    	    setBackground(list.getSelectionBackground());
-	    	    setForeground(list.getSelectionForeground());
-	    	    codigoActivo = controlador.getCode((ContactoIndividual)cont);
-	    	    actNick = cont.getNombre();
-	    	    ponerChat();
-	    	} else {
-	    	    setBackground(list.getBackground());
-	    	    setForeground(list.getForeground());
+	        	if (isSelected) {
+		    	    setBackground(list.getSelectionBackground());
+		    	    setForeground(list.getSelectionForeground());
+		    	    codigoActivo = controlador.getCode((ContactoIndividual)cont);
+		    	    actNick = cont.getNombre();
+		    	    ponerChat();
+		    	} else {
+		    	    setBackground(list.getBackground());
+		    	    setForeground(list.getForeground());
+		    	}
 	    	}
+	    	else if (cont instanceof ContactoGrupo){
+	    		Image img5= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/Grupo.png")).getImage();
+        		ImageIcon img6=new ImageIcon(img5.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+        		this.setIcon(img6);
+        		if (isSelected) {
+    	    	    setBackground(list.getSelectionBackground());
+    	    	    setForeground(list.getSelectionForeground());
+    	    	    codigoActivo = ((ContactoGrupo)cont).getCodigo();
+    	    	    actNick = cont.getNombre();
+    	    	    ponerChat();
+    	    	} else {
+    	    	    setBackground(list.getBackground());
+    	    	    setForeground(list.getForeground());
+    	    	}
+        		this.setText(cont.getNombre());
+	        	if (isSelected) {
+		    	    setBackground(list.getSelectionBackground());
+		    	    setForeground(list.getSelectionForeground());
+		    	    codigoActivo = ((ContactoGrupo)cont).getCodigo();
+		    	    actNick = cont.getNombre();
+		    	    ponerChat();
+		    	} else {
+		    	    setBackground(list.getBackground());
+		    	    setForeground(list.getForeground());
+		    	}
+	    	}
+	    	
 	        return this;
 	    }
 	}
 	
 	private void ponerChat() {
 		String ruta = controlador.getImage(codigoActivo);
-    	if (!ruta.trim().isEmpty()) {
+		if(ruta.equals("GRUPO"))
+		{
+			Image img5= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/Grupo.png")).getImage();
+    		ImageIcon img6=new ImageIcon(img5.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+    		lblnombrechat.setIcon(img6);
+		}
+		else if (!ruta.trim().isEmpty()) {
     		File f = new File(ruta);
     		BufferedImage myPicture = null;
 			try {

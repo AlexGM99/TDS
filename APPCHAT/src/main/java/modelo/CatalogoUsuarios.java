@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ViewModels.ViewModelDatosChat;
+import ViewModels.ViewModelUsuario;
 import interfazGrafica.Datos_Chat_Actual;
 import persistencia.AdaptadorContactoGrupoTDS;
 import persistencia.DAOException;
@@ -60,9 +62,22 @@ public class CatalogoUsuarios {
 		}
 		return null;
 	}
+	
+	public String getUserName(int codigo) {
+		Usuario u = getUsuario(codigo);
+		return u != null?u.getUsuario():"";
+	}
 
 	public Usuario getUsuario(String movil) {
 		return usuarios.get(movil);
+	}
+	
+	public String getUserName(String movil) {
+		return usuarios.get(movil).getUsuario();
+	}
+	
+	public int getCodigo(String movil) {
+		return usuarios.get(movil).getCodigo();
 	}
 
 	public void addUsuario(Usuario user) {
@@ -90,9 +105,12 @@ public class CatalogoUsuarios {
 			usuarios.put(usu.getMovil(), usu);
 	}
 	
-	public Datos_Chat_Actual getDatosVentana(int codigo) {
+	// TODO wrapper de los datos de inicio y pasarlos a la vista
+	
+	public ViewModelDatosChat getDatosVentana(int codigo, Usuario usu) {
 		Usuario u = getUsuario(codigo);
-		return u.getMisDatosEnVentana();
+		String nick = usu.getNombreContacto(u.getMovil());
+		return new ViewModelUsuario("", u.getNombre(), u.getMovil(), u.getSaludo(), nick);
 	}
 	
 	public boolean existeUsuario(String telefono) {

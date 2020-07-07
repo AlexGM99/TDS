@@ -163,6 +163,26 @@ public class Usuario {
 		return grupos;
 	}
 	
+	public String getNombreContacto(String movil) {
+		try {
+		return contactos.stream().filter(p -> p.getMovil().equals(movil)).findFirst().get().getNombre();
+		}
+		catch (Exception e) {
+			return "";
+		}
+	}
+	
+	public ContactoGrupo registrarGrupo(String nombre, List<ContactoIndividual> contactos) {
+		List<String> c = new LinkedList<String>();
+		contactos.stream().forEach(ci->c.add(ci.getMovil()));;
+		ContactoGrupo grupo = new ContactoGrupo(nombre, c);
+		if(grupos.contains(grupo))
+			return null;
+		grupos.add(grupo);
+		grupo.setAdmin(this);
+		return grupo;
+	}
+	
 	public List<Contacto> RecuperarContactosFiltrados(String text){
 		LinkedList<Contacto> contactosFiltrados = new LinkedList<Contacto>();
 		contactos.stream().filter(cont -> contenido(cont.getNombre(), text))
@@ -386,10 +406,6 @@ public class Usuario {
 			mensajesGrupo.put(cg.getNombre(), contador);
 		}
 		return mensajesGrupo;
-	}
-	
-	public Datos_Chat_Actual getMisDatosEnVentana() {
-		return new Datos_Chat_Actual(imagen,"nick: "+nombre, "number: " +movil, "greeting: " +saludo);
 	}
 
 }

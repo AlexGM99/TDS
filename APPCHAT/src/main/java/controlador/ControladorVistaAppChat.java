@@ -12,8 +12,13 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import org.eclipse.persistence.internal.jpa.parsing.LikeNode;
+import org.eclipse.persistence.internal.queries.ListContainerPolicy;
 import org.knowm.xchart.BitmapEncoder;
 import org.knowm.xchart.CategoryChart;
 import org.knowm.xchart.CategoryChartBuilder;
@@ -26,7 +31,10 @@ import cargadorMensajes.MensajeWhatsApp;
 import cargadorMensajes.Plataforma;
 import cargadorMensajes.SimpleTextParser;
 import Descuentos.DescuentoCompuesto;
+import Descuentos.DescuentoSimple;
+import ViewModels.ViewModelDatosChat;
 import interfazGrafica.ChatWindow;
+import interfazGrafica.Crear_Grupo;
 import interfazGrafica.Datos_Chat_Actual;
 import interfazGrafica.InterfazVistas;
 import interfazGrafica.LogIn;
@@ -46,7 +54,7 @@ import persistencia.IAdaptadorMensajeDAO;
 import persistencia.IAdaptadorUsuarioDAO;
 import tds.BubbleText;
 
-public class ControladorVistaAppChat {
+public class ControladorVistaAppChat{
 	public static final String REGISTRO_CORRECTO = "U've been registered into the Dark Lord Army!!!!!!!!!";
 	public static final String REGISTRO_NOMBRE_YA_USADO = "User already registered";
 	
@@ -59,6 +67,7 @@ public class ControladorVistaAppChat {
 	public static final String GRAFICA_TARTA_PATH = System.getProperty("user.home") + "/Downloads/Grafica-Uso-Grupos";
 	public static final BitmapFormat GRAFICA_TARTA_FORMATO = BitmapFormat.PNG;
 	
+	private AuxRender rendericer;
 	private static ControladorVistaAppChat unicaInstancia;
 	private IAdaptadorUsuarioDAO adaptadorUsuario;
 	private IAdaptadorContactoIndividualDAO adaptadorContacto;
@@ -79,6 +88,8 @@ public class ControladorVistaAppChat {
 		inicializarAdaptadores();
 		// inicializar catalogos
 		inicializarCatalogos();
+		
+		rendericer = new AuxRender();
 		
 		controladorDescuentos = new ControladorDescuentos();
 	}
@@ -130,7 +141,16 @@ public class ControladorVistaAppChat {
 	}
 
 	// TERMINADO
+<<<<<<< HEAD
 	public String registerUser(String nombre, Date fechanacimiento, String email, String movil, String usuario,
+=======
+	public List<ContactoIndividual> getContactosByCodigos(List<Integer> codes){
+		List<ContactoIndividual> contactos = usuarioActual.getContactos();
+		return contactos.stream().filter(p -> codes.contains(p.getCodigo())).collect(Collectors.toList());
+	}
+	// TERMINADO
+	public String RegisterUser(String nombre, Date fechanacimiento, String email, String movil, String usuario,
+>>>>>>> branch 'master' of https://github.com/AlexGM99/TDS.git
 			String contraseña, String imagen, String saludo) {
 		Usuario user;
 		if (catalogoUsuarios.getUsuario(movil) != null)
@@ -193,56 +213,118 @@ public class ControladorVistaAppChat {
 		return usuarioActual.isPremium();
 	}
 	
-	public DescuentoCompuesto getDescuentos() {
+	// TERMINADO
+	public DescuentoSimple getMejorDescuento() {
 		DescuentoCompuesto descuentos = controladorDescuentos.getDescuentosActuales();
-		return descuentos;
+		double max = 0.0;
+		DescuentoSimple mejorDescuento = null;
+		List<DescuentoSimple> simples = descuentos.getdescuento();
+		for(DescuentoSimple s: simples) {
+			if(Double.parseDouble(s.getCantidad())>max){
+				{
+					max = Double.parseDouble(s.getCantidad());
+					mejorDescuento = s;
+				}
+			}
+		}
+		return mejorDescuento;
 	}
 	
+	// TERMINADO
 	public void vendoMiAlmaPorPremium() {
 		usuarioActual.setPremium(true);
 		adaptadorUsuario.actualizarUsuario(usuarioActual);
 		catalogoUsuarios.addUsuario(usuarioActual);
 	}
 	
+	// TERMINADO
 	public String getImage(ContactoIndividual cont) {
 		String tel = cont.getMovil();
 		return catalogoUsuarios.getUsuario(tel).getImagen();
 	}
 	
+	// TERMINADO
 	public String getImage(int code) { 
-		return catalogoUsuarios.getUsuario(code).getImagen();
+		Usuario usu = catalogoUsuarios.getUsuario(code);
+		if (usu != null)
+			return usu.getImagen();
+		return "GRUPO";
 	}
 	
+	// TERMINADO
 	public String getUserNick(ContactoIndividual cont) {
 		String tel = cont.getMovil();
-		return catalogoUsuarios.getUsuario(tel).getUsuario();
+		return catalogoUsuarios.getUserName(tel);
 	}
 	
+	// TERMINADO
 	public String getUserNick(int code) {
-		return catalogoUsuarios.getUsuario(code).getUsuario();
+		return catalogoUsuarios.getUserName(code);
 	}
 	
+	// TERMINADO
 	public int getCode(ContactoIndividual cont) {
 		String tel = cont.getMovil();
-		return catalogoUsuarios.getUsuario(tel).getCodigo();
+		return catalogoUsuarios.getCodigo(tel);
 	}
 	
+	// TERMINADO
 	public boolean existeUsuario(String telefono) {
 		if (telefono == null) return false;
 		return catalogoUsuarios.existeUsuario(telefono);
 	}
+	
+	// TERMINADO
 	public List<Contacto> getContactos(){
 		LinkedList<Contacto> contactos = new LinkedList<Contacto>();
 		usuarioActual.getContactos().stream().
 									forEach(cont -> contactos.add(cont));
-		//TODO poner los grupos
+		//TO DO poner los grupos
+		usuarioActual.getGrupos().stream().forEach(cont -> contactos.add(cont));
 		return contactos;
 	}
 	
-	public Datos_Chat_Actual getDatos(int codigo) {
-		return catalogoUsuarios.getDatosVentana(codigo);
+	// TERMINADO
+	public Usuario getUsuarioActual() {
+		return this.usuarioActual;
 	}
 	
+	// TERMINADO
+	public List<ContactoIndividual> getContactoIndividuales(){
+		LinkedList<ContactoIndividual> contactos = new LinkedList<ContactoIndividual>();
+		usuarioActual.getContactos().stream().
+									forEach(cont -> contactos.add(cont));
+		return contactos;
+	}
+	
+	// TODO incluir grupos
+	public ViewModelDatosChat getDatos(int codigo) {
+		
+		return catalogoUsuarios.getDatosVentana(codigo, usuarioActual);
+	}
+	
+	//TERMINADO
+	public List<ContactoIndividual> setContactosFilter(List<Integer> contactos, String nombre) {
+		LinkedList<ContactoIndividual> contactosI = new LinkedList<ContactoIndividual>(getContactosByCodigos(contactos));
+		return contactosI.stream()
+				.filter(cont -> contenido(cont.getNombre(), nombre))
+				.collect(Collectors.toList());
+	}
+	// TERMINADO
+	public boolean contenido(String contenedorB, String contenidoB) {
+		int i = 0;
+		if (contenidoB.length() > contenedorB.length()) return false;
+		String contenedor = contenedorB.toLowerCase();
+		String contenido = contenidoB.toLowerCase();
+		for (; i< contenedor.length(); i++) {
+			if (contenedor.startsWith(contenido, i)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	// TERMINADO
 	public void registrarContacto(String usuario, String telefono) {
 		ContactoIndividual cont = new ContactoIndividual(usuario, telefono);
 		adaptadorContacto.registrarContactoIndividual(cont);
@@ -252,15 +334,29 @@ public class ControladorVistaAppChat {
 		chat.addChat(cont);
 	}
 	
+<<<<<<< HEAD
 	// TODO Implementar registro de mensajes para el cargador
 	public void registrarMensaje(String texto, String emisor, Date hora, BubbleText emoticon, Contacto receptor, TipoContacto tipoReceptor) {
 		Mensaje m = new Mensaje(texto, hora, emisor, receptor, tipoReceptor);
 		adaptadorMensaje.registrarMensaje(m);
 		
+=======
+	//TERMINADO
+	public boolean crearGrupo(String nombre, List<Integer> contactos) {
+		ContactoGrupo creado = usuarioActual.registrarGrupo(nombre, getContactosByCodigos(contactos));
+		if (creado!=null) {
+			adaptadorGrupo.registrarContactoGrupo(creado);
+			adaptadorUsuario.actualizarUsuario(usuarioActual);
+		}
+		return creado != null;
+>>>>>>> branch 'master' of https://github.com/AlexGM99/TDS.git
 	}
 	
 	public void enviarMensaje(String mensaje, int codigo) {
 		//TODO coger el usuario que envio el mensaje y enviarlo
+		
+		
+		
 	}
 	
 	//TODO patron observer para recoger un mensaje del bbdd
@@ -363,6 +459,7 @@ public class ControladorVistaAppChat {
 		return true;
 	}
 	
+	// TERMINADO
 	public void cerrarSesion()
 	{
 		InterfazVistas antigua = interfaz;
