@@ -24,6 +24,8 @@ import org.knowm.xchart.CategoryChart;
 import org.knowm.xchart.CategoryChartBuilder;
 import org.knowm.xchart.PieChart;
 import org.knowm.xchart.PieChartBuilder;
+import org.knowm.xchart.SwingWrapper;
+import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.style.Styler.LegendPosition;
 import org.knowm.xchart.BitmapEncoder.BitmapFormat;
 
@@ -36,6 +38,7 @@ import ViewModels.ViewModelDatosChat;
 import interfazGrafica.ChatWindow;
 import interfazGrafica.Crear_Grupo;
 import interfazGrafica.Datos_Chat_Actual;
+import interfazGrafica.InfoUso;
 import interfazGrafica.InterfazVistas;
 import interfazGrafica.LogIn;
 import interfazGrafica.Register;
@@ -57,15 +60,6 @@ import tds.BubbleText;
 public class ControladorVistaAppChat{
 	public static final String REGISTRO_CORRECTO = "U've been registered into the Dark Lord Army!!!!!!!!!";
 	public static final String REGISTRO_NOMBRE_YA_USADO = "User already registered";
-	
-	
-	public static final List<String> MESES_YEAR = Arrays.asList(new String[] { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" });
-	public static final Color[] GRAFICA_HISTOGRAMA_COLOR = new Color[] { new Color(243, 180, 159) };
-	public static final String GRAFICA_HISTOGRAMA_PATH = System.getProperty("user.home") + "/Downloads/Grafica-Uso-Anual";
-	public static final BitmapFormat GRAFICA_HISTOGRAMA_FORMATO = BitmapFormat.PNG;
-	public static final Color[] GRAFICA_TARTA_COLORES = new Color[] { new Color(224, 68, 14), new Color(230, 105, 62), new Color(236, 143, 110), new Color(243, 180, 159), new Color(246, 199, 182) };
-	public static final String GRAFICA_TARTA_PATH = System.getProperty("user.home") + "/Downloads/Grafica-Uso-Grupos";
-	public static final BitmapFormat GRAFICA_TARTA_FORMATO = BitmapFormat.PNG;
 	
 	private AuxRender rendericer;
 	private static ControladorVistaAppChat unicaInstancia;
@@ -367,65 +361,37 @@ public class ControladorVistaAppChat{
 		return null;
 	}
 	
-	// TODO Comprobar funcionamiento
-	public boolean informacionUso() {
-		// Calcular mensajes enviados a contactos y a grupos en el año actual
-		List<Integer> numMensajesContactosYear = usuarioActual.getNumMensajesPorMes(LocalDate.now().getYear(), TipoContacto.INDIVIDUAL);
-		List<Integer> numMensajesGruposYear = usuarioActual.getNumMensajesPorMes(LocalDate.now().getYear(), TipoContacto.GRUPO);
-		List<Integer> numMensajesTotalYear = new ArrayList<Integer>(12);
-		for (int i = 0; i < 12; i++) {
-			numMensajesTotalYear.set(i, numMensajesContactosYear.get(i) + numMensajesGruposYear.get(i));
+	// TEERMINADO
+	public List<Integer> getInformacionUsoAnual() {
+			// Calcular mensajes enviados a contactos y a grupos en el año actual
+			List<Integer> numMensajesContactosYear = usuarioActual.getNumMensajesPorMes(LocalDate.now().getYear(), TipoContacto.INDIVIDUAL);
+			List<Integer> numMensajesGruposYear = usuarioActual.getNumMensajesPorMes(LocalDate.now().getYear(), TipoContacto.GRUPO);
+			List<Integer> numMensajesTotalYear = new ArrayList<Integer>(12);
+			for (int i = 0; i < 12; i++) {
+				numMensajesTotalYear.add(numMensajesContactosYear.get(i) + numMensajesGruposYear.get(i));
+			}
+			return numMensajesTotalYear;
 		}
-		// Crear histograma con los mensajes por mes del user
-	    CategoryChart graficaHistograma = new CategoryChartBuilder().title("Mensajes enviados en " + LocalDate.now().getYear()).xAxisTitle("Mes").build();	 
-	    // Personalizar gráfico
-	    graficaHistograma.getStyler().setLegendPosition(LegendPosition.InsideNW);
-	    graficaHistograma.getStyler().setHasAnnotations(true);
-	    graficaHistograma.getStyler().setSeriesColors(GRAFICA_HISTOGRAMA_COLOR);
-	    // Valores
-	    graficaHistograma.addSeries("Mensajes enviados", MESES_YEAR, numMensajesTotalYear);	 
-	    // Guardar	    
-	    try {
-	    	BitmapEncoder.saveBitmap(graficaHistograma, GRAFICA_HISTOGRAMA_PATH, GRAFICA_HISTOGRAMA_FORMATO);
-		} catch (IOException e3) {
-			//e3.printStackTrace();
-			return false;
-		}
-		
-		// Obtener los 6 grupos con más mensajes enviados por el user
-		Map<String, Integer> mensajesPorGrupo = usuarioActual.getNumMensajesEnviadosPorGrupo();
-		Map<String, Integer> mensajesGruposMasEnviados = mensajesPorGrupo.entrySet().stream()
-				.sorted(Map.Entry.comparingByValue(Collections.reverseOrder()))
-				.limit(6)
-				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));	
-		
-		// Obtener el % que representan del total
-		int numMensajesTotal = usuarioActual.getNumMensajes(TipoContacto.INDIVIDUAL) + usuarioActual.getNumMensajes(TipoContacto.GRUPO);
-		
-		Map<String, Double> porcentajesMensajesGrupos = new LinkedHashMap<String, Double>(mensajesGruposMasEnviados.size());
-		for (String it : mensajesGruposMasEnviados.keySet()) {
-			porcentajesMensajesGrupos.put(it, new Double(mensajesGruposMasEnviados.get(it)));
-		}
-		porcentajesMensajesGrupos.entrySet().stream()
-			.forEach(e -> e.setValue(e.getValue() * 100 / numMensajesTotal));
-		
-		// Crear diagrama de tarta con los 6 grupos
-	    PieChart graficaTarta = new PieChartBuilder().title("Grupos a los que se han enviado más mensajes").build();
-	    // Personalizar gráfico
-	    graficaTarta.getStyler().setSeriesColors(GRAFICA_TARTA_COLORES);
-	    graficaTarta.getStyler().setLegendPosition(LegendPosition.InsideNW);
-	    // Valores
-	    for (String it : porcentajesMensajesGrupos.keySet()) {
-	    	graficaTarta.addSeries(it, porcentajesMensajesGrupos.get(it));
-		}
-	    // Guardar	    
-	    try {
-			BitmapEncoder.saveBitmap(graficaTarta, GRAFICA_TARTA_PATH, GRAFICA_TARTA_FORMATO);
-		} catch (IOException e3) {
-			//e3.printStackTrace();
-			return false;
-		}
-	    return true;
+	
+	// TERMINADO
+	public Map<String, Double> getInformacionUsoGrupos() {
+			// Obtener los 6 grupos con más mensajes enviados por el user
+			Map<String, Integer> mensajesPorGrupo = usuarioActual.getNumMensajesEnviadosPorGrupo();
+			Map<String, Integer> mensajesGruposMasEnviados = mensajesPorGrupo.entrySet().stream()
+					.sorted(Map.Entry.comparingByValue(Collections.reverseOrder()))
+					.limit(6)
+					.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));	
+			
+			// Obtener el % que representan del total
+			int numMensajesTotal = usuarioActual.getNumMensajes(TipoContacto.INDIVIDUAL) + usuarioActual.getNumMensajes(TipoContacto.GRUPO);
+			
+			Map<String, Double> porcentajesMensajesGrupos = new LinkedHashMap<String, Double>(mensajesGruposMasEnviados.size());
+			for (String it : mensajesGruposMasEnviados.keySet()) {
+				porcentajesMensajesGrupos.put(it, new Double(mensajesGruposMasEnviados.get(it)));
+			}
+			porcentajesMensajesGrupos.entrySet().stream()
+				.forEach(e -> e.setValue(e.getValue() * 100 / numMensajesTotal));
+			return porcentajesMensajesGrupos;
 	}
 	
 	// TODO Cargador de mensajes

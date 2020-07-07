@@ -15,8 +15,10 @@ import Descuentos.InterfazDescuentos;
 
 
 public class ControladorDescuentos {
-
-	private static String ARCHIVO =  "\\src\\main\\java\\Descuentos\\Descuentos.txt";
+	// Windows
+	//private static String ARCHIVO =  "\\src\\main\\java\\Descuentos\\Descuentos.txt";
+	// Ubuntu
+	private static String ARCHIVO =  "/src/main/java/Descuentos/Descuentos.txt";
 	private static String DESCUENTOS = "1;Descuento Verano;10.0;Entregas también tu alma a cambio\n" + 
 			"0;Invierno;5.0;Tienes que ser muy guapo\n" + 
 			"1;Oferta;5.0;Vendes tu cuerpecito al diablo\n" + 

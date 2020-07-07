@@ -39,6 +39,7 @@ import java.util.Scanner;
 
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
+import javax.swing.WindowConstants;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -92,6 +93,7 @@ public class ChatWindow implements InterfazVistas{
 	private JButton btnChangePhoto;
 	private JButton btnChangeGreeting;
 	private JButton btnPremium;
+	private JButton btnInfoUso;
 	private JButton btnExit;
 	private JButton btnNewContact;
 	private JButton btnNewGroup;
@@ -349,6 +351,19 @@ public class ChatWindow implements InterfazVistas{
 			});
 			popupMenu_2.add(btnPremium);
 		}
+		
+		else {
+			btnInfoUso = new JButton("Show use info");
+			btnInfoUso.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					popupMenu_2.setVisible(false);
+					InfoUso infoUso = new InfoUso(controlador);
+					infoUso.setVisible(true);
+				}
+			});
+			popupMenu_2.add(btnInfoUso);
+		}
 			
 		GridBagConstraints gbc_label_MifotoPerfil = new GridBagConstraints();
 		gbc_label_MifotoPerfil.insets = new Insets(0, 0, 0, 5);
@@ -368,7 +383,7 @@ public class ChatWindow implements InterfazVistas{
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				//Mostrar la info del usuario del chat actual
-				if (codigoActivo == -1) JOptionPane.showMessageDialog(chatslist, "U aren't in contac with no one know, select a chat to see the details of your ally",
+				if (codigoActivo == -1) JOptionPane.showMessageDialog(chatslist, "U aren't in contact with no one know, select a chat to see the details of your ally",
 													"You are not alone on the dark!", JOptionPane.WARNING_MESSAGE);
 				else {
 					ViewModelDatosChat informacion = controlador.getDatos(codigoActivo);
