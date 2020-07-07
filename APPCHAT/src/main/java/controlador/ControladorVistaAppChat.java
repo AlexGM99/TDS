@@ -141,16 +141,12 @@ public class ControladorVistaAppChat{
 	}
 
 	// TERMINADO
-<<<<<<< HEAD
-	public String registerUser(String nombre, Date fechanacimiento, String email, String movil, String usuario,
-=======
 	public List<ContactoIndividual> getContactosByCodigos(List<Integer> codes){
 		List<ContactoIndividual> contactos = usuarioActual.getContactos();
 		return contactos.stream().filter(p -> codes.contains(p.getCodigo())).collect(Collectors.toList());
 	}
 	// TERMINADO
 	public String RegisterUser(String nombre, Date fechanacimiento, String email, String movil, String usuario,
->>>>>>> branch 'master' of https://github.com/AlexGM99/TDS.git
 			String contraseña, String imagen, String saludo) {
 		Usuario user;
 		if (catalogoUsuarios.getUsuario(movil) != null)
@@ -334,13 +330,12 @@ public class ControladorVistaAppChat{
 		chat.addChat(cont);
 	}
 	
-<<<<<<< HEAD
 	// TODO Implementar registro de mensajes para el cargador
 	public void registrarMensaje(String texto, String emisor, Date hora, BubbleText emoticon, Contacto receptor, TipoContacto tipoReceptor) {
 		Mensaje m = new Mensaje(texto, hora, emisor, receptor, tipoReceptor);
 		adaptadorMensaje.registrarMensaje(m);
+	}
 		
-=======
 	//TERMINADO
 	public boolean crearGrupo(String nombre, List<Integer> contactos) {
 		ContactoGrupo creado = usuarioActual.registrarGrupo(nombre, getContactosByCodigos(contactos));
@@ -349,7 +344,6 @@ public class ControladorVistaAppChat{
 			adaptadorUsuario.actualizarUsuario(usuarioActual);
 		}
 		return creado != null;
->>>>>>> branch 'master' of https://github.com/AlexGM99/TDS.git
 	}
 	
 	public void enviarMensaje(String mensaje, int codigo) {
