@@ -260,7 +260,7 @@ public class Usuario {
 		if ((c = GetSitieneContactoByMovil(u.movil))!= null)
 			return c;
 		else 
-			return new ContactoIndividual(u.getMovil()+"-"+u.getNombre(), u.getMovil());
+			return new ContactoIndividual(u.getMovil()+"-"+u.getUsuario(), u.getMovil());
 	}
 	
 	@Override
