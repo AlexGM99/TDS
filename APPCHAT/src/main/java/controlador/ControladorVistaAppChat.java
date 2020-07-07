@@ -120,7 +120,7 @@ public class ControladorVistaAppChat{
 		catalogoUsuarios = CatalogoUsuarios.getUnicaInstancia();
 	}
 
-	// TERMINADO
+	// TODO ordenar por fecha Mensaje y por nombre contacto
 	public boolean loginUser(String name, String pass) {
 		// loguear el usuario
 		if (catalogoUsuarios.logIn(name , pass) == CatalogoUsuarios.CODIGO_LOG_IN_OK)
@@ -236,9 +236,13 @@ public class ControladorVistaAppChat{
 	
 	// TERMINADO
 	public String getImage(int code) { 
-		Usuario usu = catalogoUsuarios.getUsuario(code);
-		if (usu != null)
-			return usu.getImagen();
+		ContactoIndividual cI = usuarioActual.getContactoI(code);
+		if (cI!=null)
+		{
+			Usuario usu = catalogoUsuarios.getUsuario(cI.getMovil());
+			if (usu != null)
+				return usu.getImagen();
+		}
 		return "GRUPO";
 	}
 	
@@ -255,8 +259,9 @@ public class ControladorVistaAppChat{
 	
 	// TERMINADO
 	public int getCode(ContactoIndividual cont) {
-		String tel = cont.getMovil();
-		return catalogoUsuarios.getCodigo(tel);
+		return cont.getCodigo();
+		//String tel = cont.getMovil();
+		//return catalogoUsuarios.getCodigo(tel);
 	}
 	
 	// TERMINADO
@@ -290,8 +295,11 @@ public class ControladorVistaAppChat{
 	
 	// TODO incluir grupos
 	public ViewModelDatosChat getDatos(int codigo) {
-		
-		return catalogoUsuarios.getDatosVentana(codigo, usuarioActual);
+		if (usuarioActual.existContactoI(codigo))
+			return catalogoUsuarios.getDatosVentana(codigo, usuarioActual);
+		else if (usuarioActual.existContactoG(codigo))
+			return null;
+		return null;
 	}
 	
 	//TERMINADO
@@ -332,6 +340,8 @@ public class ControladorVistaAppChat{
 			adaptadorGrupo.registrarContactoGrupo(creado);
 			adaptadorUsuario.actualizarUsuario(usuarioActual);
 		}
+		ChatWindow chat = (ChatWindow) interfaz;
+		chat.addChat(creado);
 		return creado != null;
 	}
 	

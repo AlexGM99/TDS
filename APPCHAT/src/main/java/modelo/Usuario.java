@@ -205,6 +205,36 @@ public class Usuario {
 		return false;
 	}
 
+	public boolean existContactoI(int codigo)
+	{
+		return contactos.stream()
+				.filter(p -> p.getCodigo() == codigo).collect(Collectors.toList()).isEmpty()?false:true;
+	}
+	public boolean existContactoG(int codigo)
+	{
+		return grupos.stream()
+				.filter(p -> p.getCodigo() == codigo).collect(Collectors.toList()).isEmpty()?false:true;
+	}
+	public ContactoIndividual getContactoI(int codigo)
+	{
+		try {
+		return contactos.stream()
+				.filter(p -> p.getCodigo() == codigo).collect(Collectors.toList()).get(0);
+		} catch (Exception e){
+			return null;
+		}
+	}
+	public ContactoGrupo getContactoG(int codigo)
+	{
+		try {
+		return grupos.stream()
+				.filter(p -> p.getCodigo() == codigo).collect(Collectors.toList()).get(0);
+		}
+		catch (Exception e)
+		{
+			return null;
+		}
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
