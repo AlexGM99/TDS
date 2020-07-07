@@ -450,7 +450,7 @@ public class Register implements InterfazVistas {
 					//String passAgain = passwordField_1.getPassword().toString();
 					//ImageIcon fotoPerfil = (ImageIcon)lblPhoto.getIcon();
 					String registrado =
-							controlador.RegisterUser(firts+" "+second, birth, email, phone, nick, pass, 
+							controlador.registerUser(firts+" "+second, birth, email, phone, nick, pass, 
 									rutaAbsolutaAlaImagen, greeting);
 					JOptionPane.showMessageDialog(dateChooser,registrado, "Server Message", JOptionPane.WARNING_MESSAGE);
 				}
