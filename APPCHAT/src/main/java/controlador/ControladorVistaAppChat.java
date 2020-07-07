@@ -288,8 +288,9 @@ public class ControladorVistaAppChat{
 		return contactos;
 	}
 	
-	// TODO wrapper de los datos de inicio y pasarlos a la vista
+	// TODO incluir grupos
 	public ViewModelDatosChat getDatos(int codigo) {
+		
 		return catalogoUsuarios.getDatosVentana(codigo, usuarioActual);
 	}
 	
