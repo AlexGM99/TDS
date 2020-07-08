@@ -138,9 +138,12 @@ public class CatalogoUsuarios {
 	
 	public ViewModelDatosChat getDatosVentana(int codigo, Usuario usu) {
 		ContactoIndividual u = usu.getContactoI(codigo);
-		String nick = usu.getNombreContacto(u.getMovil());
-		Usuario uI = getUsuario(u.getMovil());
-		return new ViewModelUsuario(uI.getImagen()!=null?uI.getImagen():"", uI.getNombre(), u.getMovil(), uI.getSaludo(), nick);
+		if (u != null) {
+			String nick = usu.getNombreContacto(u.getMovil());
+			Usuario uI = getUsuario(u.getMovil());
+			return new ViewModelUsuario(uI.getImagen()!=null?uI.getImagen():"", uI.getNombre(), u.getMovil(), uI.getSaludo(), nick);
+		}
+		else return new ViewModelUsuario("", u.getNombre(), u.getMovil(), "", u.getNombre());
 	}
 	public ViewModelDatosChat getDatosVentanaGrupo(int codigo, Usuario usu, ControladorVistaAppChat c) {
 		ContactoGrupo u = usu.getContactoG(codigo);
@@ -151,11 +154,10 @@ public class CatalogoUsuarios {
 	}
 	
 	public ViewModelGrupo getDatosVentanaGrupo(List<String> contactosMovil) {
-		ContactoGrupo u = usu.getContactoG(codigo);
-		Usuario admin = u.getAdmin();
-		List<ContactoIndividual> contactos = usu.getContactos(u.getMiembros());
+		return null;
+		/*List<ContactoIndividual> contactos = usu.getContactos(u.getMiembros());
 		ContactoIndividual contAd = usu.getContactoODefault(admin);
-		return new ViewModelGrupo(contactos, contAd, u.getNombre(), c);
+		return new ViewModelGrupo(contactos, contAd, u.getNombre(), c);*/
 	}
 	
 	
