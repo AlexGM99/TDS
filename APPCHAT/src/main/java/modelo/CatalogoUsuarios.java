@@ -138,7 +138,7 @@ public class CatalogoUsuarios {
 	
 	public ViewModelDatosChat getDatosVentana(int codigo, Usuario usu) {
 		ContactoIndividual u = usu.getContactoI(codigo);
-		if (u != null) {
+		if (getByMovil(u.getMovil()) != null) {
 			String nick = usu.getNombreContacto(u.getMovil());
 			Usuario uI = getUsuario(u.getMovil());
 			return new ViewModelUsuario(uI.getImagen()!=null?uI.getImagen():"", uI.getNombre(), u.getMovil(), uI.getSaludo(), nick);
