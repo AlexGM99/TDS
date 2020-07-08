@@ -29,6 +29,7 @@ import org.knowm.xchart.BitmapEncoder.BitmapFormat;
 import Descuentos.DescuentoCompuesto;
 import Descuentos.DescuentoSimple;
 import ViewModels.ViewModelDatosChat;
+import ViewModels.ViewModelGrupo;
 import interfazGrafica.ChatWindow;
 import interfazGrafica.Crear_Grupo;
 import interfazGrafica.Datos_Chat_Actual;
@@ -299,6 +300,16 @@ public class ControladorVistaAppChat{
 			return catalogoUsuarios.getDatosVentana(codigo, usuarioActual);
 		else if (usuarioActual.existContactoG(codigo))
 			return catalogoUsuarios.getDatosVentanaGrupo(codigo, usuarioActual, unicaInstancia);
+		return null;
+	}
+	
+	public ViewModelGrupo getViewGrupo(int codigo) {
+		ContactoGrupo g;
+		if ( (g = usuarioActual.getContactoG(codigo)) != null) {
+			List<ContactoIndividual> noGrupo;
+			List<ContactoIndividual> grupo;
+			return null; 
+		}
 		return null;
 	}
 	

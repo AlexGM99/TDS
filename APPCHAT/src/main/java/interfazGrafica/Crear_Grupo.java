@@ -72,6 +72,9 @@ public class Crear_Grupo extends JFrame implements InterfazVistas {
 	private int lastSeleccionado = -1;
 	private int lastContacto = -1;
 	private int numSelect = 0;
+	
+	
+	
 	/**
 	 * Create the panel.
 	 */
@@ -406,6 +409,11 @@ public class Crear_Grupo extends JFrame implements InterfazVistas {
 	    	}
 	        return this;
 	    }
+	}
+	
+	public Crear_Grupo(Usuario usuarioActual, List<ContactoIndividual> contactos, ControladorVistaAppChat controlador, List<ContactoIndividual> seleccionados) {
+		this(usuarioActual, contactos, controlador);
+		setChatsSeleccionados(new LinkedList<ContactoIndividual>(seleccionados));
 	}
 	public void exit() {
 		this.dispose();

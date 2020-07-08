@@ -493,6 +493,7 @@ public class ChatWindow implements InterfazVistas{
 					ponerChat();
 				}
 				else if (controlador.isContactoG(codigoActivo) && controlador.soyAdminG(codigoActivo)) {
+					ViewModelGrupo g = controlador.getViewGrupo(codigoActivo);
 					
 				}
 				else {
