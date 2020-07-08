@@ -516,12 +516,13 @@ public class ControladorVistaAppChat{
 				List<ContactoIndividual> contactos = usuarioActual.getContactos();
 				Iterator<ContactoIndividual> it = contactos.iterator();
 				boolean encontrado = false;
+				ContactoIndividual itC;
 				while (it.hasNext() && ! encontrado) {
-					if (it.next().getNombre().equals(aux1)) {
-						receptor = it.next();
+					itC = it.next();
+					if (itC.getNombre().equals(aux1)) {
+						receptor = itC;
 						encontrado = true;
 					}
-					it.next();
 				}
 				if (! encontrado) {
 					receptor = registrarContacto(aux1, "imported" + aux1 + LocalDate.now().toString());
