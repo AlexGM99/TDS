@@ -276,7 +276,6 @@ public class ControladorVistaAppChat{
 		LinkedList<Contacto> contactos = new LinkedList<Contacto>();
 		usuarioActual.getContactos().stream().
 									forEach(cont -> contactos.add(cont));
-		//TO DO poner los grupos
 		usuarioActual.getGrupos().stream().forEach(cont -> contactos.add(cont));
 		return contactos;
 	}
@@ -294,7 +293,7 @@ public class ControladorVistaAppChat{
 		return contactos;
 	}
 	
-	// TODO incluir grupos
+	// TERMINADO
 	public ViewModelDatosChat getDatos(int codigo) {
 		if (usuarioActual.existContactoI(codigo))
 			return catalogoUsuarios.getDatosVentana(codigo, usuarioActual);
@@ -340,11 +339,29 @@ public class ControladorVistaAppChat{
 		if (creado!=null) {
 			adaptadorGrupo.registrarContactoGrupo(creado);
 			adaptadorUsuario.actualizarUsuario(usuarioActual);
-			adaptadorGrupo.registrarContactoGrupo(creado);
+			catalogoUsuarios.registrarGrupoEnUsuarios(creado);
+			ChatWindow chat = (ChatWindow) interfaz;
+			chat.addChat(creado);
 		}
-		ChatWindow chat = (ChatWindow) interfaz;
-		chat.addChat(creado);
 		return creado != null;
+	}
+	
+	public boolean eliminarContacto(int codigo) {
+		boolean borrado = false;
+		if (usuarioActual.existContactoI(codigo))
+		{
+			 borrado = usuarioActual.DeleteContactoI(codigo);
+		}
+		else 
+			borrado = false;
+		if (borrado) {
+			adaptadorUsuario.actualizarUsuario(usuarioActual);
+			ChatWindow chat = (ChatWindow) interfaz;
+			LinkedList<Contacto> lista = (LinkedList<Contacto>)getContactos();
+			chat.setChats(lista);
+			}
+		
+		return borrado;
 	}
 	
 	public void enviarMensaje(String mensaje, int codigo) {

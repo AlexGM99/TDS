@@ -82,6 +82,10 @@ public class CatalogoUsuarios {
 		return usuarios.get(movil).getCodigo();
 	}
 
+	public Usuario getByMovil(String movil) {
+		return usuarios.get(movil);
+	}
+	
 	public void addUsuario(Usuario user) {
 		usuarios.put(user.getMovil(), user);
 	}
@@ -100,6 +104,17 @@ public class CatalogoUsuarios {
 			return CODIGO_WRONG_PASSWORD;
 	}
 
+	public void registrarGrupoEnUsuarios(ContactoGrupo g) {
+		g.getMiembros().stream().forEach(m -> nuevoGrupoEnUser(getByMovil(m), g));
+	}
+	
+	public void nuevoGrupoEnUser(Usuario u, ContactoGrupo g) {
+		if (u.getContactoG(g.getCodigo())==null) {
+			u.addGrupo(g);
+			adaptadorUsuario.actualizarUsuario(u);
+		}
+	}
+	
 	/* Recupera todos los usuarios para trabajar con ellos en memoria */
 	private void cargarCatalogo() throws DAOException {
 		List<Usuario> usuariosBD = adaptadorUsuario.recuperarTodosUsuarios();

@@ -53,7 +53,7 @@ public class Datos_Grupo extends JFrame {
 		this.admin = model.getAdmin();
 		this.nombre = model.getNombre();
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 449, 563);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

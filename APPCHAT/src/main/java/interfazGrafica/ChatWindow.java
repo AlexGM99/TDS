@@ -376,13 +376,13 @@ public class ChatWindow implements InterfazVistas{
 					if (informacion instanceof ViewModelUsuario)
 					{
 						Datos_Chat_Actual info = new Datos_Chat_Actual((ViewModelUsuario)informacion);
-						info.setLocationRelativeTo(nombreChat);
+						info.setLocationRelativeTo(null);
 						info.visible(true);
 					}
 					else if (informacion instanceof ViewModelGrupo)
 					{
 						Datos_Grupo info = new Datos_Grupo((ViewModelGrupo)informacion);
-						info.setLocationRelativeTo(nombreChat);
+						info.setLocationRelativeTo(null);
 						info.visible(true);
 					}
 				}
@@ -457,7 +457,15 @@ public class ChatWindow implements InterfazVistas{
 		btnDeleteContact.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				//TODO delete contact
+				int opt = JOptionPane.showConfirmDialog(btnPremium,"Are you sure?", "Delete", JOptionPane.OK_OPTION);
+				if (opt==JOptionPane.OK_OPTION) {
+					if (!controlador.eliminarContacto(codigoActivo)){
+						JOptionPane.showConfirmDialog(null,"No se pudo borrar el contacto", "Ha habido un error al borrar el contacto",  JOptionPane.WARNING_MESSAGE);
+					}
+					else {
+							quitarChat();
+						}
+				}
 			}
 		});
 		popupMenu_1.add(btnDeleteContact);
@@ -714,6 +722,11 @@ public class ChatWindow implements InterfazVistas{
 	    	
 	        return this;
 	    }
+	}
+	
+	private void quitarChat() {
+		lblnombrechat.setIcon(null);
+		lblnombrechat.setText("");
 	}
 	
 	private void ponerChat() {

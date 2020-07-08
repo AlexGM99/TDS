@@ -83,7 +83,14 @@ public class Usuario {
 	public Date getFechaNacimiento() {
 		return fechaNacimiento;
 	}
-
+	
+	public boolean DeleteContactoI(int codigo) {
+		ContactoIndividual c = getContactoI(codigo);
+		if (c==null) return false;
+		contactos.remove(c);
+		return true;
+	}
+	
 	public void setFechaNacimiento(Date fechanacimiento) {
 		this.fechaNacimiento = fechanacimiento;
 	}
