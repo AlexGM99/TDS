@@ -1,31 +1,19 @@
 package controlador;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.stream.Collector;
+import java.util.Set;
 import java.util.stream.Collectors;
-
-import org.eclipse.persistence.internal.jpa.parsing.LikeNode;
-import org.eclipse.persistence.internal.queries.ListContainerPolicy;
-import org.knowm.xchart.BitmapEncoder;
-import org.knowm.xchart.CategoryChart;
-import org.knowm.xchart.CategoryChartBuilder;
-import org.knowm.xchart.PieChart;
-import org.knowm.xchart.PieChartBuilder;
-import org.knowm.xchart.style.Styler.LegendPosition;
-import org.knowm.xchart.BitmapEncoder.BitmapFormat;
 
 import cargadorMensajes.MensajeWhatsApp;
 import cargadorMensajes.Plataforma;
@@ -35,8 +23,6 @@ import Descuentos.DescuentoSimple;
 import ViewModels.ViewModelDatosChat;
 import ViewModels.ViewModelGrupo;
 import interfazGrafica.ChatWindow;
-import interfazGrafica.Crear_Grupo;
-import interfazGrafica.Datos_Chat_Actual;
 import interfazGrafica.InterfazVistas;
 import interfazGrafica.LogIn;
 import interfazGrafica.Register;
@@ -54,20 +40,10 @@ import persistencia.IAdaptadorContactoGrupoDAO;
 import persistencia.IAdaptadorContactoIndividualDAO;
 import persistencia.IAdaptadorMensajeDAO;
 import persistencia.IAdaptadorUsuarioDAO;
-import tds.BubbleText;
 
 public class ControladorVistaAppChat{
 	public static final String REGISTRO_CORRECTO = "U've been registered into the Dark Lord Army!!!!!!!!!";
 	public static final String REGISTRO_NOMBRE_YA_USADO = "User already registered";
-	
-	
-	public static final List<String> MESES_YEAR = Arrays.asList(new String[] { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" });
-	public static final Color[] GRAFICA_HISTOGRAMA_COLOR = new Color[] { new Color(243, 180, 159) };
-	public static final String GRAFICA_HISTOGRAMA_PATH = System.getProperty("user.home") + "/Downloads/Grafica-Uso-Anual";
-	public static final BitmapFormat GRAFICA_HISTOGRAMA_FORMATO = BitmapFormat.PNG;
-	public static final Color[] GRAFICA_TARTA_COLORES = new Color[] { new Color(224, 68, 14), new Color(230, 105, 62), new Color(236, 143, 110), new Color(243, 180, 159), new Color(246, 199, 182) };
-	public static final String GRAFICA_TARTA_PATH = System.getProperty("user.home") + "/Downloads/Grafica-Uso-Grupos";
-	public static final BitmapFormat GRAFICA_TARTA_FORMATO = BitmapFormat.PNG;
 	
 	private AuxRender rendericer;
 	private static ControladorVistaAppChat unicaInstancia;
@@ -340,19 +316,28 @@ public class ControladorVistaAppChat{
 	}
 	
 	// TERMINADO
-	public void registrarContacto(String usuario, String telefono) {
+	public ContactoIndividual registrarContacto(String usuario, String telefono) {
 		ContactoIndividual cont = new ContactoIndividual(usuario, telefono);
 		adaptadorContacto.registrarContactoIndividual(cont);
 		usuarioActual.addContacto(cont);
 		adaptadorUsuario.actualizarUsuario(usuarioActual);
 		ChatWindow chat = (ChatWindow) interfaz;
 		chat.addChat(cont);
+		return cont;
 	}
 	
-	// TODO Implementar registro de mensajes para el cargador
-	public void registrarMensaje(String texto, String emisor, Date hora, BubbleText emoticon, Contacto receptor, TipoContacto tipoReceptor) {
+	// TERMINADO
+	public void registrarMensaje(String texto, String emisor, Date hora, Contacto receptor, TipoContacto tipoReceptor) {
 		Mensaje m = new Mensaje(texto, hora, emisor, receptor, tipoReceptor);
+		receptor.addMensaje(m);
 		adaptadorMensaje.registrarMensaje(m);
+		if (tipoReceptor.equals(TipoContacto.GRUPO)) {
+			adaptadorGrupo.actualizarContactoGrupo((ContactoGrupo) receptor);
+		}
+		else if (tipoReceptor.equals(TipoContacto.INDIVIDUAL)) {
+			adaptadorContacto.actualizarContactoIndividual((ContactoIndividual) receptor);
+		}
+		
 	}
 		
 	//TERMINADO
@@ -454,65 +439,37 @@ public class ControladorVistaAppChat{
 		return null;
 	}
 	
-	// TODO Comprobar funcionamiento
-	public boolean informacionUso() {
-		// Calcular mensajes enviados a contactos y a grupos en el año actual
-		List<Integer> numMensajesContactosYear = usuarioActual.getNumMensajesPorMes(LocalDate.now().getYear(), TipoContacto.INDIVIDUAL);
-		List<Integer> numMensajesGruposYear = usuarioActual.getNumMensajesPorMes(LocalDate.now().getYear(), TipoContacto.GRUPO);
-		List<Integer> numMensajesTotalYear = new ArrayList<Integer>(12);
-		for (int i = 0; i < 12; i++) {
-			numMensajesTotalYear.set(i, numMensajesContactosYear.get(i) + numMensajesGruposYear.get(i));
+	// TERMINADO
+	public List<Integer> getInformacionUsoAnual() {
+			// Calcular mensajes enviados a contactos y a grupos en el año actual
+			List<Integer> numMensajesContactosYear = usuarioActual.getNumMensajesPorMes(LocalDate.now().getYear(), TipoContacto.INDIVIDUAL);
+			List<Integer> numMensajesGruposYear = usuarioActual.getNumMensajesPorMes(LocalDate.now().getYear(), TipoContacto.GRUPO);
+			List<Integer> numMensajesTotalYear = new ArrayList<Integer>(12);
+			for (int i = 0; i < 12; i++) {
+				numMensajesTotalYear.add(numMensajesContactosYear.get(i) + numMensajesGruposYear.get(i));
+			}
+			return numMensajesTotalYear;
 		}
-		// Crear histograma con los mensajes por mes del user
-	    CategoryChart graficaHistograma = new CategoryChartBuilder().title("Mensajes enviados en " + LocalDate.now().getYear()).xAxisTitle("Mes").build();	 
-	    // Personalizar gráfico
-	    graficaHistograma.getStyler().setLegendPosition(LegendPosition.InsideNW);
-	    graficaHistograma.getStyler().setHasAnnotations(true);
-	    graficaHistograma.getStyler().setSeriesColors(GRAFICA_HISTOGRAMA_COLOR);
-	    // Valores
-	    graficaHistograma.addSeries("Mensajes enviados", MESES_YEAR, numMensajesTotalYear);	 
-	    // Guardar	    
-	    try {
-	    	BitmapEncoder.saveBitmap(graficaHistograma, GRAFICA_HISTOGRAMA_PATH, GRAFICA_HISTOGRAMA_FORMATO);
-		} catch (IOException e3) {
-			//e3.printStackTrace();
-			return false;
-		}
-		
-		// Obtener los 6 grupos con más mensajes enviados por el user
-		Map<String, Integer> mensajesPorGrupo = usuarioActual.getNumMensajesEnviadosPorGrupo();
-		Map<String, Integer> mensajesGruposMasEnviados = mensajesPorGrupo.entrySet().stream()
-				.sorted(Map.Entry.comparingByValue(Collections.reverseOrder()))
-				.limit(6)
-				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));	
-		
-		// Obtener el % que representan del total
-		int numMensajesTotal = usuarioActual.getNumMensajes(TipoContacto.INDIVIDUAL) + usuarioActual.getNumMensajes(TipoContacto.GRUPO);
-		
-		Map<String, Double> porcentajesMensajesGrupos = new LinkedHashMap<String, Double>(mensajesGruposMasEnviados.size());
-		for (String it : mensajesGruposMasEnviados.keySet()) {
-			porcentajesMensajesGrupos.put(it, new Double(mensajesGruposMasEnviados.get(it)));
-		}
-		porcentajesMensajesGrupos.entrySet().stream()
-			.forEach(e -> e.setValue(e.getValue() * 100 / numMensajesTotal));
-		
-		// Crear diagrama de tarta con los 6 grupos
-	    PieChart graficaTarta = new PieChartBuilder().title("Grupos a los que se han enviado más mensajes").build();
-	    // Personalizar gráfico
-	    graficaTarta.getStyler().setSeriesColors(GRAFICA_TARTA_COLORES);
-	    graficaTarta.getStyler().setLegendPosition(LegendPosition.InsideNW);
-	    // Valores
-	    for (String it : porcentajesMensajesGrupos.keySet()) {
-	    	graficaTarta.addSeries(it, porcentajesMensajesGrupos.get(it));
-		}
-	    // Guardar	    
-	    try {
-			BitmapEncoder.saveBitmap(graficaTarta, GRAFICA_TARTA_PATH, GRAFICA_TARTA_FORMATO);
-		} catch (IOException e3) {
-			//e3.printStackTrace();
-			return false;
-		}
-	    return true;
+	
+	// TERMINADO
+	public Map<String, Double> getInformacionUsoGrupos() {
+			// Obtener los 6 grupos con más mensajes enviados por el user
+			Map<String, Integer> mensajesPorGrupo = usuarioActual.getNumMensajesEnviadosPorGrupo();
+			Map<String, Integer> mensajesGruposMasEnviados = mensajesPorGrupo.entrySet().stream()
+					.sorted(Map.Entry.comparingByValue(Collections.reverseOrder()))
+					.limit(6)
+					.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));	
+			
+			// Obtener el % que representan del total
+			int numMensajesTotal = usuarioActual.getNumMensajes(TipoContacto.INDIVIDUAL) + usuarioActual.getNumMensajes(TipoContacto.GRUPO);
+			
+			Map<String, Double> porcentajesMensajesGrupos = new LinkedHashMap<String, Double>(mensajesGruposMasEnviados.size());
+			for (String it : mensajesGruposMasEnviados.keySet()) {
+				porcentajesMensajesGrupos.put(it, new Double(mensajesGruposMasEnviados.get(it)));
+			}
+			porcentajesMensajesGrupos.entrySet().stream()
+				.forEach(e -> e.setValue(e.getValue() * 100 / numMensajesTotal));
+			return porcentajesMensajesGrupos;
 	}
 	
 	// TODO Cargador de mensajes
@@ -527,9 +484,53 @@ public class ControladorVistaAppChat{
 		List<MensajeWhatsApp> chat = null;
 		try {
 			chat = SimpleTextParser.parse(fich, formatDateWhatsApp, plataforma);
+			// Comprobar si es un grupo o un chat individual
+			TipoContacto tipoReceptor;
+			Contacto receptor = null;
+			Set<String> miembrosChat = new HashSet<String>();
 			for (MensajeWhatsApp mensaje : chat) {
-				// TODO Registrar los mensajes
-				
+				miembrosChat.add(mensaje.getAutor());
+			}
+			// Comprobar cómo está guardado el nombre
+			String uAct = "";
+			if (miembrosChat.contains(usuarioActual.getNombre()))
+				uAct = usuarioActual.getNombre();
+			else if (miembrosChat.contains(usuarioActual.getMovil()))
+				uAct = usuarioActual.getMovil();
+			else if (miembrosChat.contains(usuarioActual.getUsuario()))
+				uAct = usuarioActual.getUsuario();
+			if (uAct.equals(""))
+				return false;
+			miembrosChat.remove(uAct);
+			if (miembrosChat.size() != 1) {
+				/*tipoReceptor = TipoContacto.GRUPO;
+				List<>
+				crearGrupo("Grupo importado" + chat.get(0).getFecha().toString(),)*/
+				return false;
+			}
+			else {
+				tipoReceptor = TipoContacto.INDIVIDUAL;
+				// Comprobar si la otra persona está guardada como contacto
+				List<String> aux = new LinkedList<String>(miembrosChat);
+				String aux1 = aux.get(0);
+				List<ContactoIndividual> contactos = usuarioActual.getContactos();
+				Iterator<ContactoIndividual> it = contactos.iterator();
+				boolean encontrado = false;
+				while (it.hasNext() && ! encontrado) {
+					if (it.next().getNombre().equals(aux1)) {
+						receptor = it.next();
+						encontrado = true;
+					}
+					it.next();
+				}
+				if (! encontrado) {
+					receptor = registrarContacto(aux1, "imported" + aux1 + LocalDate.now().toString());
+				}				
+			}
+			for (MensajeWhatsApp mensaje : chat) {
+				// Registrar los mensajes
+				Date fecha = java.sql.Timestamp.valueOf(mensaje.getFecha());
+				registrarMensaje(mensaje.getTexto(), mensaje.getAutor(), fecha, receptor, tipoReceptor);
 				System.out.println(">" + mensaje.getFecha().format(formatter) +
 									" " + mensaje.getAutor() + " : " + mensaje.getTexto());
 			}

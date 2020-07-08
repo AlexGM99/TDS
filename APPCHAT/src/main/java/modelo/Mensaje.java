@@ -15,13 +15,13 @@ public class Mensaje {
 	private Contacto receptor;
 	private TipoContacto tipoReceptor;
 
-	public Mensaje(String texto, Date hora, String tlfEmisor, Contacto receptor, TipoContacto grupo) {
+	public Mensaje(String texto, Date hora, String tlfEmisor, Contacto receptor, TipoContacto tipoReceptor) {
 		this.codigo = 0;
 		this.texto = texto;
 		this.hora = hora;
 		this.tlfEmisor = tlfEmisor;
 		this.receptor = receptor;
-		this.tipoReceptor = grupo;
+		this.tipoReceptor = tipoReceptor;
 	}
 
 	public int getCodigo() {

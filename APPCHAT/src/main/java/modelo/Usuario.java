@@ -440,6 +440,9 @@ public class Usuario {
 	public List<Integer> getNumMensajesPorMes(int year, TipoContacto tipoContacto) {
 		// Creamos una lista donde guardaremos los mensajes enviados en cada mes
 		List<Integer> mensajesAnual = new ArrayList<Integer>(12);
+		for (int i = 0; i < 12; i++) {
+			mensajesAnual.add(0);
+		}
 		int mes;
 		switch (tipoContacto) {
 		case GRUPO:
