@@ -5,6 +5,7 @@ import javax.swing.JFrame;
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import java.awt.GridBagLayout;
+import java.awt.HeadlessException;
 import java.awt.Image;
 
 import javax.swing.JButton;
@@ -374,7 +375,22 @@ public class ChatWindow implements InterfazVistas{
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				popupMenu_2.setVisible(false);
-				if ( !controlador.cargarMensajes("/home/edupema/Escritorio/cargar.txt", SimpleTextParser.FORMAT_DATE_IOS))
+				Scanner entrada = null;
+		        JFileChooser fileChooser = new JFileChooser();
+		        FileNameExtensionFilter txtFilter = new FileNameExtensionFilter("Plain text files", "txt"); 
+		        fileChooser.setFileFilter(txtFilter);
+		        fileChooser.showOpenDialog(fileChooser);
+				String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+				String formatDate = null;
+				try {
+					formatDate = SimpleTextParser.detectFormatDate(filePath);					
+				} catch (HeadlessException | IOException e1) {
+					//e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, "There was an error reading the date format", "Boom!", JOptionPane.ERROR_MESSAGE);
+				}
+				if (formatDate == null)
+					JOptionPane.showMessageDialog(null, "There was an error reading the date format", "Boom!", JOptionPane.ERROR_MESSAGE);
+				else if ( ! controlador.cargarMensajes(filePath, formatDate))
 					JOptionPane.showMessageDialog(null, "There was an error loading your messages", "Boom!", JOptionPane.ERROR_MESSAGE);
 				for (ContactoIndividual it : controlador.getUsuarioActual().getContactos()) {
 					System.out.println(it.getMensajes());

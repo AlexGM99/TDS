@@ -92,4 +92,32 @@ public class SimpleTextParser {
 		return false;
 	}
 
+	public static String detectFormatDate(String filePath) throws IOException {
+
+		FileReader input = new FileReader(filePath);
+		BufferedReader bufRead = new BufferedReader(input);
+		String line = null;
+
+		if ((line = bufRead.readLine()) == null) {
+			bufRead.close();
+			return null;
+		}
+		bufRead.close();
+		
+		
+		if (line.startsWith("["))
+			return FORMAT_DATE_IOS; 
+		
+		line = line.substring(line.indexOf("/") + 1, line.indexOf("-"));
+		line = line.substring(line.indexOf("/") + 1);
+		
+		if (line.indexOf(" ") == 2)
+			return FORMAT_DATE_ANDROID_1;
+		
+		if (line.indexOf(" ") == 4)
+			return FORMAT_DATE_ANDROID_2;
+		
+		return null;
+	}
+	
 }
