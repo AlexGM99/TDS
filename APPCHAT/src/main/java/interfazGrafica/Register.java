@@ -442,7 +442,7 @@ public class Register implements InterfazVistas {
 					String email = emailField.getText();
 					if (email == null) 
 						email = FECHA_NO_DEFINIDA;
-					String phone = phoneField.getText();
+					String phone = phoneField.getText().trim();
 					String nick = nickField.getText();
 					String greeting = greetingField.getText();
 					@SuppressWarnings("deprecation")

@@ -3,8 +3,12 @@ package modelo;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import ViewModels.ViewModelDatosChat;
 import ViewModels.ViewModelGrupo;
@@ -120,6 +124,14 @@ public class CatalogoUsuarios {
 		}
 	}
 	
+	public void deleteEnUsuarios(Set<String> nuevo, Set<String> antiguo, int g)
+	{
+		Set<String> s = new HashSet<String>(antiguo);
+		s.removeAll(nuevo);
+		s.stream().map(m -> getUsuario(m)).forEach(u -> u.DeleteContactoG(g));
+		s.stream().map(m -> getUsuario(m)).forEach(u -> adaptadorUsuario.actualizarUsuario(u));
+	}
+	
 	public void nuevoGrupoEnUser(Usuario u, ContactoGrupo g) {
 		if (u.getContactoG(g.getCodigo())==null) {
 			u.addGrupo(g);
@@ -138,7 +150,7 @@ public class CatalogoUsuarios {
 	
 	public ViewModelDatosChat getDatosVentana(int codigo, Usuario usu) {
 		ContactoIndividual u = usu.getContactoI(codigo);
-		if (u != null) {
+		if (existeUsuario(u.getMovil())) {
 			String nick = usu.getNombreContacto(u.getMovil());
 			Usuario uI = getUsuario(u.getMovil());
 			return new ViewModelUsuario(uI.getImagen()!=null?uI.getImagen():"", uI.getNombre(), u.getMovil(), uI.getSaludo(), nick);
@@ -161,6 +173,20 @@ public class CatalogoUsuarios {
 	}
 	
 	
+	public List<ContactoIndividual> getContactosAunqueNoExistenEnUsuario(Usuario u, Set<String> moviles){
+		List<ContactoIndividual> c = new LinkedList<ContactoIndividual>();
+		c = u.getContactos().stream().filter(p -> moviles.contains(p.getMovil())).collect(Collectors.toList());
+		List<String> sinAsignar = new LinkedList<String>();
+		c.stream().filter(p->!moviles.contains(p.getMovil())).forEach(p -> sinAsignar.add(p.getMovil()));
+		for (String string : sinAsignar) {
+			if (existeUsuario(string))
+			{
+				Usuario s = getByMovil(string);
+				c.add(new ContactoIndividual(s.getNombre(), s.getMovil()));
+			}
+		}
+		return c;
+	}
 	
 	public boolean existeUsuario(String telefono) {
 		return usuarios.containsKey(telefono);
