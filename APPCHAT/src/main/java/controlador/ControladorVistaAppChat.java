@@ -306,8 +306,8 @@ public class ControladorVistaAppChat{
 	public ViewModelGrupo getViewGrupo(int codigo) {
 		ContactoGrupo g;
 		if ( (g = usuarioActual.getContactoG(codigo)) != null) {
-			List<ContactoIndividual> noGrupo;
-			List<ContactoIndividual> grupo;
+			List<ContactoIndividual> noGrupo = new LinkedList<ContactoIndividual>();
+			List<ContactoIndividual> grupo = new LinkedList<ContactoIndividual>();
 			return null; 
 		}
 		return null;

@@ -685,6 +685,7 @@ public class ChatWindow implements InterfazVistas{
 	        boolean isSelected, boolean cellHasFocus) {
 	    	this.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 	    	if(cont instanceof ContactoIndividual) {
+	    		try {
 	    		String ruta = controlador.getImage((ContactoIndividual)cont);
 	        	if (!ruta.trim().isEmpty()) {
 	        		File f = new File(ruta);
@@ -705,6 +706,11 @@ public class ChatWindow implements InterfazVistas{
 	        		ImageIcon img6=new ImageIcon(img5.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
 	        		this.setIcon(img6);
 	        	}
+	    		} catch (Exception e) {
+	    			Image img5= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/usuarioDefecto.png")).getImage();
+	        		ImageIcon img6=new ImageIcon(img5.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+	        		this.setIcon(img6);
+				}
 	        	this.setText(cont.getNombre());
 	        	if (isSelected) {
 		    	    setBackground(list.getSelectionBackground());
