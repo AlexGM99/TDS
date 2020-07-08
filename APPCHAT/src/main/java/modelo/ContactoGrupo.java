@@ -42,6 +42,10 @@ public class ContactoGrupo extends Contacto {
 	public Set<String> getMiembros() {
 		return miembros;
 	}
+	
+	public boolean isAdmin(String movil) {
+		return admin.equals(movil);
+	}
 
 	@Override
 	public boolean equals(Object obj) {

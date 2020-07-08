@@ -375,6 +375,42 @@ public class ControladorVistaAppChat{
 		return borrado;
 	}
 	
+	//TODO Actualizar vista de chat
+	public void eliminarMensajes(int codigo) {
+		ContactoGrupo g;
+		ContactoIndividual c;
+		if ((c =usuarioActual.getContactoI(codigo)) != null)
+		{
+			 c.setMensajes(new LinkedList<Mensaje>());
+			 adaptadorContacto.actualizarContactoIndividual(c);
+		}
+		else if ((g =usuarioActual.getContactoG(codigo)) != null){
+			g.setMensajes(new LinkedList<Mensaje>());
+			adaptadorGrupo.actualizarContactoGrupo(g);
+		}
+	}
+	
+	public boolean isContactoInd(int codigo) {
+		return (usuarioActual.existContactoI(codigo));
+	}
+	
+	public boolean isContactoG(int codigo) {
+		return (usuarioActual.existContactoG(codigo));
+	}
+	
+	public boolean soyAdminG(int codigo) {
+		return (usuarioActual.getContactoG(codigo).isAdmin(usuarioActual.getMovil()));
+	}
+	
+	public String GetMovilI(int codigo) {
+		return usuarioActual.getContactoI(codigo).getMovil();
+	}
+	
+	public void actualizarContactoI(int codigo, String nick) {
+		ContactoIndividual i = usuarioActual.modifyContactoI(codigo, nick);
+		adaptadorContacto.actualizarContactoIndividual(i);
+	}
+	
 	public void enviarMensaje(String mensaje, int codigo) {
 		//TODO coger el usuario que envio el mensaje y enviarlo
 		
