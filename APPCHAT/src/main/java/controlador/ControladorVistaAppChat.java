@@ -1,33 +1,19 @@
 package controlador;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.stream.Collector;
+import java.util.Set;
 import java.util.stream.Collectors;
-
-import org.eclipse.persistence.internal.jpa.parsing.LikeNode;
-import org.eclipse.persistence.internal.queries.ListContainerPolicy;
-import org.knowm.xchart.BitmapEncoder;
-import org.knowm.xchart.CategoryChart;
-import org.knowm.xchart.CategoryChartBuilder;
-import org.knowm.xchart.PieChart;
-import org.knowm.xchart.PieChartBuilder;
-import org.knowm.xchart.SwingWrapper;
-import org.knowm.xchart.XChartPanel;
-import org.knowm.xchart.style.Styler.LegendPosition;
-import org.knowm.xchart.BitmapEncoder.BitmapFormat;
 
 import cargadorMensajes.MensajeWhatsApp;
 import cargadorMensajes.Plataforma;
@@ -36,9 +22,6 @@ import Descuentos.DescuentoCompuesto;
 import Descuentos.DescuentoSimple;
 import ViewModels.ViewModelDatosChat;
 import interfazGrafica.ChatWindow;
-import interfazGrafica.Crear_Grupo;
-import interfazGrafica.Datos_Chat_Actual;
-import interfazGrafica.InfoUso;
 import interfazGrafica.InterfazVistas;
 import interfazGrafica.LogIn;
 import interfazGrafica.Register;
@@ -55,7 +38,6 @@ import persistencia.IAdaptadorContactoGrupoDAO;
 import persistencia.IAdaptadorContactoIndividualDAO;
 import persistencia.IAdaptadorMensajeDAO;
 import persistencia.IAdaptadorUsuarioDAO;
-import tds.BubbleText;
 
 public class ControladorVistaAppChat{
 	public static final String REGISTRO_CORRECTO = "U've been registered into the Dark Lord Army!!!!!!!!!";
@@ -315,19 +297,28 @@ public class ControladorVistaAppChat{
 	}
 	
 	// TERMINADO
-	public void registrarContacto(String usuario, String telefono) {
+	public ContactoIndividual registrarContacto(String usuario, String telefono) {
 		ContactoIndividual cont = new ContactoIndividual(usuario, telefono);
 		adaptadorContacto.registrarContactoIndividual(cont);
 		usuarioActual.addContacto(cont);
 		adaptadorUsuario.actualizarUsuario(usuarioActual);
 		ChatWindow chat = (ChatWindow) interfaz;
 		chat.addChat(cont);
+		return cont;
 	}
 	
-	// TODO Implementar registro de mensajes para el cargador
-	public void registrarMensaje(String texto, String emisor, Date hora, BubbleText emoticon, Contacto receptor, TipoContacto tipoReceptor) {
+	// TERMINADO
+	public void registrarMensaje(String texto, String emisor, Date hora, Contacto receptor, TipoContacto tipoReceptor) {
 		Mensaje m = new Mensaje(texto, hora, emisor, receptor, tipoReceptor);
+		receptor.addMensaje(m);
 		adaptadorMensaje.registrarMensaje(m);
+		if (tipoReceptor.equals(TipoContacto.GRUPO)) {
+			adaptadorGrupo.actualizarContactoGrupo((ContactoGrupo) receptor);
+		}
+		else if (tipoReceptor.equals(TipoContacto.INDIVIDUAL)) {
+			adaptadorContacto.actualizarContactoIndividual((ContactoIndividual) receptor);
+		}
+		
 	}
 		
 	//TERMINADO
@@ -361,7 +352,7 @@ public class ControladorVistaAppChat{
 		return null;
 	}
 	
-	// TEERMINADO
+	// TERMINADO
 	public List<Integer> getInformacionUsoAnual() {
 			// Calcular mensajes enviados a contactos y a grupos en el año actual
 			List<Integer> numMensajesContactosYear = usuarioActual.getNumMensajesPorMes(LocalDate.now().getYear(), TipoContacto.INDIVIDUAL);
@@ -406,9 +397,53 @@ public class ControladorVistaAppChat{
 		List<MensajeWhatsApp> chat = null;
 		try {
 			chat = SimpleTextParser.parse(fich, formatDateWhatsApp, plataforma);
+			// Comprobar si es un grupo o un chat individual
+			TipoContacto tipoReceptor;
+			Contacto receptor = null;
+			Set<String> miembrosChat = new HashSet<String>();
 			for (MensajeWhatsApp mensaje : chat) {
-				// TODO Registrar los mensajes
-				
+				miembrosChat.add(mensaje.getAutor());
+			}
+			// Comprobar cómo está guardado el nombre
+			String uAct = "";
+			if (miembrosChat.contains(usuarioActual.getNombre()))
+				uAct = usuarioActual.getNombre();
+			else if (miembrosChat.contains(usuarioActual.getMovil()))
+				uAct = usuarioActual.getMovil();
+			else if (miembrosChat.contains(usuarioActual.getUsuario()))
+				uAct = usuarioActual.getUsuario();
+			if (uAct.equals(""))
+				return false;
+			miembrosChat.remove(uAct);
+			if (miembrosChat.size() != 1) {
+				/*tipoReceptor = TipoContacto.GRUPO;
+				List<>
+				crearGrupo("Grupo importado" + chat.get(0).getFecha().toString(),)*/
+				return false;
+			}
+			else {
+				tipoReceptor = TipoContacto.INDIVIDUAL;
+				// Comprobar si la otra persona está guardada como contacto
+				List<String> aux = new LinkedList<String>(miembrosChat);
+				String aux1 = aux.get(0);
+				List<ContactoIndividual> contactos = usuarioActual.getContactos();
+				Iterator<ContactoIndividual> it = contactos.iterator();
+				boolean encontrado = false;
+				while (it.hasNext() && ! encontrado) {
+					if (it.next().getNombre().equals(aux1)) {
+						receptor = it.next();
+						encontrado = true;
+					}
+					it.next();
+				}
+				if (! encontrado) {
+					receptor = registrarContacto(aux1, "imported" + aux1 + LocalDate.now().toString());
+				}				
+			}
+			for (MensajeWhatsApp mensaje : chat) {
+				// Registrar los mensajes
+				Date fecha = java.sql.Timestamp.valueOf(mensaje.getFecha());
+				registrarMensaje(mensaje.getTexto(), mensaje.getAutor(), fecha, receptor, tipoReceptor);
 				System.out.println(">" + mensaje.getFecha().format(formatter) +
 									" " + mensaje.getAutor() + " : " + mensaje.getTexto());
 			}

@@ -21,6 +21,7 @@ import Descuentos.DescuentoCompuesto;
 import Descuentos.DescuentoSimple;
 import ViewModels.ViewModelDatosChat;
 import ViewModels.ViewModelUsuario;
+import cargadorMensajes.SimpleTextParser;
 import controlador.ControladorVistaAppChat;
 import modelo.Contacto;
 import modelo.ContactoGrupo;
@@ -94,6 +95,7 @@ public class ChatWindow implements InterfazVistas{
 	private JButton btnChangeGreeting;
 	private JButton btnPremium;
 	private JButton btnInfoUso;
+	private JButton btnCargador;
 	private JButton btnExit;
 	private JButton btnNewContact;
 	private JButton btnNewGroup;
@@ -364,6 +366,20 @@ public class ChatWindow implements InterfazVistas{
 			});
 			popupMenu_2.add(btnInfoUso);
 		}
+		
+		btnCargador = new JButton("Load messages");
+		btnCargador.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				popupMenu_2.setVisible(false);
+				if ( !controlador.cargarMensajes("/home/edupema/Escritorio/cargar.txt", SimpleTextParser.FORMAT_DATE_IOS))
+					JOptionPane.showMessageDialog(null, "There was an error loading your messages", "Boom!", JOptionPane.ERROR_MESSAGE);
+				for (ContactoIndividual it : controlador.getUsuarioActual().getContactos()) {
+					System.out.println(it.getMensajes());
+				}
+			}
+		});
+		popupMenu_2.add(btnCargador);
 			
 		GridBagConstraints gbc_label_MifotoPerfil = new GridBagConstraints();
 		gbc_label_MifotoPerfil.insets = new Insets(0, 0, 0, 5);
