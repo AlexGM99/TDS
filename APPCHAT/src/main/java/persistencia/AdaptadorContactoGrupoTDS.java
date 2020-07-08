@@ -125,7 +125,7 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 
 		// miembrosList
 		String lineas = servPersistencia.recuperarPropiedadEntidad(eContactoGr, NOMBRE_PROP_MIEMBROS);
-		List<String> aux = Arrays.asList(lineas);
+		List<String> aux = Arrays.asList(lineas.split(" "));
 		String[] miembros = new String[aux.size()];
 		for (int i = 0; i < miembros.length; i++) {
 			miembros[i] = aux.get(i);
