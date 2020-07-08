@@ -460,7 +460,7 @@ public class ChatWindow implements InterfazVistas{
 				int opt = JOptionPane.showConfirmDialog(btnPremium,"Are you sure?", "Delete", JOptionPane.OK_OPTION);
 				if (opt==JOptionPane.OK_OPTION) {
 					if (!controlador.eliminarContacto(codigoActivo)){
-						JOptionPane.showConfirmDialog(null,"No se pudo borrar el contacto", "Ha habido un error al borrar el contacto",  JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showConfirmDialog(null,"No se pudo borrar el contacto", "Contacto no borrado",  JOptionPane.WARNING_MESSAGE);
 					}
 					else {
 							quitarChat();

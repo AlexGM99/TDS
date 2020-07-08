@@ -348,12 +348,23 @@ public class ControladorVistaAppChat{
 	
 	public boolean eliminarContacto(int codigo) {
 		boolean borrado = false;
+		ContactoGrupo g;
 		if (usuarioActual.existContactoI(codigo))
 		{
 			 borrado = usuarioActual.DeleteContactoI(codigo);
 		}
-		else 
+		else if ((g =usuarioActual.getContactoG(codigo)) != null){
+			if (g.getAdmin().getCodigo() == usuarioActual.getCodigo()) {
+				catalogoUsuarios.borrarGrupoUsers(g);
+				borrado = usuarioActual.DeleteContactoG(codigo);
+				adaptadorGrupo.borrarContactoGrupo(g);
+			}
+			else
+				borrado = false;
+		}
+		else {
 			borrado = false;
+		}
 		if (borrado) {
 			adaptadorUsuario.actualizarUsuario(usuarioActual);
 			ChatWindow chat = (ChatWindow) interfaz;

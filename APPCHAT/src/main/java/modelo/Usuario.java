@@ -90,6 +90,12 @@ public class Usuario {
 		contactos.remove(c);
 		return true;
 	}
+	public boolean DeleteContactoG(int codigo) {
+		ContactoGrupo c = getContactoG(codigo);
+		if (c==null) return false;
+		grupos.remove(c);
+		return true;
+	}
 	
 	public void setFechaNacimiento(Date fechanacimiento) {
 		this.fechaNacimiento = fechanacimiento;

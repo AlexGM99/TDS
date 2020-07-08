@@ -108,6 +108,17 @@ public class CatalogoUsuarios {
 		g.getMiembros().stream().forEach(m -> nuevoGrupoEnUser(getByMovil(m), g));
 	}
 	
+	public void borrarGrupoUsers(ContactoGrupo g) {
+		g.getMiembros().stream().forEach(m->quitarGrupoUsers(getByMovil(m), g));
+	}
+	
+	public void quitarGrupoUsers( Usuario u, ContactoGrupo g) {
+		if (u.getContactoG(g.getCodigo())!=null) {
+			u.DeleteContactoG(g.getCodigo());
+			adaptadorUsuario.actualizarUsuario(u);
+		}
+	}
+	
 	public void nuevoGrupoEnUser(Usuario u, ContactoGrupo g) {
 		if (u.getContactoG(g.getCodigo())==null) {
 			u.addGrupo(g);
@@ -137,6 +148,8 @@ public class CatalogoUsuarios {
 		ContactoIndividual contAd = usu.getContactoODefault(admin);
 		return new ViewModelGrupo(contactos, contAd, u.getNombre(), c);
 	}
+	
+	
 	
 	public boolean existeUsuario(String telefono) {
 		return usuarios.containsKey(telefono);
