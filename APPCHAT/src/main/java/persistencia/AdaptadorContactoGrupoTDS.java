@@ -101,7 +101,7 @@ public class AdaptadorContactoGrupoTDS implements IAdaptadorContactoGrupoDAO {
 		servPersistencia.eliminarPropiedadEntidad(eContactoGr, NOMBRE_PROP_MENSAJES);
 		servPersistencia.anadirPropiedadEntidad(eContactoGr, NOMBRE_PROP_MENSAJES, lineas);
 		
-		lineas = Auxiliar.obtenerCodigos(contacto.getMiembros());
+		lineas = Auxiliar.obtenerCodigosSimples(contacto.getMiembros());
 		servPersistencia.eliminarPropiedadEntidad(eContactoGr, NOMBRE_PROP_MIEMBROS);
 		servPersistencia.anadirPropiedadEntidad(eContactoGr, NOMBRE_PROP_MIEMBROS, lineas);
 		

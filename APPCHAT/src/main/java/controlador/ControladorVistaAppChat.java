@@ -5,14 +5,18 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -290,10 +294,12 @@ public class ControladorVistaAppChat{
 	public List<ContactoIndividual> getContactoIndividuales(){
 		LinkedList<ContactoIndividual> contactos = new LinkedList<ContactoIndividual>();
 		usuarioActual.getContactos().stream().
-									forEach(cont -> contactos.add(cont));
+									forEach(cont -> addifUser(contactos, cont));
 		return contactos;
 	}
-	
+	private void addifUser(LinkedList<ContactoIndividual> c, ContactoIndividual ci) {
+		if (existeUsuario(ci.getMovil())) c.add(ci);
+	}
 	// TERMINADO
 	public ViewModelDatosChat getDatos(int codigo) {
 		if (usuarioActual.existContactoI(codigo))
@@ -306,9 +312,11 @@ public class ControladorVistaAppChat{
 	public ViewModelGrupo getViewGrupo(int codigo) {
 		ContactoGrupo g;
 		if ( (g = usuarioActual.getContactoG(codigo)) != null) {
-			List<ContactoIndividual> noGrupo = new LinkedList<ContactoIndividual>();
-			List<ContactoIndividual> grupo = new LinkedList<ContactoIndividual>();
-			return null; 
+			
+			List<ContactoIndividual> grupo = catalogoUsuarios.getContactosAunqueNoExistenEnUsuario(usuarioActual, g.getMiembros());
+			
+			List<ContactoIndividual> noGrupo = usuarioActual.getContactos().stream().filter( p -> !grupo.contains(p) && existeUsuario(p.getMovil())).collect(Collectors.toList());
+			return new ViewModelGrupo(noGrupo, new ContactoIndividual(usuarioActual.getNombre(), usuarioActual.getMovil()), g.getNombre(), unicaInstancia, grupo, g.getCodigo()); 
 		}
 		return null;
 	}
@@ -353,6 +361,24 @@ public class ControladorVistaAppChat{
 			catalogoUsuarios.registrarGrupoEnUsuarios(creado);
 			ChatWindow chat = (ChatWindow) interfaz;
 			chat.addChat(creado);
+		}
+		return creado != null;
+	}
+	
+	public boolean ModificarGrupo(String nombre, List<Integer> contactos, int code) {
+		ContactoGrupo creado = usuarioActual.getContactoG(code);
+		ContactoGrupo noModificado =  new ContactoGrupo(creado);
+		if (creado!=null) {
+			creado.setNombre(nombre);
+			creado.setMiembros(getContactosByCodigos(contactos).stream().map(p->p.getMovil()).collect(Collectors.toSet()));
+			usuarioActual.DeleteContactoG(code);
+			usuarioActual.addGrupo(creado);
+			catalogoUsuarios.registrarGrupoEnUsuarios(creado);
+			catalogoUsuarios.deleteEnUsuarios(creado.getMiembros(), noModificado.getMiembros(), code);
+			adaptadorGrupo.actualizarContactoGrupo(creado);
+			ChatWindow chat = (ChatWindow) interfaz;
+			
+			chat.setChats(new LinkedList<Contacto>(getContactos()));
 		}
 		return creado != null;
 	}

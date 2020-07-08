@@ -23,6 +23,14 @@ public class ContactoGrupo extends Contacto {
 		this.miembros = new HashSet<String>(miembros);
 	}
 	
+	public ContactoGrupo(ContactoGrupo g) {
+		super(g.getNombre());
+		this.admin = g.admin;
+		this.miembros = g.miembros;
+		g.setCodigo(g.getCodigo());
+		this.setMensajes(g.getMensajes());
+	}
+	
 	public Usuario getAdmin() {
 		return admin;
 	}
@@ -44,7 +52,20 @@ public class ContactoGrupo extends Contacto {
 	}
 	
 	public boolean isAdmin(String movil) {
-		return admin.equals(movil);
+		return admin.getMovil().equals(movil);
+	}
+	@Override
+	public void setNombre(String nombre) {
+		// TODO Auto-generated method stub
+		super.setNombre(nombre);
+	}
+	@Override
+	public void setMensajes(List<Mensaje> mensajes) {
+		// TODO Auto-generated method stub
+		super.setMensajes(mensajes);
+	}
+	public void setMiembros(Set<String> miembros) {
+		this.miembros = miembros;
 	}
 
 	@Override

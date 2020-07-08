@@ -494,6 +494,10 @@ public class ChatWindow implements InterfazVistas{
 				}
 				else if (controlador.isContactoG(codigoActivo) && controlador.soyAdminG(codigoActivo)) {
 					ViewModelGrupo g = controlador.getViewGrupo(codigoActivo);
+					if (g!= null) {
+						Crear_Grupo gr =new Crear_Grupo(controlador.getUsuarioActual() ,g.getContactos(), controlador, g.getSeleccionados(), g.getCode(), g.getNombre());
+						gr.setVisible(true);
+					}
 					
 				}
 				else {

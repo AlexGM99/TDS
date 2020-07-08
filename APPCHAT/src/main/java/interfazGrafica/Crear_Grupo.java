@@ -3,6 +3,7 @@ package interfazGrafica;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import javax.swing.JPanel;
 
@@ -72,7 +73,8 @@ public class Crear_Grupo extends JFrame implements InterfazVistas {
 	private int lastSeleccionado = -1;
 	private int lastContacto = -1;
 	private int numSelect = 0;
-	
+	private JButton btnCrearGrupo;
+	private JPanel panel_2;
 	
 	
 	/**
@@ -270,7 +272,7 @@ public class Crear_Grupo extends JFrame implements InterfazVistas {
 		panel_1.add(txtNombreGrupo, BorderLayout.NORTH);
 		txtNombreGrupo.setColumns(10);
 		
-		JPanel panel_2 = new JPanel();
+		panel_2 = new JPanel();
 		panel_1.add(panel_2, BorderLayout.SOUTH);
 		
 		JButton btnCancelar = new JButton("Cancelar");
@@ -286,7 +288,7 @@ public class Crear_Grupo extends JFrame implements InterfazVistas {
 		btnCancelar.setMaximumSize(new Dimension(100, 23));
 		panel_2.add(btnCancelar);
 		
-		JButton btnCrearGrupo = new JButton("Crear Grupo");
+		btnCrearGrupo = new JButton("Crear Grupo");
 		btnCrearGrupo.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -411,9 +413,29 @@ public class Crear_Grupo extends JFrame implements InterfazVistas {
 	    }
 	}
 	
-	public Crear_Grupo(Usuario usuarioActual, List<ContactoIndividual> contactos, ControladorVistaAppChat controlador, List<ContactoIndividual> seleccionados) {
+	public Crear_Grupo(Usuario usuarioActual, List<ContactoIndividual> contactos, ControladorVistaAppChat controlador, List<ContactoIndividual> seleccionados2, int codigo, String nombre) {
 		this(usuarioActual, contactos, controlador);
-		setChatsSeleccionados(new LinkedList<ContactoIndividual>(seleccionados));
+		seleccionados = new LinkedList<Integer>( seleccionados2.stream().map(p->p.getCodigo()).collect(Collectors.toList()));
+		setChatsSeleccionados(new LinkedList<ContactoIndividual>(seleccionados2));
+		panel_2.remove(btnCrearGrupo);
+		txtNombreGrupo.setText(nombre);
+		btnCrearGrupo = new JButton("Modificar Grupo");
+		btnCrearGrupo.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				boolean creado = controlador.ModificarGrupo(txtNombreGrupo.getText(), seleccionados, codigo);
+				if (creado)
+					exit();
+				else
+					JOptionPane.showConfirmDialog(null, "Grupo ya existente",
+	    					"cambie el nombre del grupo o sus integrantes", JOptionPane.WARNING_MESSAGE);
+			}
+		});
+		btnCrearGrupo.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		btnCrearGrupo.setPreferredSize(new Dimension(100, 23));
+		btnCrearGrupo.setMinimumSize(new Dimension(100, 23));
+		btnCrearGrupo.setMaximumSize(new Dimension(100, 23));
+		panel_2.add(btnCrearGrupo);
 	}
 	public void exit() {
 		this.dispose();
