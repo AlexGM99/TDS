@@ -33,6 +33,7 @@ import cargadorMensajes.SimpleTextParser;
 import Descuentos.DescuentoCompuesto;
 import Descuentos.DescuentoSimple;
 import ViewModels.ViewModelDatosChat;
+import ViewModels.ViewModelGrupo;
 import interfazGrafica.ChatWindow;
 import interfazGrafica.Crear_Grupo;
 import interfazGrafica.Datos_Chat_Actual;
@@ -307,6 +308,16 @@ public class ControladorVistaAppChat{
 		return null;
 	}
 	
+	public ViewModelGrupo getViewGrupo(int codigo) {
+		ContactoGrupo g;
+		if ( (g = usuarioActual.getContactoG(codigo)) != null) {
+			List<ContactoIndividual> noGrupo;
+			List<ContactoIndividual> grupo;
+			return null; 
+		}
+		return null;
+	}
+	
 	//TERMINADO
 	public List<ContactoIndividual> setContactosFilter(List<Integer> contactos, String nombre) {
 		LinkedList<ContactoIndividual> contactosI = new LinkedList<ContactoIndividual>(getContactosByCodigos(contactos));
@@ -384,6 +395,42 @@ public class ControladorVistaAppChat{
 			}
 		
 		return borrado;
+	}
+	
+	//TODO Actualizar vista de chat
+	public void eliminarMensajes(int codigo) {
+		ContactoGrupo g;
+		ContactoIndividual c;
+		if ((c =usuarioActual.getContactoI(codigo)) != null)
+		{
+			 c.setMensajes(new LinkedList<Mensaje>());
+			 adaptadorContacto.actualizarContactoIndividual(c);
+		}
+		else if ((g =usuarioActual.getContactoG(codigo)) != null){
+			g.setMensajes(new LinkedList<Mensaje>());
+			adaptadorGrupo.actualizarContactoGrupo(g);
+		}
+	}
+	
+	public boolean isContactoInd(int codigo) {
+		return (usuarioActual.existContactoI(codigo));
+	}
+	
+	public boolean isContactoG(int codigo) {
+		return (usuarioActual.existContactoG(codigo));
+	}
+	
+	public boolean soyAdminG(int codigo) {
+		return (usuarioActual.getContactoG(codigo).isAdmin(usuarioActual.getMovil()));
+	}
+	
+	public String GetMovilI(int codigo) {
+		return usuarioActual.getContactoI(codigo).getMovil();
+	}
+	
+	public void actualizarContactoI(int codigo, String nick) {
+		ContactoIndividual i = usuarioActual.modifyContactoI(codigo, nick);
+		adaptadorContacto.actualizarContactoIndividual(i);
 	}
 	
 	public void enviarMensaje(String mensaje, int codigo) {

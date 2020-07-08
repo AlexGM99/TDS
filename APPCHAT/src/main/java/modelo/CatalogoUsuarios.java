@@ -11,6 +11,7 @@ import ViewModels.ViewModelGrupo;
 import ViewModels.ViewModelUsuario;
 import controlador.ControladorVistaAppChat;
 import interfazGrafica.Datos_Chat_Actual;
+import interfazGrafica.Datos_Grupo;
 import persistencia.AdaptadorContactoGrupoTDS;
 import persistencia.DAOException;
 import persistencia.FactoriaDAO;
@@ -142,6 +143,14 @@ public class CatalogoUsuarios {
 		return new ViewModelUsuario(uI.getImagen()!=null?uI.getImagen():"", uI.getNombre(), u.getMovil(), uI.getSaludo(), nick);
 	}
 	public ViewModelDatosChat getDatosVentanaGrupo(int codigo, Usuario usu, ControladorVistaAppChat c) {
+		ContactoGrupo u = usu.getContactoG(codigo);
+		Usuario admin = u.getAdmin();
+		List<ContactoIndividual> contactos = usu.getContactos(u.getMiembros());
+		ContactoIndividual contAd = usu.getContactoODefault(admin);
+		return new ViewModelGrupo(contactos, contAd, u.getNombre(), c);
+	}
+	
+	public ViewModelGrupo getDatosVentanaGrupo(List<String> contactosMovil) {
 		ContactoGrupo u = usu.getContactoG(codigo);
 		Usuario admin = u.getAdmin();
 		List<ContactoIndividual> contactos = usu.getContactos(u.getMiembros());

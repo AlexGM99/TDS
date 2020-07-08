@@ -97,6 +97,14 @@ public class Usuario {
 		return true;
 	}
 	
+	public ContactoIndividual modifyContactoI(int codigo, String nick) {
+		ContactoIndividual i = getContactoI(codigo);
+		contactos.remove(i);
+		i.setNombre(nick);
+		contactos.add(i);
+		return i;
+	}
+	
 	public void setFechaNacimiento(Date fechanacimiento) {
 		this.fechaNacimiento = fechanacimiento;
 	}

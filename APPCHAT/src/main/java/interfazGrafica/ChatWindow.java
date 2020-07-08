@@ -96,6 +96,7 @@ public class ChatWindow implements InterfazVistas{
 	private JButton btnExit;
 	private JButton btnNewContact;
 	private JButton btnNewGroup;
+	private JButton btnModify;
 	/**
 	 * Launch the application.
 	 */
@@ -449,14 +450,10 @@ public class ChatWindow implements InterfazVistas{
 		addPopup(btnopciones, popupMenu_1);
 		
 		JButton btnDeleteContact = new JButton("Delete contact");
-		btnDeleteContact.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
-			}
-		});
 		btnDeleteContact.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				popupMenu_1.setVisible(false);
 				int opt = JOptionPane.showConfirmDialog(btnPremium,"Are you sure?", "Delete", JOptionPane.OK_OPTION);
 				if (opt==JOptionPane.OK_OPTION) {
 					if (!controlador.eliminarContacto(codigoActivo)){
@@ -475,9 +472,36 @@ public class ChatWindow implements InterfazVistas{
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				//TODO clear history messages of the chat
+				popupMenu_1.setVisible(false);
+				int opt = JOptionPane.showConfirmDialog(btnPremium,"Are you sure?", "Clear history", JOptionPane.OK_OPTION);
+				if (opt==JOptionPane.OK_OPTION) {
+					controlador.eliminarMensajes(codigoActivo);
+				}
 			}
 		});
 		popupMenu_1.add(btnClearHistory);
+		
+		btnModify = new JButton("Modify");
+		btnModify.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				popupMenu_1.setVisible(false);
+				if (controlador.isContactoInd(codigoActivo)) {
+					String nick =
+							JOptionPane.showInputDialog(null, "Introduce how you would like to save it", "Edit Contact " + controlador.GetMovilI(codigoActivo), JOptionPane.QUESTION_MESSAGE);
+					controlador.actualizarContactoI(codigoActivo, nick);
+					ponerChat();
+				}
+				else if (controlador.isContactoG(codigoActivo) && controlador.soyAdminG(codigoActivo)) {
+					ViewModelGrupo g = controlador.getViewGrupo(codigoActivo);
+					
+				}
+				else {
+					JOptionPane.showConfirmDialog(null,"No se puedes modificar el contacto", "Contacto no modificable",  JOptionPane.WARNING_MESSAGE);
+				}
+			}
+		});
+		popupMenu_1.add(btnModify);
 		
 		btnopciones.addMouseListener(new MouseAdapter() {
 			@Override

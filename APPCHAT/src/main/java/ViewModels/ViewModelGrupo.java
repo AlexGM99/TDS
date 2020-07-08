@@ -12,12 +12,21 @@ public class ViewModelGrupo implements ViewModelDatosChat {
 	private ContactoIndividual admin;
 	private String nombre;
 	private ControladorVistaAppChat controlador;
+	private List<ContactoIndividual> seleccionados;
 	
 	public ViewModelGrupo(List<ContactoIndividual> contactos, ContactoIndividual admin, String nombre, ControladorVistaAppChat controlador) {
 		this.contactos = contactos;
 		this.admin = admin;
 		this.nombre = nombre;
 		this.controlador = controlador;
+	}
+	
+	public ViewModelGrupo(List<ContactoIndividual> contactos, ContactoIndividual admin, String nombre, ControladorVistaAppChat controlador, List<ContactoIndividual> seleccionados) {
+		this.contactos = contactos;
+		this.admin = admin;
+		this.nombre = nombre;
+		this.controlador = controlador;
+		this.seleccionados = seleccionados;
 	}
 	
 	public ContactoIndividual getAdmin() {
@@ -32,5 +41,7 @@ public class ViewModelGrupo implements ViewModelDatosChat {
 	public ControladorVistaAppChat getControlador() {
 		return controlador;
 	}
-	
+	public List<ContactoIndividual> getSeleccionados() {
+		return seleccionados;
+	}
 }
