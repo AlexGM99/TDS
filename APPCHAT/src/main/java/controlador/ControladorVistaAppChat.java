@@ -3,6 +3,7 @@ package controlador;
 import java.awt.Color;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -26,6 +27,9 @@ import org.knowm.xchart.PieChartBuilder;
 import org.knowm.xchart.style.Styler.LegendPosition;
 import org.knowm.xchart.BitmapEncoder.BitmapFormat;
 
+import cargadorMensajes.MensajeWhatsApp;
+import cargadorMensajes.Plataforma;
+import cargadorMensajes.SimpleTextParser;
 import Descuentos.DescuentoCompuesto;
 import Descuentos.DescuentoSimple;
 import ViewModels.ViewModelDatosChat;
@@ -49,6 +53,7 @@ import persistencia.IAdaptadorContactoGrupoDAO;
 import persistencia.IAdaptadorContactoIndividualDAO;
 import persistencia.IAdaptadorMensajeDAO;
 import persistencia.IAdaptadorUsuarioDAO;
+import tds.BubbleText;
 
 public class ControladorVistaAppChat{
 	public static final String REGISTRO_CORRECTO = "U've been registered into the Dark Lord Army!!!!!!!!!";
@@ -57,10 +62,10 @@ public class ControladorVistaAppChat{
 	
 	public static final List<String> MESES_YEAR = Arrays.asList(new String[] { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" });
 	public static final Color[] GRAFICA_HISTOGRAMA_COLOR = new Color[] { new Color(243, 180, 159) };
-	public static final String GRAFICA_HISTOGRAMA_PATH = "./Sample_Chart-H";
+	public static final String GRAFICA_HISTOGRAMA_PATH = System.getProperty("user.home") + "/Downloads/Grafica-Uso-Anual";
 	public static final BitmapFormat GRAFICA_HISTOGRAMA_FORMATO = BitmapFormat.PNG;
 	public static final Color[] GRAFICA_TARTA_COLORES = new Color[] { new Color(224, 68, 14), new Color(230, 105, 62), new Color(236, 143, 110), new Color(243, 180, 159), new Color(246, 199, 182) };
-	public static final String GRAFICA_TARTA_PATH = "./Sample_Chart-G";
+	public static final String GRAFICA_TARTA_PATH = System.getProperty("user.home") + "/Downloads/Grafica-Uso-Grupos";
 	public static final BitmapFormat GRAFICA_TARTA_FORMATO = BitmapFormat.PNG;
 	
 	private AuxRender rendericer;
@@ -333,6 +338,12 @@ public class ControladorVistaAppChat{
 		chat.addChat(cont);
 	}
 	
+	// TODO Implementar registro de mensajes para el cargador
+	public void registrarMensaje(String texto, String emisor, Date hora, BubbleText emoticon, Contacto receptor, TipoContacto tipoReceptor) {
+		Mensaje m = new Mensaje(texto, hora, emisor, receptor, tipoReceptor);
+		adaptadorMensaje.registrarMensaje(m);
+	}
+		
 	//TERMINADO
 	public boolean crearGrupo(String nombre, List<Integer> contactos) {
 		ContactoGrupo creado = usuarioActual.registrarGrupo(nombre, getContactosByCodigos(contactos));
@@ -396,7 +407,8 @@ public class ControladorVistaAppChat{
 		return null;
 	}
 	
-	public void informacionUso() {
+	// TODO Comprobar funcionamiento
+	public boolean informacionUso() {
 		// Calcular mensajes enviados a contactos y a grupos en el año actual
 		List<Integer> numMensajesContactosYear = usuarioActual.getNumMensajesPorMes(LocalDate.now().getYear(), TipoContacto.INDIVIDUAL);
 		List<Integer> numMensajesGruposYear = usuarioActual.getNumMensajesPorMes(LocalDate.now().getYear(), TipoContacto.GRUPO);
@@ -405,8 +417,7 @@ public class ControladorVistaAppChat{
 			numMensajesTotalYear.set(i, numMensajesContactosYear.get(i) + numMensajesGruposYear.get(i));
 		}
 		// Crear histograma con los mensajes por mes del user
-	    //CategoryChart graficaHistograma = new CategoryChartBuilder().width(800).height(600).title("Histograma de prueba").xAxisTitle("Mes").build();	 
-	    CategoryChart graficaHistograma = new CategoryChartBuilder().xAxisTitle("Mes").build();	 
+	    CategoryChart graficaHistograma = new CategoryChartBuilder().title("Mensajes enviados en " + LocalDate.now().getYear()).xAxisTitle("Mes").build();	 
 	    // Personalizar gráfico
 	    graficaHistograma.getStyler().setLegendPosition(LegendPosition.InsideNW);
 	    graficaHistograma.getStyler().setHasAnnotations(true);
@@ -417,8 +428,8 @@ public class ControladorVistaAppChat{
 	    try {
 	    	BitmapEncoder.saveBitmap(graficaHistograma, GRAFICA_HISTOGRAMA_PATH, GRAFICA_HISTOGRAMA_FORMATO);
 		} catch (IOException e3) {
-			// TODO Manejar excepción
-			e3.printStackTrace();
+			//e3.printStackTrace();
+			return false;
 		}
 		
 		// Obtener los 6 grupos con más mensajes enviados por el user
@@ -439,8 +450,7 @@ public class ControladorVistaAppChat{
 			.forEach(e -> e.setValue(e.getValue() * 100 / numMensajesTotal));
 		
 		// Crear diagrama de tarta con los 6 grupos
-	    //PieChart graficaTarta = new PieChartBuilder().width(800).height(600).title("Tarta de prueba").build();
-	    PieChart graficaTarta = new PieChartBuilder().build();
+	    PieChart graficaTarta = new PieChartBuilder().title("Grupos a los que se han enviado más mensajes").build();
 	    // Personalizar gráfico
 	    graficaTarta.getStyler().setSeriesColors(GRAFICA_TARTA_COLORES);
 	    graficaTarta.getStyler().setLegendPosition(LegendPosition.InsideNW);
@@ -452,9 +462,35 @@ public class ControladorVistaAppChat{
 	    try {
 			BitmapEncoder.saveBitmap(graficaTarta, GRAFICA_TARTA_PATH, GRAFICA_TARTA_FORMATO);
 		} catch (IOException e3) {
-			// TODO Manejar excepción
-			e3.printStackTrace();
+			//e3.printStackTrace();
+			return false;
 		}
+	    return true;
+	}
+	
+	// TODO Cargador de mensajes
+	public boolean cargarMensajes(String fich, String formatDateWhatsApp) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatDateWhatsApp);
+		Plataforma plataforma;
+		if (formatDateWhatsApp.equals(SimpleTextParser.FORMAT_DATE_IOS))
+			plataforma = Plataforma.IOS;
+		else
+			plataforma = Plataforma.ANDROID;
+		
+		List<MensajeWhatsApp> chat = null;
+		try {
+			chat = SimpleTextParser.parse(fich, formatDateWhatsApp, plataforma);
+			for (MensajeWhatsApp mensaje : chat) {
+				// TODO Registrar los mensajes
+				
+				System.out.println(">" + mensaje.getFecha().format(formatter) +
+									" " + mensaje.getAutor() + " : " + mensaje.getTexto());
+			}
+		} catch (IOException e) {
+			//e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 	
 	// TERMINADO
