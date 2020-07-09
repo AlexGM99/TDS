@@ -477,6 +477,7 @@ public class ChatWindow implements InterfazVistas{
 				int opt = JOptionPane.showConfirmDialog(btnPremium,"Are you sure?", "Clear history", JOptionPane.OK_OPTION);
 				if (opt==JOptionPane.OK_OPTION) {
 					controlador.eliminarMensajes(codigoActivo);
+					ponerChat();
 				}
 			}
 		});
@@ -606,6 +607,7 @@ public class ChatWindow implements InterfazVistas{
 				if (e.getKeyChar() == '\n' || e.getKeyChar() == '\r') {
 					controlador.enviarMensaje(textmensaje.getText(), codigoActivo);
 					ponerChat();
+					textmensaje.setText("");
 				}
 			}
 		});
@@ -640,6 +642,7 @@ public class ChatWindow implements InterfazVistas{
 			public void mouseClicked(MouseEvent e) {
 				controlador.enviarMensaje(textmensaje.getText(), codigoActivo);
 				ponerChat();
+				textmensaje.setText("");
 			}
 		});
 		GridBagConstraints gbc_enviarMensaje = new GridBagConstraints();
@@ -791,7 +794,9 @@ public class ChatWindow implements InterfazVistas{
     	}
     	lblnombrechat.setText(actNick);
     	java.util.List<Mensaje> m = controlador.getMensajes(codigoActivo);
+    	System.out.println("------------------------------------");
     	m.stream().forEach( mes -> System.out.println(mes.getTexto()));
+    	System.out.println("------------------------------------");
 	}
 	
 	public void setChats(LinkedList<Contacto> listaModel) {

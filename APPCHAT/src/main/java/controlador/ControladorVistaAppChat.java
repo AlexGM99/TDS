@@ -56,7 +56,7 @@ import persistencia.IAdaptadorContactoIndividualDAO;
 import persistencia.IAdaptadorMensajeDAO;
 import persistencia.IAdaptadorUsuarioDAO;
 
-public class ControladorVistaAppChat implements Observer {
+public class ControladorVistaAppChat {
 	public static final String REGISTRO_CORRECTO = "U've been registered into the Dark Lord Army!!!!!!!!!";
 	public static final String REGISTRO_NOMBRE_YA_USADO = "User already registered";
 
@@ -459,7 +459,10 @@ public class ControladorVistaAppChat implements Observer {
 	public void enviarMensaje(String mensaje, int codigo) {
 		Mensaje m = usuarioActual.addMiMensaje(mensaje, codigo);
 		adaptadorMensaje.registrarMensaje(m);
-		adaptadorContacto.actualizarContactoIndividual(usuarioActual.getContactoI(codigo));
+		if (m.getTipoReceptor().equals(TipoContacto.INDIVIDUAL))
+			adaptadorContacto.actualizarContactoIndividual(usuarioActual.getContactoI(codigo));
+		else
+			adaptadorGrupo.actualizarContactoGrupo(usuarioActual.getContactoG(codigo));
 		adaptadorUsuario.actualizarUsuario(usuarioActual);
 		List<Usuario> receptores = catalogoUsuarios.enviarMensajeAcontactos(codigo, usuarioActual);
 		if (!receptores.isEmpty()) {
@@ -482,12 +485,11 @@ public class ControladorVistaAppChat implements Observer {
 				adaptadorUsuario.actualizarUsuario(u);
 			} else {
 				List<ContactoGrupo> gs = new LinkedList<ContactoGrupo>();
-				receptores.stream().forEach(receptor -> gs.add(receptor.addMensajeDelCG(m, usuarioActual, codigo)));
-				gs.stream().filter(grupo -> grupo != null).forEach(p -> adaptadorGrupo.actualizarContactoGrupo(p));
-				receptores.stream().forEach(p -> adaptadorUsuario.actualizarUsuario(p));
+				//receptores.stream().forEach(receptor -> gs.add(receptor.addMensajeDelCG(m, usuarioActual, codigo)));
+				//gs.stream().filter(grupo -> grupo != null).forEach(p -> adaptadorGrupo.actualizarContactoGrupo(p));
+				//receptores.stream().forEach(p -> adaptadorUsuario.actualizarUsuario(p));
 			}
 		}
-		// TODO actualizar vista de mensajes
 	}
 
 	public List<Contacto> buscarChats(String text) {
@@ -576,15 +578,5 @@ public class ControladorVistaAppChat implements Observer {
 		InterfazVistas antigua = interfaz;
 		interfaz = new LogIn(this);
 		antigua.exit();
-	}
-
-	@Override
-	public void update(Observable arg0, Object arg1) {
-		if (arg1 instanceof String) {
-			System.out.println("NombreObserver: Nombre ha cambiado a " + (String) arg1);
-		} else {
-			System.out.println("NombreObserver: Algo diferente ha cambiado!");
-		}
-
 	}
 }

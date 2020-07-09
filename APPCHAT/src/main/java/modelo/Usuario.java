@@ -212,8 +212,8 @@ public class Usuario {
 	
 	public KeyValue<Boolean, KeyValue<Mensaje, ContactoIndividual>> addMensajeDelCI(Mensaje m, Usuario emisor, int code) {
 		ContactoIndividual i = null;
-		if (existContactoI(code)) {
-			i = getContactoI(code);
+		if (GetSitieneContactoByMovil(emisor.getMovil()) != null) {
+			i = GetSitieneContactoByMovil(emisor.getMovil());
 			Mensaje m2 = new Mensaje(m, i);
 			i.addMensaje(m2);
 			new KeyValue<Mensaje, ContactoIndividual>(m2, i);
