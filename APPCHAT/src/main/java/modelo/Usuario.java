@@ -9,8 +9,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import Helpers.KeyValue;
+import interfazGrafica.Datos_Chat_Actual;
+
+// TODO Revisar implementación
+// TODO Faltan premium
+// TODO Faltan estadísticas
 
 public class Usuario {
 	private int codigo;
@@ -187,6 +194,59 @@ public class Usuario {
 			return "";
 		}
 	}
+	
+	public Mensaje addMiMensaje(String mensaje, int codigo) {
+		if (existContactoI(codigo)) { 
+			ContactoIndividual cI = getContactoI(codigo);
+			Mensaje m = new Mensaje(mensaje, new Date(), this.movil, cI, TipoContacto.INDIVIDUAL);
+			cI.addMensaje(m);
+			return m;
+		}else if (existContactoG(codigo)) {
+			ContactoGrupo cG = getContactoG(codigo);
+			Mensaje m = new Mensaje(mensaje, new Date(), this.movil, cG, TipoContacto.GRUPO);
+			cG.addMensaje(m);
+			return m;
+		}
+		return null;
+	}
+	
+	public KeyValue<Boolean, KeyValue<Mensaje, ContactoIndividual>> addMensajeDelCI(Mensaje m, Usuario emisor, int code) {
+		ContactoIndividual i = null;
+		if (GetSitieneContactoByMovil(emisor.getMovil()) != null) {
+			i = GetSitieneContactoByMovil(emisor.getMovil());
+			Mensaje m2 = new Mensaje(m, i);
+			i.addMensaje(m2);
+			new KeyValue<Mensaje, ContactoIndividual>(m2, i);
+			return new KeyValue<Boolean, KeyValue<Mensaje, ContactoIndividual>>(false, new KeyValue<Mensaje, ContactoIndividual>(m2, i)); 
+		} else {
+			i = new ContactoIndividual(emisor.getMovil(), emisor.getMovil());
+			Mensaje m2 = new Mensaje(m, i);
+			i.addMensaje(m2);
+			contactos.add(i);
+			new KeyValue<Mensaje, ContactoIndividual>(m2, i);
+			return new KeyValue<Boolean, KeyValue<Mensaje, ContactoIndividual>>(true, new KeyValue<Mensaje, ContactoIndividual>(m2, i)); 
+		}
+	}
+	
+	public ContactoGrupo addMensajeDelCG(Mensaje m, Usuario emisor, int code) {
+		ContactoGrupo g = null;
+		if (existContactoG(code)) {
+			g = getContactoG(code);
+			if (!g.getMensajes().contains(m))
+				g.addMensaje(m);
+		}
+		return g;
+	}
+	
+	public List<Mensaje> getMensajes(int codigo){
+		if (existContactoI(codigo)) {
+			return getContactoI(codigo).getMensajes();
+		}else if (existContactoG(codigo)) {
+			return getContactoG(codigo).getMensajes();
+		}
+		return new LinkedList<Mensaje>();
+	}
+	
 	
 	public ContactoGrupo registrarGrupo(String nombre, List<ContactoIndividual> contactos) {
 		List<String> c = new LinkedList<String>();
@@ -434,9 +494,6 @@ public class Usuario {
 	public List<Integer> getNumMensajesPorMes(int year, TipoContacto tipoContacto) {
 		// Creamos una lista donde guardaremos los mensajes enviados en cada mes
 		List<Integer> mensajesAnual = new ArrayList<Integer>(12);
-		for (int i = 0; i < 12; i++) {
-			mensajesAnual.add(0);
-		}
 		int mes;
 		switch (tipoContacto) {
 		case GRUPO:

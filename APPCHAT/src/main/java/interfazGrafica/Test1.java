@@ -81,7 +81,6 @@ public class Test1 {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					bombilla.setVisible(false);
-					System.out.println(i);
 				}
 			});
 		}

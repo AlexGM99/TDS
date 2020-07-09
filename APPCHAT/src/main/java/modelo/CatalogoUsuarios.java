@@ -192,6 +192,22 @@ public class CatalogoUsuarios {
 		return c;
 	}
 	
+	public List<Usuario> enviarMensajeAcontactos(int codigo, Usuario u) {
+		List<Usuario> receptores = new LinkedList<Usuario>();
+		if (u.existContactoI(codigo) && existeUsuario(u.getContactoI(codigo).getMovil())) {
+			receptores.add(getByMovil(u.getContactoI(codigo).getMovil()));
+			return receptores;
+		} else if (u.existContactoG(codigo)) {
+			receptores = 
+					u.getContactoG(codigo).getMiembros().stream().
+					filter( movil -> existeUsuario(movil) )
+					.map( c -> getByMovil(c))
+					.collect(Collectors.toList());
+			return receptores;
+		}
+		return receptores;
+	}
+	
 	public boolean existeUsuario(String telefono) {
 		return usuarios.containsKey(telefono);
 	}
