@@ -392,7 +392,10 @@ public class ChatWindow implements InterfazVistas{
 					else if ( ! controlador.cargarMensajes(filePath, formatDate))
 						JOptionPane.showMessageDialog(null, "There was an error loading your messages", "Boom!", JOptionPane.ERROR_MESSAGE);
 					for (ContactoIndividual it : controlador.getUsuarioActual().getContactos()) {
-						System.out.println(it.getMensajes());
+						System.out.println(it.getNombre() + ":" + it.getMensajes());
+					}
+					for (ContactoGrupo it : controlador.getUsuarioActual().getGrupos()) {
+						System.out.println(it.getNombre() + ":" + it.getMensajes());
 					}
 				}
 			}

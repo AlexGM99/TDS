@@ -110,11 +110,15 @@ public class CatalogoUsuarios {
 	}
 
 	public void registrarGrupoEnUsuarios(ContactoGrupo g) {
-		g.getMiembros().stream().forEach(m -> nuevoGrupoEnUser(getByMovil(m), g));
+		g.getMiembros().stream()
+			.filter(m -> existeUsuario(m))
+			.forEach(m -> nuevoGrupoEnUser(getByMovil(m), g));
 	}
 	
 	public void borrarGrupoUsers(ContactoGrupo g) {
-		g.getMiembros().stream().forEach(m->quitarGrupoUsers(getByMovil(m), g));
+		g.getMiembros().stream()
+			.filter(m -> existeUsuario(m))
+			.forEach(m->quitarGrupoUsers(getByMovil(m), g));
 	}
 	
 	public void quitarGrupoUsers( Usuario u, ContactoGrupo g) {

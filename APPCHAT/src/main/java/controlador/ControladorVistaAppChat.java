@@ -3,6 +3,7 @@ package controlador;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -538,16 +539,43 @@ public class ControladorVistaAppChat{
 				uAct = usuarioActual.getMovil();
 			else if (miembrosChat.contains(usuarioActual.getUsuario()))
 				uAct = usuarioActual.getUsuario();
-			if (uAct.equals(""))
+			if (uAct.equals("")) {
 				return false;
+			}
 			miembrosChat.remove(uAct);
 			// Se comprueba si es un grupo o un contactoIndividual
 			if (miembrosChat.size() != 1) {
 				// TODO Tratar caso grupo
-				/*tipoReceptor = TipoContacto.GRUPO;
-				List<>
-				crearGrupo("Grupo importado" + chat.get(0).getFecha().toString(),)*/
-				return false;
+				tipoReceptor = TipoContacto.GRUPO;
+				// Comprobar si la otra persona está guardada como contacto
+				List<Integer> contactos = new LinkedList<Integer>();
+				
+				boolean encontrado;
+				ContactoIndividual itC;
+				for (String itM : miembrosChat) {
+					Iterator<ContactoIndividual> it = usuarioActual.getContactos().iterator();
+					encontrado = false;
+					itC = null;
+					while (it.hasNext() && ! encontrado) {
+						itC = it.next();
+						if (itC.getNombre().equals(itM)) {
+							encontrado = true;
+						}
+					}
+					// Si no se tiene a la otra persona guardada se crea un contacto nuevo
+					if (! encontrado) {
+						itC = registrarContacto(itM, "imported" + itM + LocalDate.now());
+					}
+					contactos.add(itC.getCodigo());
+					
+				}
+				String nombreG = "Grupo importado el" + LocalDate.now();
+				crearGrupo(nombreG, contactos);
+				receptor = usuarioActual.getGrupos().stream()
+							.filter(g -> g.getNombre().equals(nombreG))
+							.collect(Collectors.toList())
+							.get(0);
+				
 			}
 			else {
 				tipoReceptor = TipoContacto.INDIVIDUAL;
@@ -584,7 +612,7 @@ public class ControladorVistaAppChat{
 		return true;
 	}
 	
-	// TODO Exportar contactos
+	// TERMINADO
 	public boolean exportarContactos(String filePath) {
 		// Obtener los contactos
 		Map<String, String> contactos = new HashMap<String, String>();
