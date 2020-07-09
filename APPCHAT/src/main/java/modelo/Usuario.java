@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import Helpers.KeyValue;
 import interfazGrafica.Datos_Chat_Actual;
 
 // TODO Revisar implementación
@@ -209,25 +210,41 @@ public class Usuario {
 		return null;
 	}
 	
-	public ContactoIndividual addMensajeDelCI(Mensaje m, Usuario emisor, int code) {
+	public KeyValue<Boolean, KeyValue<Mensaje, ContactoIndividual>> addMensajeDelCI(Mensaje m, Usuario emisor, int code) {
 		ContactoIndividual i = null;
 		if (existContactoI(code)) {
 			i = getContactoI(code);
-			i.addMensaje(m);
+			Mensaje m2 = new Mensaje(m, i);
+			i.addMensaje(m2);
+			new KeyValue<Mensaje, ContactoIndividual>(m2, i);
+			return new KeyValue<Boolean, KeyValue<Mensaje, ContactoIndividual>>(false, new KeyValue<Mensaje, ContactoIndividual>(m2, i)); 
 		} else {
 			i = new ContactoIndividual(emisor.getMovil(), emisor.getMovil());
-			i.addMensaje(m);
+			Mensaje m2 = new Mensaje(m, i);
+			i.addMensaje(m2);
+			contactos.add(i);
+			new KeyValue<Mensaje, ContactoIndividual>(m2, i);
+			return new KeyValue<Boolean, KeyValue<Mensaje, ContactoIndividual>>(true, new KeyValue<Mensaje, ContactoIndividual>(m2, i)); 
 		}
-		return i;
 	}
 	
 	public ContactoGrupo addMensajeDelCG(Mensaje m, Usuario emisor, int code) {
 		ContactoGrupo g = null;
 		if (existContactoG(code)) {
 			g = getContactoG(code);
-			g.addMensaje(m);
+			if (!g.getMensajes().contains(m))
+				g.addMensaje(m);
 		}
 		return g;
+	}
+	
+	public List<Mensaje> getMensajes(int codigo){
+		if (existContactoI(codigo)) {
+			return getContactoI(codigo).getMensajes();
+		}else if (existContactoG(codigo)) {
+			return getContactoG(codigo).getMensajes();
+		}
+		return new LinkedList<Mensaje>();
 	}
 	
 	public ContactoGrupo registrarGrupo(String nombre, List<ContactoIndividual> contactos) {

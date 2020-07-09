@@ -24,6 +24,14 @@ public class Mensaje {
 		this.tipoReceptor = grupo;
 	}
 
+	public Mensaje(Mensaje m, ContactoIndividual receptor) {
+		this.codigo = 0;
+		this.texto = m.texto;
+		this.hora = m.hora;
+		this.receptor = receptor;
+		this.tipoReceptor = m.tipoReceptor;
+	}
+	
 	public int getCodigo() {
 		return codigo;
 	}

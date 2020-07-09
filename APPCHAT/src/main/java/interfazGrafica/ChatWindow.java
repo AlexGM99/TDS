@@ -26,6 +26,7 @@ import controlador.ControladorVistaAppChat;
 import modelo.Contacto;
 import modelo.ContactoGrupo;
 import modelo.ContactoIndividual;
+import modelo.Mensaje;
 import modelo.Usuario;
 
 import javax.swing.border.BevelBorder;
@@ -604,6 +605,7 @@ public class ChatWindow implements InterfazVistas{
 			public void keyTyped(KeyEvent e) {
 				if (e.getKeyChar() == '\n' || e.getKeyChar() == '\r') {
 					controlador.enviarMensaje(textmensaje.getText(), codigoActivo);
+					ponerChat();
 				}
 			}
 		});
@@ -637,6 +639,7 @@ public class ChatWindow implements InterfazVistas{
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				controlador.enviarMensaje(textmensaje.getText(), codigoActivo);
+				ponerChat();
 			}
 		});
 		GridBagConstraints gbc_enviarMensaje = new GridBagConstraints();
@@ -787,6 +790,8 @@ public class ChatWindow implements InterfazVistas{
     		lblnombrechat.setIcon(img6);
     	}
     	lblnombrechat.setText(actNick);
+    	java.util.List<Mensaje> m = controlador.getMensajes(codigoActivo);
+    	m.stream().forEach( mes -> System.out.println(mes.getTexto()));
 	}
 	
 	public void setChats(LinkedList<Contacto> listaModel) {

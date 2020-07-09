@@ -32,6 +32,7 @@ import org.knowm.xchart.BitmapEncoder.BitmapFormat;
 
 import Descuentos.DescuentoCompuesto;
 import Descuentos.DescuentoSimple;
+import Helpers.KeyValue;
 import ViewModels.ViewModelDatosChat;
 import ViewModels.ViewModelGrupo;
 import interfazGrafica.ChatWindow;
@@ -55,19 +56,20 @@ import persistencia.IAdaptadorContactoIndividualDAO;
 import persistencia.IAdaptadorMensajeDAO;
 import persistencia.IAdaptadorUsuarioDAO;
 
-public class ControladorVistaAppChat implements Observer{
+public class ControladorVistaAppChat implements Observer {
 	public static final String REGISTRO_CORRECTO = "U've been registered into the Dark Lord Army!!!!!!!!!";
 	public static final String REGISTRO_NOMBRE_YA_USADO = "User already registered";
-	
-	
-	public static final List<String> MESES_YEAR = Arrays.asList(new String[] { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" });
+
+	public static final List<String> MESES_YEAR = Arrays.asList(new String[] { "Enero", "Febrero", "Marzo", "Abril",
+			"Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" });
 	public static final Color[] GRAFICA_HISTOGRAMA_COLOR = new Color[] { new Color(243, 180, 159) };
 	public static final String GRAFICA_HISTOGRAMA_PATH = "./Sample_Chart-H";
 	public static final BitmapFormat GRAFICA_HISTOGRAMA_FORMATO = BitmapFormat.PNG;
-	public static final Color[] GRAFICA_TARTA_COLORES = new Color[] { new Color(224, 68, 14), new Color(230, 105, 62), new Color(236, 143, 110), new Color(243, 180, 159), new Color(246, 199, 182) };
+	public static final Color[] GRAFICA_TARTA_COLORES = new Color[] { new Color(224, 68, 14), new Color(230, 105, 62),
+			new Color(236, 143, 110), new Color(243, 180, 159), new Color(246, 199, 182) };
 	public static final String GRAFICA_TARTA_PATH = "./Sample_Chart-G";
 	public static final BitmapFormat GRAFICA_TARTA_FORMATO = BitmapFormat.PNG;
-	
+
 	private AuxRender rendericer;
 	private static ControladorVistaAppChat unicaInstancia;
 	private IAdaptadorUsuarioDAO adaptadorUsuario;
@@ -82,16 +84,16 @@ public class ControladorVistaAppChat implements Observer{
 	private InterfazVistas interfaz;
 
 	private ControladorDescuentos controladorDescuentos;
-	
+
 	// TERMINADO
 	private ControladorVistaAppChat() {
 		// Inicializar adaptadores
 		inicializarAdaptadores();
 		// inicializar catalogos
 		inicializarCatalogos();
-		
+
 		rendericer = new AuxRender();
-		
+
 		controladorDescuentos = new ControladorDescuentos();
 	}
 
@@ -129,30 +131,32 @@ public class ControladorVistaAppChat implements Observer{
 	// TODO ordenar por fecha Mensaje y por nombre contacto
 	public boolean loginUser(String name, String pass) {
 		// loguear el usuario
-		if (catalogoUsuarios.logIn(name , pass) == CatalogoUsuarios.CODIGO_LOG_IN_OK)
+		if (catalogoUsuarios.logIn(name, pass) == CatalogoUsuarios.CODIGO_LOG_IN_OK)
 			usuarioActual = catalogoUsuarios.getUsuario(name);
-		else return false;
+		else
+			return false;
 		// Cambiamos la interfaz
 		changeToChatWindow();
 		// obtener los datos de chats e inicializar la ventana
 		ChatWindow chat = (ChatWindow) interfaz;
-		LinkedList<Contacto> lista = (LinkedList<Contacto>)getContactos();
+		LinkedList<Contacto> lista = (LinkedList<Contacto>) getContactos();
 		chat.setChats(lista);
 		return true;
 	}
 
 	// TERMINADO
-	public List<ContactoIndividual> getContactosByCodigos(List<Integer> codes){
+	public List<ContactoIndividual> getContactosByCodigos(List<Integer> codes) {
 		List<ContactoIndividual> contactos = usuarioActual.getContactos();
 		return contactos.stream().filter(p -> codes.contains(p.getCodigo())).collect(Collectors.toList());
 	}
+
 	// TERMINADO
 	public String RegisterUser(String nombre, Date fechanacimiento, String email, String movil, String usuario,
 			String contraseña, String imagen, String saludo) {
 		Usuario user;
 		if (catalogoUsuarios.getUsuario(movil) != null)
 			return REGISTRO_NOMBRE_YA_USADO;
-		
+
 		if (saludo.equals(""))
 			user = new Usuario(nombre, fechanacimiento, email, movil, usuario, contraseña, imagen);
 		else
@@ -163,7 +167,7 @@ public class ControladorVistaAppChat implements Observer{
 		changeToChatWindow();
 		return REGISTRO_CORRECTO;
 	}
-	
+
 	// TERMINADO
 	public boolean changePhoto(String ruta) {
 		usuarioActual.setImagen(ruta);
@@ -171,13 +175,14 @@ public class ControladorVistaAppChat implements Observer{
 		adaptadorUsuario.actualizarUsuario(usuarioActual);
 		return true;
 	}
-	
+
 	// TERMINADO
 	public boolean changeGreeting(String greeting) {
 		usuarioActual.setSaludo(greeting);
 		adaptadorUsuario.actualizarUsuario(usuarioActual);
 		return true;
 	}
+
 	// TERMINADO
 	public String getGreeting() {
 		return usuarioActual.getSaludo();
@@ -189,35 +194,34 @@ public class ControladorVistaAppChat implements Observer{
 		interfaz = new Register(this);
 		antigua.exit();
 	}
-	
+
 	// TERMINADO
 	public void changeToLogin() {
 		InterfazVistas antigua = interfaz;
 		interfaz = new LogIn(this);
 		antigua.exit();
 	}
-	
+
 	// TERMINADO
-	public void changeToChatWindow()
-	{
+	public void changeToChatWindow() {
 		InterfazVistas antigua = interfaz;
 		interfaz = new ChatWindow(this, usuarioActual);
 		antigua.exit();
 	}
-	
+
 	// TERMINADO
 	public boolean soypremium() {
 		return usuarioActual.isPremium();
 	}
-	
+
 	// TERMINADO
 	public DescuentoSimple getMejorDescuento() {
 		DescuentoCompuesto descuentos = controladorDescuentos.getDescuentosActuales();
 		double max = 0.0;
 		DescuentoSimple mejorDescuento = null;
 		List<DescuentoSimple> simples = descuentos.getdescuento();
-		for(DescuentoSimple s: simples) {
-			if(Double.parseDouble(s.getCantidad())>max){
+		for (DescuentoSimple s : simples) {
+			if (Double.parseDouble(s.getCantidad()) > max) {
 				{
 					max = Double.parseDouble(s.getCantidad());
 					mejorDescuento = s;
@@ -226,80 +230,81 @@ public class ControladorVistaAppChat implements Observer{
 		}
 		return mejorDescuento;
 	}
-	
+
 	// TERMINADO
 	public void vendoMiAlmaPorPremium() {
 		usuarioActual.setPremium(true);
 		adaptadorUsuario.actualizarUsuario(usuarioActual);
 		catalogoUsuarios.addUsuario(usuarioActual);
 	}
-	
+
 	// TERMINADO
 	public String getImage(ContactoIndividual cont) {
 		String tel = cont.getMovil();
 		return catalogoUsuarios.getUsuario(tel).getImagen();
 	}
-	
+
 	// TERMINADO
-	public String getImage(int code) { 
+	public String getImage(int code) {
 		ContactoIndividual cI = usuarioActual.getContactoI(code);
-		if (cI!=null)
-		{
+		if (cI != null) {
 			Usuario usu = catalogoUsuarios.getUsuario(cI.getMovil());
 			if (usu != null)
 				return usu.getImagen();
 		}
 		return "GRUPO";
 	}
-	
+
 	// TERMINADO
 	public String getUserNick(ContactoIndividual cont) {
 		String tel = cont.getMovil();
 		return catalogoUsuarios.getUserName(tel);
 	}
-	
+
 	// TERMINADO
 	public String getUserNick(int code) {
 		return catalogoUsuarios.getUserName(code);
 	}
-	
+
 	// TERMINADO
 	public int getCode(ContactoIndividual cont) {
 		return cont.getCodigo();
-		//String tel = cont.getMovil();
-		//return catalogoUsuarios.getCodigo(tel);
+		// String tel = cont.getMovil();
+		// return catalogoUsuarios.getCodigo(tel);
 	}
-	
+
 	// TERMINADO
 	public boolean existeUsuario(String telefono) {
-		if (telefono == null) return false;
+		if (telefono == null)
+			return false;
 		return catalogoUsuarios.existeUsuario(telefono);
 	}
-	
+
 	// TERMINADO
-	public List<Contacto> getContactos(){
+	public List<Contacto> getContactos() {
 		LinkedList<Contacto> contactos = new LinkedList<Contacto>();
-		usuarioActual.getContactos().stream().
-									forEach(cont -> contactos.add(cont));
+		usuarioActual.getContactos().stream().forEach(cont -> contactos.add(cont));
 		usuarioActual.getGrupos().stream().forEach(cont -> contactos.add(cont));
 		return contactos;
 	}
-	
+
 	// TERMINADO
 	public Usuario getUsuarioActual() {
 		return this.usuarioActual;
 	}
-	
+
 	// TERMINADO
-	public List<ContactoIndividual> getContactoIndividuales(){
+	public List<ContactoIndividual> getContactoIndividuales() {
 		LinkedList<ContactoIndividual> contactos = new LinkedList<ContactoIndividual>();
-		usuarioActual.getContactos().stream().
-									forEach(cont -> addifUser(contactos, cont));
+		usuarioActual.getContactos().stream().forEach(cont -> addifUser(contactos, cont));
 		return contactos;
 	}
+
 	private void addifUser(LinkedList<ContactoIndividual> c, ContactoIndividual ci) {
-		if (existeUsuario(ci.getMovil())) c.add(ci);
+		if (existeUsuario(ci.getMovil()))
+			c.add(ci);
 	}
+
 	// TERMINADO
 	public ViewModelDatosChat getDatos(int codigo) {
 		if (usuarioActual.existContactoI(codigo))
@@ -308,40 +313,45 @@ public class ControladorVistaAppChat implements Observer{
 			return catalogoUsuarios.getDatosVentanaGrupo(codigo, usuarioActual, unicaInstancia);
 		return null;
 	}
-	
+
 	public ViewModelGrupo getViewGrupo(int codigo) {
 		ContactoGrupo g;
-		if ( (g = usuarioActual.getContactoG(codigo)) != null) {
-			
-			List<ContactoIndividual> grupo = catalogoUsuarios.getContactosAunqueNoExistenEnUsuario(usuarioActual, g.getMiembros());
-			
-			List<ContactoIndividual> noGrupo = usuarioActual.getContactos().stream().filter( p -> !grupo.contains(p) && existeUsuario(p.getMovil())).collect(Collectors.toList());
-			return new ViewModelGrupo(noGrupo, new ContactoIndividual(usuarioActual.getNombre(), usuarioActual.getMovil()), g.getNombre(), unicaInstancia, grupo, g.getCodigo()); 
+		if ((g = usuarioActual.getContactoG(codigo)) != null) {
+
+			List<ContactoIndividual> grupo = catalogoUsuarios.getContactosAunqueNoExistenEnUsuario(usuarioActual,
+					g.getMiembros());
+
+			List<ContactoIndividual> noGrupo = usuarioActual.getContactos().stream()
+					.filter(p -> !grupo.contains(p) && existeUsuario(p.getMovil())).collect(Collectors.toList());
+			return new ViewModelGrupo(noGrupo,
+					new ContactoIndividual(usuarioActual.getNombre(), usuarioActual.getMovil()), g.getNombre(),
+					unicaInstancia, grupo, g.getCodigo());
 		}
 		return null;
 	}
-	
-	//TERMINADO
+
+	// TERMINADO
 	public List<ContactoIndividual> setContactosFilter(List<Integer> contactos, String nombre) {
-		LinkedList<ContactoIndividual> contactosI = new LinkedList<ContactoIndividual>(getContactosByCodigos(contactos));
-		return contactosI.stream()
-				.filter(cont -> contenido(cont.getNombre(), nombre))
-				.collect(Collectors.toList());
+		LinkedList<ContactoIndividual> contactosI = new LinkedList<ContactoIndividual>(
+				getContactosByCodigos(contactos));
+		return contactosI.stream().filter(cont -> contenido(cont.getNombre(), nombre)).collect(Collectors.toList());
 	}
+
 	// TERMINADO
 	public boolean contenido(String contenedorB, String contenidoB) {
 		int i = 0;
-		if (contenidoB.length() > contenedorB.length()) return false;
+		if (contenidoB.length() > contenedorB.length())
+			return false;
 		String contenedor = contenedorB.toLowerCase();
 		String contenido = contenidoB.toLowerCase();
-		for (; i< contenedor.length(); i++) {
+		for (; i < contenedor.length(); i++) {
 			if (contenedor.startsWith(contenido, i)) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
 	// TERMINADO
 	public void registrarContacto(String usuario, String telefono) {
 		ContactoIndividual cont = new ContactoIndividual(usuario, telefono);
@@ -351,11 +361,11 @@ public class ControladorVistaAppChat implements Observer{
 		ChatWindow chat = (ChatWindow) interfaz;
 		chat.addChat(cont);
 	}
-	
-	//TERMINADO
+
+	// TERMINADO
 	public boolean crearGrupo(String nombre, List<Integer> contactos) {
 		ContactoGrupo creado = usuarioActual.registrarGrupo(nombre, getContactosByCodigos(contactos));
-		if (creado!=null) {
+		if (creado != null) {
 			adaptadorGrupo.registrarContactoGrupo(creado);
 			adaptadorUsuario.actualizarUsuario(usuarioActual);
 			catalogoUsuarios.registrarGrupoEnUsuarios(creado);
@@ -364,190 +374,205 @@ public class ControladorVistaAppChat implements Observer{
 		}
 		return creado != null;
 	}
-	
-	//TERMINADO
+
+	// TERMINADO
 	public boolean ModificarGrupo(String nombre, List<Integer> contactos, int code) {
 		ContactoGrupo creado = usuarioActual.getContactoG(code);
-		ContactoGrupo noModificado =  new ContactoGrupo(creado);
-		if (creado!=null) {
+		ContactoGrupo noModificado = new ContactoGrupo(creado);
+		if (creado != null) {
 			creado.setNombre(nombre);
-			creado.setMiembros(getContactosByCodigos(contactos).stream().map(p->p.getMovil()).collect(Collectors.toSet()));
+			creado.setMiembros(
+					getContactosByCodigos(contactos).stream().map(p -> p.getMovil()).collect(Collectors.toSet()));
 			usuarioActual.DeleteContactoG(code);
 			usuarioActual.addGrupo(creado);
 			catalogoUsuarios.registrarGrupoEnUsuarios(creado);
 			catalogoUsuarios.deleteEnUsuarios(creado.getMiembros(), noModificado.getMiembros(), code);
 			adaptadorGrupo.actualizarContactoGrupo(creado);
 			ChatWindow chat = (ChatWindow) interfaz;
-			
+
 			chat.setChats(new LinkedList<Contacto>(getContactos()));
 		}
 		return creado != null;
 	}
-	//TERMINADO
+
+	// TERMINADO
 	public boolean eliminarContacto(int codigo) {
 		boolean borrado = false;
 		ContactoGrupo g;
-		if (usuarioActual.existContactoI(codigo))
-		{
-			 borrado = usuarioActual.DeleteContactoI(codigo);
-		}
-		else if ((g =usuarioActual.getContactoG(codigo)) != null){
+		if (usuarioActual.existContactoI(codigo)) {
+			borrado = usuarioActual.DeleteContactoI(codigo);
+		} else if ((g = usuarioActual.getContactoG(codigo)) != null) {
 			if (g.getAdmin().getCodigo() == usuarioActual.getCodigo()) {
 				catalogoUsuarios.borrarGrupoUsers(g);
 				borrado = usuarioActual.DeleteContactoG(codigo);
 				adaptadorUsuario.actualizarUsuario(usuarioActual);
 				adaptadorGrupo.borrarContactoGrupo(g);
-			}
-			else
+			} else
 				borrado = false;
-		}
-		else {
+		} else {
 			borrado = false;
 		}
 		if (borrado) {
 			adaptadorUsuario.actualizarUsuario(usuarioActual);
 			ChatWindow chat = (ChatWindow) interfaz;
-			LinkedList<Contacto> lista = (LinkedList<Contacto>)getContactos();
+			LinkedList<Contacto> lista = (LinkedList<Contacto>) getContactos();
 			chat.setChats(lista);
-			}
-		
+		}
+
 		return borrado;
 	}
-	
-	//TODO Actualizar vista de chat
+
+	// TODO Actualizar vista de chat
 	public void eliminarMensajes(int codigo) {
 		ContactoGrupo g;
 		ContactoIndividual c;
-		if ((c =usuarioActual.getContactoI(codigo)) != null)
-		{
-			 c.setMensajes(new LinkedList<Mensaje>());
-			 adaptadorContacto.actualizarContactoIndividual(c);
-		}
-		else if ((g =usuarioActual.getContactoG(codigo)) != null){
+		if ((c = usuarioActual.getContactoI(codigo)) != null) {
+			c.setMensajes(new LinkedList<Mensaje>());
+			adaptadorContacto.actualizarContactoIndividual(c);
+		} else if ((g = usuarioActual.getContactoG(codigo)) != null) {
 			g.setMensajes(new LinkedList<Mensaje>());
 			adaptadorGrupo.actualizarContactoGrupo(g);
 		}
 	}
-	
+
 	public boolean isContactoInd(int codigo) {
 		return (usuarioActual.existContactoI(codigo));
 	}
-	
+
 	public boolean isContactoG(int codigo) {
 		return (usuarioActual.existContactoG(codigo));
 	}
-	
+
 	public boolean soyAdminG(int codigo) {
 		return (usuarioActual.getContactoG(codigo).isAdmin(usuarioActual.getMovil()));
 	}
-	
+
 	public String GetMovilI(int codigo) {
 		return usuarioActual.getContactoI(codigo).getMovil();
 	}
-	
+
 	public void actualizarContactoI(int codigo, String nick) {
 		ContactoIndividual i = usuarioActual.modifyContactoI(codigo, nick);
 		adaptadorContacto.actualizarContactoIndividual(i);
 	}
-	
+
 	public void enviarMensaje(String mensaje, int codigo) {
 		Mensaje m = usuarioActual.addMiMensaje(mensaje, codigo);
-		adaptadorUsuario.actualizarUsuario(usuarioActual);
+		adaptadorMensaje.registrarMensaje(m);
 		adaptadorContacto.actualizarContactoIndividual(usuarioActual.getContactoI(codigo));
+		adaptadorUsuario.actualizarUsuario(usuarioActual);
 		List<Usuario> receptores = catalogoUsuarios.enviarMensajeAcontactos(codigo, usuarioActual);
 		if (!receptores.isEmpty()) {
-			if (m.getTipoReceptor().equals(TipoContacto.INDIVIDUAL))
-			{
+			if (m.getTipoReceptor().equals(TipoContacto.INDIVIDUAL)) {
 				Usuario u = receptores.get(0);
-				ContactoIndividual ci = u.addMensajeDelCI(m, usuarioActual, codigo);
+				KeyValue<Boolean, KeyValue<Mensaje,ContactoIndividual>> ciV = u.addMensajeDelCI(m, usuarioActual, codigo);
+				ContactoIndividual ci = ciV.getValue().getValue();
+				if (ciV.getKey()) {
+					List<Mensaje> mess = ci.getMensajes();
+					ci.setMensajes(new LinkedList<Mensaje>());
+					adaptadorMensaje.registrarMensaje(ciV.getValue().getKey());
+					adaptadorContacto.registrarContactoIndividual(ci);
+					ci.setMensajes(mess);
+				}
+				else {
+					adaptadorMensaje.registrarMensaje(ciV.getValue().getKey());
+				}
 				adaptadorContacto.actualizarContactoIndividual(ci);
+
 				adaptadorUsuario.actualizarUsuario(u);
 			} else {
 				List<ContactoGrupo> gs = new LinkedList<ContactoGrupo>();
-				receptores.stream().forEach( receptor -> gs.add(receptor.addMensajeDelCG(m, usuarioActual, codigo)));
-				receptores.stream().forEach( p -> adaptadorUsuario.actualizarUsuario(p));
-				gs.stream().forEach(p -> adaptadorGrupo.actualizarContactoGrupo(p));
+				receptores.stream().forEach(receptor -> gs.add(receptor.addMensajeDelCG(m, usuarioActual, codigo)));
+				gs.stream().filter(grupo -> grupo != null).forEach(p -> adaptadorGrupo.actualizarContactoGrupo(p));
+				receptores.stream().forEach(p -> adaptadorUsuario.actualizarUsuario(p));
 			}
 		}
 		// TODO actualizar vista de mensajes
 	}
-		
-	
-	public List<Contacto> buscarChats(String text){
+
+	public List<Contacto> buscarChats(String text) {
 		return usuarioActual.RecuperarContactosFiltrados(text);
-		
+
 	}
-	
+
+	public List<Mensaje> getMensajes(int codigo) {
+		return usuarioActual.getMensajes(codigo);
+	}
+
 	// TODO Funcion para buscar un mensaje en un chat normal
 	public List<Mensaje> buscarMensajeContacto(String texto, LocalDate fecha1, LocalDate fecha2) {
 		// Cualquiera de los parámetros puede ser opcional
 		return null;
 	}
-	
+
 	public void informacionUso() {
 		// Calcular mensajes enviados a contactos y a grupos en el año actual
-		List<Integer> numMensajesContactosYear = usuarioActual.getNumMensajesPorMes(LocalDate.now().getYear(), TipoContacto.INDIVIDUAL);
-		List<Integer> numMensajesGruposYear = usuarioActual.getNumMensajesPorMes(LocalDate.now().getYear(), TipoContacto.GRUPO);
+		List<Integer> numMensajesContactosYear = usuarioActual.getNumMensajesPorMes(LocalDate.now().getYear(),
+				TipoContacto.INDIVIDUAL);
+		List<Integer> numMensajesGruposYear = usuarioActual.getNumMensajesPorMes(LocalDate.now().getYear(),
+				TipoContacto.GRUPO);
 		List<Integer> numMensajesTotalYear = new ArrayList<Integer>(12);
 		for (int i = 0; i < 12; i++) {
 			numMensajesTotalYear.set(i, numMensajesContactosYear.get(i) + numMensajesGruposYear.get(i));
 		}
 		// Crear histograma con los mensajes por mes del user
-	    //CategoryChart graficaHistograma = new CategoryChartBuilder().width(800).height(600).title("Histograma de prueba").xAxisTitle("Mes").build();	 
-	    CategoryChart graficaHistograma = new CategoryChartBuilder().xAxisTitle("Mes").build();	 
-	    // Personalizar gráfico
-	    graficaHistograma.getStyler().setLegendPosition(LegendPosition.InsideNW);
-	    graficaHistograma.getStyler().setHasAnnotations(true);
-	    graficaHistograma.getStyler().setSeriesColors(GRAFICA_HISTOGRAMA_COLOR);
-	    // Valores
-	    graficaHistograma.addSeries("Mensajes enviados", MESES_YEAR, numMensajesTotalYear);	 
-	    // Guardar	    
-	    try {
-	    	BitmapEncoder.saveBitmap(graficaHistograma, GRAFICA_HISTOGRAMA_PATH, GRAFICA_HISTOGRAMA_FORMATO);
+		// CategoryChart graficaHistograma = new
+		// CategoryChartBuilder().width(800).height(600).title("Histograma de
+		// prueba").xAxisTitle("Mes").build();
+		CategoryChart graficaHistograma = new CategoryChartBuilder().xAxisTitle("Mes").build();
+		// Personalizar gráfico
+		graficaHistograma.getStyler().setLegendPosition(LegendPosition.InsideNW);
+		graficaHistograma.getStyler().setHasAnnotations(true);
+		graficaHistograma.getStyler().setSeriesColors(GRAFICA_HISTOGRAMA_COLOR);
+		// Valores
+		graficaHistograma.addSeries("Mensajes enviados", MESES_YEAR, numMensajesTotalYear);
+		// Guardar
+		try {
+			BitmapEncoder.saveBitmap(graficaHistograma, GRAFICA_HISTOGRAMA_PATH, GRAFICA_HISTOGRAMA_FORMATO);
 		} catch (IOException e3) {
 			// TODO Manejar excepción
 			e3.printStackTrace();
 		}
-		
+
 		// Obtener los 6 grupos con más mensajes enviados por el user
 		Map<String, Integer> mensajesPorGrupo = usuarioActual.getNumMensajesEnviadosPorGrupo();
 		Map<String, Integer> mensajesGruposMasEnviados = mensajesPorGrupo.entrySet().stream()
-				.sorted(Map.Entry.comparingByValue(Collections.reverseOrder()))
-				.limit(6)
-				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));	
-		
+				.sorted(Map.Entry.comparingByValue(Collections.reverseOrder())).limit(6)
+				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+
 		// Obtener el % que representan del total
-		int numMensajesTotal = usuarioActual.getNumMensajes(TipoContacto.INDIVIDUAL) + usuarioActual.getNumMensajes(TipoContacto.GRUPO);
-		
-		Map<String, Double> porcentajesMensajesGrupos = new LinkedHashMap<String, Double>(mensajesGruposMasEnviados.size());
+		int numMensajesTotal = usuarioActual.getNumMensajes(TipoContacto.INDIVIDUAL)
+				+ usuarioActual.getNumMensajes(TipoContacto.GRUPO);
+
+		Map<String, Double> porcentajesMensajesGrupos = new LinkedHashMap<String, Double>(
+				mensajesGruposMasEnviados.size());
 		for (String it : mensajesGruposMasEnviados.keySet()) {
 			porcentajesMensajesGrupos.put(it, new Double(mensajesGruposMasEnviados.get(it)));
 		}
-		porcentajesMensajesGrupos.entrySet().stream()
-			.forEach(e -> e.setValue(e.getValue() * 100 / numMensajesTotal));
-		
+		porcentajesMensajesGrupos.entrySet().stream().forEach(e -> e.setValue(e.getValue() * 100 / numMensajesTotal));
+
 		// Crear diagrama de tarta con los 6 grupos
-	    //PieChart graficaTarta = new PieChartBuilder().width(800).height(600).title("Tarta de prueba").build();
-	    PieChart graficaTarta = new PieChartBuilder().build();
-	    // Personalizar gráfico
-	    graficaTarta.getStyler().setSeriesColors(GRAFICA_TARTA_COLORES);
-	    graficaTarta.getStyler().setLegendPosition(LegendPosition.InsideNW);
-	    // Valores
-	    for (String it : porcentajesMensajesGrupos.keySet()) {
-	    	graficaTarta.addSeries(it, porcentajesMensajesGrupos.get(it));
+		// PieChart graficaTarta = new
+		// PieChartBuilder().width(800).height(600).title("Tarta de prueba").build();
+		PieChart graficaTarta = new PieChartBuilder().build();
+		// Personalizar gráfico
+		graficaTarta.getStyler().setSeriesColors(GRAFICA_TARTA_COLORES);
+		graficaTarta.getStyler().setLegendPosition(LegendPosition.InsideNW);
+		// Valores
+		for (String it : porcentajesMensajesGrupos.keySet()) {
+			graficaTarta.addSeries(it, porcentajesMensajesGrupos.get(it));
 		}
-	    // Guardar	    
-	    try {
+		// Guardar
+		try {
 			BitmapEncoder.saveBitmap(graficaTarta, GRAFICA_TARTA_PATH, GRAFICA_TARTA_FORMATO);
 		} catch (IOException e3) {
 			// TODO Manejar excepción
 			e3.printStackTrace();
 		}
 	}
-	
+
 	// TERMINADO
-	public void cerrarSesion()
-	{
+	public void cerrarSesion() {
 		InterfazVistas antigua = interfaz;
 		interfaz = new LogIn(this);
 		antigua.exit();
@@ -556,12 +581,10 @@ public class ControladorVistaAppChat implements Observer{
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		if (arg1 instanceof String) {
-			System.out.println(
-			"NombreObserver: Nombre ha cambiado a " + (String)arg1);
-			}else{
-			System.out.println(
-			"NombreObserver: Algo diferente ha cambiado!");
-			}
-		
+			System.out.println("NombreObserver: Nombre ha cambiado a " + (String) arg1);
+		} else {
+			System.out.println("NombreObserver: Algo diferente ha cambiado!");
+		}
+
 	}
 }
