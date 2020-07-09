@@ -43,15 +43,11 @@ public class PruebaPersistenciaMensaje {
 		adaptadorM.borrarMensaje(m);
 	}
 
-	/*@Test
-	public void testBorrarMensaje() {
-		fail("Not yet implemented");
-	}*/
-
 	@Test
 	public void testActualizarMensaje() {
-		Mensaje m = new Mensaje("Texto Antes", Date.from(Instant.now()), "TlfEmisorAntes", new ContactoIndividual("ContactoAntes", "MoovilContactoAntes"), TipoContacto.INDIVIDUAL);
-		Mensaje m2 = new Mensaje("Texto Despues", Date.from(Instant.now()), "TlfEmisorDespues", new ContactoIndividual("ContactoDespues", "MoovilContactoDespues"), TipoContacto.INDIVIDUAL);
+		ContactoIndividual c = new ContactoIndividual("ContactoAntes", "MoovilContactoAntes");
+		Mensaje m = new Mensaje("Texto Antes", Date.from(Instant.now()), "TlfEmisorAntes", c, TipoContacto.INDIVIDUAL);
+		Mensaje m2 = new Mensaje("Texto Despues", Date.from(Instant.now()), "TlfEmisorDespues", c, TipoContacto.INDIVIDUAL);
 		
 		adaptadorM.registrarMensaje(m);
 		
@@ -59,17 +55,13 @@ public class PruebaPersistenciaMensaje {
 		m.setTexto(m2.getTexto());
 		m.setHora(m2.getHora());
 		m.setTlfEmisor(m2.getTlfEmisor());
-		m.setReceptor(m2.getReceptor());
+		//m.setReceptor(c2);
 		adaptadorM.actualizarMensaje(m);
 		
 		assertEquals("Prueba Actualizar Mensaje", m2.toString(),adaptadorM.recuperarMensaje(m.getCodigo()).toString());
+		
+		adaptadorM.borrarMensaje(m);
 	}
 
-	/*
-	 * @Test public void testRecuperarMensaje() { fail("Not yet implemented"); }
-	 * 
-	 * @Test public void testRecuperarTodosMensajes() { fail("Not yet implemented");
-	 * }
-	 */
 
 }

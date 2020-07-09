@@ -129,6 +129,7 @@ public class ControladorVistaAppChat{
 		List<ContactoIndividual> contactos = usuarioActual.getContactos();
 		return contactos.stream().filter(p -> codes.contains(p.getCodigo())).collect(Collectors.toList());
 	}
+	
 	// TERMINADO
 	public String RegisterUser(String nombre, Date fechanacimiento, String email, String movil, String usuario,
 			String contraseña, String imagen, String saludo) {
@@ -147,6 +148,8 @@ public class ControladorVistaAppChat{
 		return REGISTRO_CORRECTO;
 	}
 	
+	
+	
 	// TERMINADO
 	public boolean changePhoto(String ruta) {
 		usuarioActual.setImagen(ruta);
@@ -161,6 +164,7 @@ public class ControladorVistaAppChat{
 		adaptadorUsuario.actualizarUsuario(usuarioActual);
 		return true;
 	}
+	
 	// TERMINADO
 	public String getGreeting() {
 		return usuarioActual.getSaludo();
@@ -311,6 +315,7 @@ public class ControladorVistaAppChat{
 				.filter(cont -> contenido(cont.getNombre(), nombre))
 				.collect(Collectors.toList());
 	}
+	
 	// TERMINADO
 	public boolean contenido(String contenedorB, String contenidoB) {
 		int i = 0;
@@ -336,20 +341,40 @@ public class ControladorVistaAppChat{
 		return cont;
 	}
 	
-	// TERMINADO
-	public void registrarMensaje(String texto, String emisor, Date hora, Contacto receptor, TipoContacto tipoReceptor) {
-		Mensaje m = new Mensaje(texto, hora, emisor, receptor, tipoReceptor);
-		receptor.addMensaje(m);
-		adaptadorMensaje.registrarMensaje(m);
-		if (tipoReceptor.equals(TipoContacto.GRUPO)) {
-			adaptadorGrupo.actualizarContactoGrupo((ContactoGrupo) receptor);
-		}
-		else if (tipoReceptor.equals(TipoContacto.INDIVIDUAL)) {
-			adaptadorContacto.actualizarContactoIndividual((ContactoIndividual) receptor);
-		}
-		
+	public void actualizarContactoI(int codigo, String nick) {
+		ContactoIndividual i = usuarioActual.modifyContactoI(codigo, nick);
+		adaptadorContacto.actualizarContactoIndividual(i);
 	}
+
+	public boolean eliminarContacto(int codigo) {
+		boolean borrado = false;
+		ContactoGrupo g;
+		if (usuarioActual.existContactoI(codigo))
+		{
+			 borrado = usuarioActual.DeleteContactoI(codigo);
+		}
+		else if ((g =usuarioActual.getContactoG(codigo)) != null){
+			if (g.getAdmin().getCodigo() == usuarioActual.getCodigo()) {
+				catalogoUsuarios.borrarGrupoUsers(g);
+				borrado = usuarioActual.DeleteContactoG(codigo);
+				adaptadorGrupo.borrarContactoGrupo(g);
+			}
+			else
+				borrado = false;
+		}
+		else {
+			borrado = false;
+		}
+		if (borrado) {
+			adaptadorUsuario.actualizarUsuario(usuarioActual);
+			ChatWindow chat = (ChatWindow) interfaz;
+			LinkedList<Contacto> lista = (LinkedList<Contacto>)getContactos();
+			chat.setChats(lista);
+			}
 		
+		return borrado;
+	}
+	
 	//TERMINADO
 	public boolean crearGrupo(String nombre, List<Integer> contactos) {
 		ContactoGrupo creado = usuarioActual.registrarGrupo(nombre, getContactosByCodigos(contactos));
@@ -381,50 +406,6 @@ public class ControladorVistaAppChat{
 		return creado != null;
 	}
 	
-	public boolean eliminarContacto(int codigo) {
-		boolean borrado = false;
-		ContactoGrupo g;
-		if (usuarioActual.existContactoI(codigo))
-		{
-			 borrado = usuarioActual.DeleteContactoI(codigo);
-		}
-		else if ((g =usuarioActual.getContactoG(codigo)) != null){
-			if (g.getAdmin().getCodigo() == usuarioActual.getCodigo()) {
-				catalogoUsuarios.borrarGrupoUsers(g);
-				borrado = usuarioActual.DeleteContactoG(codigo);
-				adaptadorGrupo.borrarContactoGrupo(g);
-			}
-			else
-				borrado = false;
-		}
-		else {
-			borrado = false;
-		}
-		if (borrado) {
-			adaptadorUsuario.actualizarUsuario(usuarioActual);
-			ChatWindow chat = (ChatWindow) interfaz;
-			LinkedList<Contacto> lista = (LinkedList<Contacto>)getContactos();
-			chat.setChats(lista);
-			}
-		
-		return borrado;
-	}
-	
-	//TODO Actualizar vista de chat
-	public void eliminarMensajes(int codigo) {
-		ContactoGrupo g;
-		ContactoIndividual c;
-		if ((c =usuarioActual.getContactoI(codigo)) != null)
-		{
-			 c.setMensajes(new LinkedList<Mensaje>());
-			 adaptadorContacto.actualizarContactoIndividual(c);
-		}
-		else if ((g =usuarioActual.getContactoG(codigo)) != null){
-			g.setMensajes(new LinkedList<Mensaje>());
-			adaptadorGrupo.actualizarContactoGrupo(g);
-		}
-	}
-	
 	public boolean isContactoInd(int codigo) {
 		return (usuarioActual.existContactoI(codigo));
 	}
@@ -441,11 +422,35 @@ public class ControladorVistaAppChat{
 		return usuarioActual.getContactoI(codigo).getMovil();
 	}
 	
-	public void actualizarContactoI(int codigo, String nick) {
-		ContactoIndividual i = usuarioActual.modifyContactoI(codigo, nick);
-		adaptadorContacto.actualizarContactoIndividual(i);
+	// TERMINADO
+	public void registrarMensaje(String texto, String emisor, Date hora, Contacto receptor, TipoContacto tipoReceptor) {
+		Mensaje m = new Mensaje(texto, hora, emisor, receptor, tipoReceptor);
+		receptor.addMensaje(m);
+		adaptadorMensaje.registrarMensaje(m);
+		if (tipoReceptor.equals(TipoContacto.GRUPO)) {
+			adaptadorGrupo.actualizarContactoGrupo((ContactoGrupo) receptor);
+		}
+		else if (tipoReceptor.equals(TipoContacto.INDIVIDUAL)) {
+			adaptadorContacto.actualizarContactoIndividual((ContactoIndividual) receptor);
+		}
+		
 	}
-	
+		
+	//TODO Actualizar vista de chat
+	public void eliminarMensajes(int codigo) {
+		ContactoGrupo g;
+		ContactoIndividual c;
+		if ((c =usuarioActual.getContactoI(codigo)) != null)
+		{
+			 c.setMensajes(new LinkedList<Mensaje>());
+			 adaptadorContacto.actualizarContactoIndividual(c);
+		}
+		else if ((g =usuarioActual.getContactoG(codigo)) != null){
+			g.setMensajes(new LinkedList<Mensaje>());
+			adaptadorGrupo.actualizarContactoGrupo(g);
+		}
+	}
+
 	public void enviarMensaje(String mensaje, int codigo) {
 		//TODO coger el usuario que envio el mensaje y enviarlo
 		
@@ -502,7 +507,9 @@ public class ControladorVistaAppChat{
 	
 	// TODO Cargador de mensajes
 	public boolean cargarMensajes(String fich, String formatDateWhatsApp) {
+		// Se establece el formato de la fecha
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatDateWhatsApp);
+		// En función del formato de la fecha se establece la plataforma
 		Plataforma plataforma;
 		if (formatDateWhatsApp.equals(SimpleTextParser.FORMAT_DATE_IOS))
 			plataforma = Plataforma.IOS;
@@ -512,14 +519,14 @@ public class ControladorVistaAppChat{
 		List<MensajeWhatsApp> chat = null;
 		try {
 			chat = SimpleTextParser.parse(fich, formatDateWhatsApp, plataforma);
-			// Comprobar si es un grupo o un chat individual
 			TipoContacto tipoReceptor;
 			Contacto receptor = null;
+			// Se cogen los nombres de los participantes del chat
 			Set<String> miembrosChat = new HashSet<String>();
 			for (MensajeWhatsApp mensaje : chat) {
 				miembrosChat.add(mensaje.getAutor());
 			}
-			// Comprobar cómo está guardado el nombre
+			// Comprobar si está participando el usuario
 			String uAct = "";
 			if (miembrosChat.contains(usuarioActual.getNombre()))
 				uAct = usuarioActual.getNombre();
@@ -530,7 +537,9 @@ public class ControladorVistaAppChat{
 			if (uAct.equals(""))
 				return false;
 			miembrosChat.remove(uAct);
+			// Se comprueba si es un grupo o un contactoIndividual
 			if (miembrosChat.size() != 1) {
+				// TODO Tratar caso grupo
 				/*tipoReceptor = TipoContacto.GRUPO;
 				List<>
 				crearGrupo("Grupo importado" + chat.get(0).getFecha().toString(),)*/
@@ -552,6 +561,7 @@ public class ControladorVistaAppChat{
 						encontrado = true;
 					}
 				}
+				// Si no se tiene a la otra persona guardada se crea un contacto nuevo
 				if (! encontrado) {
 					receptor = registrarContacto(aux1, "imported" + aux1 + LocalDate.now().toString());
 				}				
