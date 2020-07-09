@@ -196,7 +196,7 @@ public class Usuario {
 	}
 	
 	public Mensaje addMiMensaje(String mensaje, int codigo) {
-		if (existContactoI(codigo)) {
+		if (existContactoI(codigo)) { 
 			ContactoIndividual cI = getContactoI(codigo);
 			Mensaje m = new Mensaje(mensaje, new Date(), this.movil, cI, TipoContacto.INDIVIDUAL);
 			cI.addMensaje(m);
