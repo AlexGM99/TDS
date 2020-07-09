@@ -247,6 +247,7 @@ public class Usuario {
 		return new LinkedList<Mensaje>();
 	}
 	
+	
 	public ContactoGrupo registrarGrupo(String nombre, List<ContactoIndividual> contactos) {
 		List<String> c = new LinkedList<String>();
 		contactos.stream().forEach(ci->c.add(ci.getMovil()));;
