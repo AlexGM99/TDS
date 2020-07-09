@@ -45,6 +45,8 @@ import Descuentos.DescuentoSimple;
 import Helpers.KeyValue;
 import ViewModels.ViewModelDatosChat;
 import ViewModels.ViewModelGrupo;
+import cargadorMensajes.Plataforma;
+import cargadorMensajes.SimpleTextParser;
 import interfazGrafica.ChatWindow;
 import interfazGrafica.Crear_Grupo;
 import interfazGrafica.Datos_Chat_Actual;
@@ -582,6 +584,18 @@ public class ControladorVistaAppChat {
 			e3.printStackTrace();
 		}
 	}
+	
+	// TODO Cargador de mensajes
+		public void cargarMensajes(String fich, String formatDateWhatsApp) {
+			Plataforma p;
+			if (formatDateWhatsApp.equals(SimpleTextParser.FORMAT_DATE_IOS))
+				p = Plataforma.IOS;
+			else
+				p = Plataforma.ANDROID;
+			
+			cargador.setFichero(fich, formatDateWhatsApp, p);
+		}
+	
 	public boolean exportarContactos(String filePath) {
 		// Obtener los contactos
 		Map<String, String> contactos = new HashMap<String, String>();
