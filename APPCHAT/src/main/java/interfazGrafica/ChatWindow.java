@@ -658,6 +658,8 @@ public class ChatWindow implements InterfazVistas{
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				controlador.enviarMensaje(textmensaje.getText(), codigoActivo);
+				ponerChat();
+				textmensaje.setText("");
 			}
 		});
 		Image img3= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/envioAdap.png")).getImage();
