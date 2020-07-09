@@ -45,6 +45,7 @@ import Descuentos.DescuentoSimple;
 import Helpers.KeyValue;
 import ViewModels.ViewModelDatosChat;
 import ViewModels.ViewModelGrupo;
+import cargadorMensajes.CargadorMensajes;
 import cargadorMensajes.Plataforma;
 import cargadorMensajes.SimpleTextParser;
 import interfazGrafica.ChatWindow;
@@ -97,15 +98,20 @@ public class ControladorVistaAppChat {
 
 	private ControladorDescuentos controladorDescuentos;
 
+	private CargadorMensajes cargador;
+	
 	// TERMINADO
 	private ControladorVistaAppChat() {
 		// Inicializar adaptadores
 		inicializarAdaptadores();
 		// inicializar catalogos
 		inicializarCatalogos();
-
+		
+		cargador = new CargadorMensajes();
+		cargador.addMensajesListener(this);
+		
 		rendericer = new AuxRender();
-
+		
 		controladorDescuentos = new ControladorDescuentos();
 	}
 
