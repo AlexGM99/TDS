@@ -107,7 +107,7 @@ public class Test1 {
 				}
 			});
 			chat_list.add(boton);
-//			panel2.add(boton);
+			//panel2.add(boton);
 		}
 		
 		/*
