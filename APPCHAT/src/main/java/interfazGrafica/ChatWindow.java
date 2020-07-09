@@ -3,6 +3,8 @@ package interfazGrafica;
 
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
+import java.awt.Color;
+
 import javax.swing.JPanel;
 import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
@@ -13,6 +15,7 @@ import javax.swing.JFileChooser;
 
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.Toolkit;
 
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -26,20 +29,28 @@ import controlador.ControladorVistaAppChat;
 import modelo.Contacto;
 import modelo.ContactoGrupo;
 import modelo.ContactoIndividual;
+import modelo.Prueba;
 import modelo.Usuario;
+import pulsador.IEncendidoListener;
+import pulsador.Luz;
 
 import javax.swing.border.BevelBorder;
+import javax.swing.border.EmptyBorder;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.DateTimeException;
+import java.util.EventObject;
 import java.util.LinkedList;
 import java.util.Scanner;
 
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
+import javax.swing.SwingConstants;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -100,6 +111,7 @@ public class ChatWindow implements InterfazVistas{
 	private JButton btnNewContact;
 	private JButton btnNewGroup;
 	private JButton btnModify;
+	private Luz luz_1;
 	/**
 	 * Launch the application.
 	 */
@@ -123,6 +135,93 @@ public class ChatWindow implements InterfazVistas{
 		this.controlador = controlador;
 		initialize();
 		lblMiNombre.setText(user.getUsuario());
+		
+		luz_1 = new Luz();
+		GridBagConstraints gbc_luz_1 = new GridBagConstraints();
+		gbc_luz_1.gridx = 4;
+		gbc_luz_1.gridy = 0;	
+		luz_1.addEncendidoListener(new IEncendidoListener() {
+			@Override
+			public void enteradoCambioEncendido(EventObject arg0) {
+				//luz_1.setColor(Color.YELLOW);
+				
+				JFileChooser fileChooser = new JFileChooser();
+		        FileNameExtensionFilter txtFilter = new FileNameExtensionFilter("Plain text files", "txt"); 
+		        fileChooser.setFileFilter(txtFilter);
+		        fileChooser.showOpenDialog(fileChooser);
+				File file = fileChooser.getSelectedFile();
+				if (file == null)  return;
+				String filePath = file.getAbsolutePath();
+				
+				JFrame bombilla = new JFrame();
+				bombilla.setLocationRelativeTo(null);
+				bombilla.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				bombilla.setBounds(100, 100, 328, 119);
+				JPanel panel1 = new JPanel();
+				panel1.setBorder(new EmptyBorder(5, 5, 5, 5));
+				bombilla.setContentPane(panel1);
+				panel1.setLayout(new BorderLayout(0, 0));
+				Dimension pantalla = Toolkit.getDefaultToolkit().getScreenSize();
+		        Dimension ventana = bombilla.getSize();
+		        bombilla.setLocation((pantalla.width - ventana.width) / 2, (pantalla.height - ventana.height) / 2);
+				
+				JPanel panel2 = new JPanel();
+				panel1.add(panel2, BorderLayout.SOUTH);
+				JButton btnIos = new JButton("iOS");
+				btnIos.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						bombilla.setVisible(false);
+						try {
+							controlador.cargarMensajes(filePath, SimpleTextParser.FORMAT_DATE_IOS);
+						} catch (IndexOutOfBoundsException | DateTimeException e2) {
+							JOptionPane.showMessageDialog(null, "There was an error loading your messages", "Boom!", JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				});
+				panel2.add(btnIos);
+				JButton btnAndroid1 = new JButton("Android 1");
+				btnAndroid1.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						bombilla.setVisible(false);
+						try {
+							controlador.cargarMensajes(filePath, SimpleTextParser.FORMAT_DATE_ANDROID_1);
+						} catch (IndexOutOfBoundsException | DateTimeException e2) {
+							//e2.printStackTrace();
+							JOptionPane.showMessageDialog(null, "There was an error loading your messages", "Boom!", JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				});
+				panel2.add(btnAndroid1);
+				JButton btnAndroid2 = new JButton("Android 2");
+				btnAndroid2.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						bombilla.setVisible(false);
+						try {
+							controlador.cargarMensajes(filePath, SimpleTextParser.FORMAT_DATE_ANDROID_2);
+						} catch (IndexOutOfBoundsException | DateTimeException e2) {
+							JOptionPane.showMessageDialog(null, "There was an error loading your messages", "Boom!", JOptionPane.ERROR_MESSAGE);
+						}
+					}
+				});
+				panel2.add(btnAndroid2);
+				
+				JPanel panel3 = new JPanel();
+				panel1.add(panel3, BorderLayout.CENTER);
+				panel3.setLayout(new BorderLayout(0, 0));
+				JLabel lblNewLabel = new JLabel("Choose the date format");
+				lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+				panel3.add(lblNewLabel);
+				
+				bombilla.setVisible(true);
+				
+				luz_1.setColor(Color.WHITE);
+			}
+		});		
+		mostrarPerfil.add(luz_1, gbc_luz_1);
+		
 		if (!user.getImagen().trim().isEmpty()) {
 		 Scanner entrada = null;
 		 try {
@@ -206,9 +305,9 @@ public class ChatWindow implements InterfazVistas{
 		gbc_mostrarPerfil.gridy = 0;
 		panel.add(mostrarPerfil, gbc_mostrarPerfil);
 		GridBagLayout gbl_mostrarPerfil = new GridBagLayout();
-		gbl_mostrarPerfil.columnWidths = new int[]{0, 0, 0, 0, 0};
+		gbl_mostrarPerfil.columnWidths = new int[]{0, 0, 0, 0, 0, 0};
 		gbl_mostrarPerfil.rowHeights = new int[]{0, 0};
-		gbl_mostrarPerfil.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_mostrarPerfil.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		gbl_mostrarPerfil.rowWeights = new double[]{0.0, Double.MIN_VALUE};
 		mostrarPerfil.setLayout(gbl_mostrarPerfil);
 		
@@ -367,8 +466,8 @@ public class ChatWindow implements InterfazVistas{
 			});
 			popupMenu_2.add(btnInfoUso);
 		}
-		
-		btnCargador = new JButton("Load messages");
+			
+		/*btnCargador = new JButton("Load messages");
 		btnCargador.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -400,7 +499,7 @@ public class ChatWindow implements InterfazVistas{
 				}
 			}
 		});
-		popupMenu_2.add(btnCargador);
+		popupMenu_2.add(btnCargador);*/
 		
 		btnExportar = new JButton("Export contacts");
 		btnExportar.addMouseListener(new MouseAdapter() {

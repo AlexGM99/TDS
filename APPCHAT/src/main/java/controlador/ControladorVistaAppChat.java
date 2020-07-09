@@ -2,23 +2,18 @@ package controlador;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.itextpdf.text.Document;
@@ -27,7 +22,10 @@ import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import cargadorMensajes.CargadorMensajes;
+import cargadorMensajes.IMensajesListener;
 import cargadorMensajes.MensajeWhatsApp;
+import cargadorMensajes.MensajesEvent;
 import cargadorMensajes.Plataforma;
 import cargadorMensajes.SimpleTextParser;
 import Descuentos.DescuentoCompuesto;
@@ -52,7 +50,7 @@ import persistencia.IAdaptadorContactoIndividualDAO;
 import persistencia.IAdaptadorMensajeDAO;
 import persistencia.IAdaptadorUsuarioDAO;
 
-public class ControladorVistaAppChat{
+public class ControladorVistaAppChat implements IMensajesListener {
 	public static final String REGISTRO_CORRECTO = "U've been registered into the Dark Lord Army!!!!!!!!!";
 	public static final String REGISTRO_NOMBRE_YA_USADO = "User already registered";
 	
@@ -71,12 +69,17 @@ public class ControladorVistaAppChat{
 
 	private ControladorDescuentos controladorDescuentos;
 	
+	private CargadorMensajes cargador;
+	
 	// TERMINADO
 	private ControladorVistaAppChat() {
 		// Inicializar adaptadores
 		inicializarAdaptadores();
 		// inicializar catalogos
 		inicializarCatalogos();
+		
+		cargador = new CargadorMensajes();
+		cargador.addMensajesListener(this);
 		
 		rendericer = new AuxRender();
 		
@@ -511,105 +514,68 @@ public class ControladorVistaAppChat{
 	}
 	
 	// TODO Cargador de mensajes
-	public boolean cargarMensajes(String fich, String formatDateWhatsApp) {
-		// Se establece el formato de la fecha
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatDateWhatsApp);
-		// En función del formato de la fecha se establece la plataforma
-		Plataforma plataforma;
+	public void cargarMensajes(String fich, String formatDateWhatsApp) {
+		Plataforma p;
 		if (formatDateWhatsApp.equals(SimpleTextParser.FORMAT_DATE_IOS))
-			plataforma = Plataforma.IOS;
+			p = Plataforma.IOS;
 		else
-			plataforma = Plataforma.ANDROID;
+			p = Plataforma.ANDROID;
 		
-		List<MensajeWhatsApp> chat = null;
-		try {
-			chat = SimpleTextParser.parse(fich, formatDateWhatsApp, plataforma);
-			TipoContacto tipoReceptor;
-			Contacto receptor = null;
-			// Se cogen los nombres de los participantes del chat
-			Set<String> miembrosChat = new HashSet<String>();
-			for (MensajeWhatsApp mensaje : chat) {
-				miembrosChat.add(mensaje.getAutor());
-			}
-			// Comprobar si está participando el usuario
-			String uAct = "";
-			if (miembrosChat.contains(usuarioActual.getNombre()))
-				uAct = usuarioActual.getNombre();
-			else if (miembrosChat.contains(usuarioActual.getMovil()))
-				uAct = usuarioActual.getMovil();
-			else if (miembrosChat.contains(usuarioActual.getUsuario()))
-				uAct = usuarioActual.getUsuario();
-			if (uAct.equals("")) {
-				return false;
-			}
-			miembrosChat.remove(uAct);
-			// Se comprueba si es un grupo o un contactoIndividual
-			if (miembrosChat.size() != 1) {
-				// TODO Tratar caso grupo
-				tipoReceptor = TipoContacto.GRUPO;
-				// Comprobar si la otra persona está guardada como contacto
-				List<Integer> contactos = new LinkedList<Integer>();
-				
-				boolean encontrado;
-				ContactoIndividual itC;
-				for (String itM : miembrosChat) {
-					Iterator<ContactoIndividual> it = usuarioActual.getContactos().iterator();
-					encontrado = false;
-					itC = null;
-					while (it.hasNext() && ! encontrado) {
-						itC = it.next();
-						if (itC.getNombre().equals(itM)) {
-							encontrado = true;
-						}
-					}
-					// Si no se tiene a la otra persona guardada se crea un contacto nuevo
-					if (! encontrado) {
-						itC = registrarContacto(itM, "imported" + itM + LocalDate.now());
-					}
-					contactos.add(itC.getCodigo());
-					
-				}
-				String nombreG = "Grupo importado el" + LocalDate.now();
-				crearGrupo(nombreG, contactos);
-				receptor = usuarioActual.getGrupos().stream()
-							.filter(g -> g.getNombre().equals(nombreG))
-							.collect(Collectors.toList())
-							.get(0);
-				
-			}
-			else {
-				tipoReceptor = TipoContacto.INDIVIDUAL;
-				// Comprobar si la otra persona está guardada como contacto
-				List<String> aux = new LinkedList<String>(miembrosChat);
-				String aux1 = aux.get(0);
-				List<ContactoIndividual> contactos = usuarioActual.getContactos();
-				Iterator<ContactoIndividual> it = contactos.iterator();
-				boolean encontrado = false;
-				ContactoIndividual itC;
-				while (it.hasNext() && ! encontrado) {
-					itC = it.next();
-					if (itC.getNombre().equals(aux1)) {
-						receptor = itC;
-						encontrado = true;
-					}
-				}
-				// Si no se tiene a la otra persona guardada se crea un contacto nuevo
-				if (! encontrado) {
-					receptor = registrarContacto(aux1, "imported" + aux1 + LocalDate.now().toString());
-				}				
-			}
-			for (MensajeWhatsApp mensaje : chat) {
-				// Registrar los mensajes
-				Date fecha = java.sql.Timestamp.valueOf(mensaje.getFecha());
-				registrarMensaje(mensaje.getTexto(), mensaje.getAutor(), fecha, receptor, tipoReceptor);
-				System.out.println(">" + mensaje.getFecha().format(formatter) +
-									" " + mensaje.getAutor() + " : " + mensaje.getTexto());
-			}
-		} catch (IOException e) {
-			//e.printStackTrace();
-			return false;
+		cargador.setFichero(fich, formatDateWhatsApp, p);
+	}
+	
+
+	@Override
+	public void nuevosMensajes(MensajesEvent e) {
+		List<MensajeWhatsApp> mensajes = e.getMensajes();
+		Contacto receptor;
+		Set<String> autores = mensajes.stream()
+				.map(m -> m.getAutor())
+				.collect(Collectors.toSet());
+		if (autores.size() != 2)
+			return;
+		
+		ContactoIndividual auxC = null;
+		for (String it : autores) {
+			if (usuarioActual.getContactos().stream()
+					.anyMatch(c -> c.getNombre().equals(it)))
+			auxC = usuarioActual.getContactos().stream()
+					.filter(c -> c.getNombre().equals(it))
+					.collect(Collectors.toList())
+					.get(0);
 		}
-		return true;
+		if (auxC == null)
+			return;
+		
+		Usuario auxU = catalogoUsuarios.getByMovil(auxC.getMovil());
+		ContactoIndividual auxC1 = null;
+		if ( ! auxU.getContactos().stream()
+				.anyMatch(c -> c.getNombre().equals(usuarioActual.getMovil())))
+			return;
+		
+		auxC1 = auxU.getContactos().stream()
+				.filter(c -> c.getNombre().equals(usuarioActual.getMovil()))
+				.collect(Collectors.toList())
+				.get(0);
+					
+		for (MensajeWhatsApp itM : mensajes) {
+			if (itM.getAutor().equals(auxC.getNombre()))
+				registrarMensaje(itM.getTexto(), itM.getAutor(), java.sql.Timestamp.valueOf(itM.getFecha()), auxC1, TipoContacto.INDIVIDUAL);
+			else if (itM.getAutor().equals(auxC1.getNombre()))
+				registrarMensaje(itM.getTexto(), itM.getAutor(), java.sql.Timestamp.valueOf(itM.getFecha()), auxC, TipoContacto.INDIVIDUAL); 				
+		}
+		System.out.println("F");
+		
+		for (ContactoIndividual it : getUsuarioActual().getContactos()) {
+			System.out.println(it.getNombre() + ":" + it.getMensajes());
+		}
+		
+		for (ContactoIndividual it : auxU.getContactos()) {
+			System.out.println(it.getNombre() + ":" + it.getMensajes());
+		}
+		
+		System.out.println("FF");
+
 	}
 	
 	// TERMINADO
@@ -698,4 +664,5 @@ public class ControladorVistaAppChat{
 		interfaz = new LogIn(this);
 		antigua.exit();
 	}
+	
 }

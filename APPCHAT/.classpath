@@ -28,5 +28,6 @@
 	<classpathentry kind="lib" path="lib/javax.persistence_2.0.3.v201010191057.jar"/>
 	<classpathentry kind="lib" path="DriverPersistencia.jar"/>
 	<classpathentry kind="lib" path="lib/chatWindowLib.jar"/>
+	<classpathentry kind="lib" path="lib/Luz.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
