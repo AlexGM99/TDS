@@ -1,13 +1,14 @@
 package controlador;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -17,9 +18,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Set;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
+
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
 
 import cargadorMensajes.MensajeWhatsApp;
 import cargadorMensajes.Plataforma;
@@ -39,7 +44,6 @@ import modelo.ContactoIndividual;
 import modelo.Mensaje;
 import modelo.TipoContacto;
 import modelo.Usuario;
-import persistencia.AdaptadorContactoGrupoTDS;
 import persistencia.DAOException;
 import persistencia.FactoriaDAO;
 import persistencia.IAdaptadorContactoGrupoDAO;
@@ -578,6 +582,85 @@ public class ControladorVistaAppChat{
 			return false;
 		}
 		return true;
+	}
+	
+	// TODO Exportar contactos
+	public boolean exportarContactos(String filePath) {
+		// Obtener los contactos
+		Map<String, String> contactos = new HashMap<String, String>();
+		for (ContactoIndividual itC : usuarioActual.getContactos()) {
+			// Si existe el usuario se coge el nick y se añade al mapa
+			if (existeUsuario(itC.getMovil())) {
+				contactos.put( adaptadorUsuario.recuperarTodosUsuarios().stream()
+									.filter(u-> u.getMovil().equals(itC.getMovil()))
+									.collect(Collectors.toList())
+									.get(0).getUsuario(), itC.getMovil());
+			}
+			// Si es un usuario fantasma se pone su nombre como nick
+			else {
+				contactos.put(itC.getNombre(), itC.getMovil());
+			}
+		}
+		// Obtener los grupos
+		// Map<NombreGrupo, Map<Username, tlf>>
+		Map<String, Map<String, String>> grupos = new HashMap<String, Map<String, String>>();
+		// Map<NombreGrupo, Admin>
+		Map<String, Usuario> auxAdmin = new HashMap<String, Usuario>();
+		// Map<Username, tlf>
+		Map<String, String> auxM;
+		// Para cada grupo...
+		for (ContactoGrupo itG : usuarioActual.getGrupos()) {
+			// Creamos un mapa con <nick, tlf> de los miembros
+			auxM = new HashMap<String, String>();
+			// Recorremos la lista de miembros...
+			for (String itTelf : itG.getMiembros()) {
+				if (existeUsuario(itTelf)) {
+					auxM.put(adaptadorUsuario.recuperarTodosUsuarios().stream()
+									.filter(u-> u.getMovil().equals(itTelf))
+									.collect(Collectors.toList())
+									.get(0).getUsuario(), itTelf);
+				}
+				else {
+					auxM.put(itTelf, itTelf);
+				}
+			}
+			grupos.put(itG.getNombre(), auxM);
+			auxAdmin.put(itG.getNombre(), itG.getAdmin());
+		}	
+		// PDF
+		 FileOutputStream archivo;
+		 try {
+			archivo = new FileOutputStream(filePath);
+			Document documento = new Document();
+			Font bold = new Font();
+			bold.setStyle(Font.BOLD);
+			Font italic = new Font();
+			italic.setStyle(Font.ITALIC);
+			PdfWriter.getInstance(documento, archivo);
+			documento.open();
+			// Usuario
+			documento.add(new Paragraph("User: ", bold));
+			documento.add(new Paragraph("     " + usuarioActual.getUsuario()));
+			// Contactos
+			documento.add(new Paragraph("\nContacts:", bold));
+			for (String it : contactos.keySet()) {
+				documento.add(new Paragraph("     Username: " + it + "     Phone: " + contactos.get(it)));
+			}
+			// Grupos
+			documento.add(new Paragraph("\nGroups:", bold));
+			for (String it : grupos.keySet()) {
+				documento.add(new Paragraph("     " + it));
+				documento.add(new Paragraph("          Username: " + auxAdmin.get(it).getUsuario() + "     Phone: " + auxAdmin.get(it).getMovil() + "     (admin)", italic));
+				for (String it1 : grupos.get(it).keySet()) {
+					documento.add(new Paragraph("          Username: " + it1 + "     Phone: " + grupos.get(it).get(it1)));
+				}
+			}
+			documento.close();
+		} catch (DocumentException | FileNotFoundException e) {
+			//e.printStackTrace();
+			return false;
+		}
+		 return true;
 	}
 	
 	// TERMINADO

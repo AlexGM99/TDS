@@ -13,12 +13,7 @@ import org.knowm.xchart.CategoryChart;
 import org.knowm.xchart.CategoryChartBuilder;
 import org.knowm.xchart.PieChart;
 import org.knowm.xchart.PieChartBuilder;
-import org.knowm.xchart.QuickChart;
-import org.knowm.xchart.SwingWrapper;
-import org.knowm.xchart.XYChart;
-import org.knowm.xchart.XYSeries;
 import org.knowm.xchart.style.Styler.LegendPosition;
-import org.knowm.xchart.style.markers.SeriesMarkers;
 
 public class Test {
 
@@ -56,8 +51,8 @@ public class Test {
 		System.out.println("mapa2 calculado" + mapa2);
 		
 		 
-		double[] xData = new double[] { 1.0, 2.0, 3.0 };
-	    double[] yData = new double[] { 34.0, 52.0, 27.0 };
+		//double[] xData = new double[] { 1.0, 2.0, 3.0 };
+	    //double[] yData = new double[] { 34.0, 52.0, 27.0 };
 		
 		/*
 		 * //XYChart chart = QuickChart.getChart("Sample Chart", "X", "Y", "y(x)",
@@ -105,7 +100,7 @@ public class Test {
 	    chart2.addSeries("NAMAE", 17);
 	    chart2.addSeries("Texto aquí", 40);
 	    // Display
-	    new SwingWrapper(chart2).displayChart();
+	    //new SwingWrapper(chart2).displayChart();
 	    
 	    BitmapEncoder.saveBitmap(chart2, "./Sample_Chart-T", BitmapFormat.PNG);
 

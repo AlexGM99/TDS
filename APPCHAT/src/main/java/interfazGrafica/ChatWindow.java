@@ -13,12 +13,10 @@ import javax.swing.JFileChooser;
 
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.List;
 
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import Descuentos.DescuentoCompuesto;
 import Descuentos.DescuentoSimple;
 import ViewModels.ViewModelDatosChat;
 import ViewModels.ViewModelGrupo;
@@ -42,7 +40,6 @@ import java.util.Scanner;
 
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
-import javax.swing.WindowConstants;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -97,6 +94,7 @@ public class ChatWindow implements InterfazVistas{
 	private JButton btnChangeGreeting;
 	private JButton btnPremium;
 	private JButton btnInfoUso;
+	private JButton btnExportar;
 	private JButton btnCargador;
 	private JButton btnExit;
 	private JButton btnNewContact;
@@ -375,29 +373,48 @@ public class ChatWindow implements InterfazVistas{
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				popupMenu_2.setVisible(false);
-				Scanner entrada = null;
 		        JFileChooser fileChooser = new JFileChooser();
 		        FileNameExtensionFilter txtFilter = new FileNameExtensionFilter("Plain text files", "txt"); 
 		        fileChooser.setFileFilter(txtFilter);
 		        fileChooser.showOpenDialog(fileChooser);
-				String filePath = fileChooser.getSelectedFile().getAbsolutePath();
-				String formatDate = null;
-				try {
-					formatDate = SimpleTextParser.detectFormatDate(filePath);					
-				} catch (HeadlessException | IOException e1) {
-					//e1.printStackTrace();
-					JOptionPane.showMessageDialog(null, "There was an error reading the date format", "Boom!", JOptionPane.ERROR_MESSAGE);
-				}
-				if (formatDate == null)
-					JOptionPane.showMessageDialog(null, "There was an error reading the date format", "Boom!", JOptionPane.ERROR_MESSAGE);
-				else if ( ! controlador.cargarMensajes(filePath, formatDate))
-					JOptionPane.showMessageDialog(null, "There was an error loading your messages", "Boom!", JOptionPane.ERROR_MESSAGE);
-				for (ContactoIndividual it : controlador.getUsuarioActual().getContactos()) {
-					System.out.println(it.getMensajes());
+				File file = fileChooser.getSelectedFile();
+				if (file != null) {
+					String filePath = file.getAbsolutePath();
+					String formatDate = null;
+					try {
+						formatDate = SimpleTextParser.detectFormatDate(filePath);					
+					} catch (HeadlessException | IOException e1) {
+						//e1.printStackTrace();
+						JOptionPane.showMessageDialog(null, "There was an error reading the date format", "Boom!", JOptionPane.ERROR_MESSAGE);
+					}
+					if (formatDate == null)
+						JOptionPane.showMessageDialog(null, "There was an error reading the date format", "Boom!", JOptionPane.ERROR_MESSAGE);
+					else if ( ! controlador.cargarMensajes(filePath, formatDate))
+						JOptionPane.showMessageDialog(null, "There was an error loading your messages", "Boom!", JOptionPane.ERROR_MESSAGE);
+					for (ContactoIndividual it : controlador.getUsuarioActual().getContactos()) {
+						System.out.println(it.getMensajes());
+					}
 				}
 			}
 		});
 		popupMenu_2.add(btnCargador);
+		
+		btnExportar = new JButton("Export contacts");
+		btnExportar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				popupMenu_2.setVisible(false);			
+		        JFileChooser fileChooser = new JFileChooser();
+		        fileChooser.showSaveDialog(fileChooser);
+		        File file = fileChooser.getSelectedFile();
+				if (file != null) {
+					String filePath = file.getAbsolutePath(); 
+					if (! controlador.exportarContactos(filePath))
+						JOptionPane.showMessageDialog(null, "There was an error exporting your contacts", "Boom!", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+		popupMenu_2.add(btnExportar);
 			
 		GridBagConstraints gbc_label_MifotoPerfil = new GridBagConstraints();
 		gbc_label_MifotoPerfil.insets = new Insets(0, 0, 0, 5);
