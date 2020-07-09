@@ -196,7 +196,7 @@ public class Usuario {
 	}
 	
 	public Mensaje addMiMensaje(String mensaje, int codigo) {
-		if (existContactoI(codigo)) {
+		if (existContactoI(codigo)) { 
 			ContactoIndividual cI = getContactoI(codigo);
 			Mensaje m = new Mensaje(mensaje, new Date(), this.movil, cI, TipoContacto.INDIVIDUAL);
 			cI.addMensaje(m);
@@ -246,6 +246,7 @@ public class Usuario {
 		}
 		return new LinkedList<Mensaje>();
 	}
+	
 	
 	public ContactoGrupo registrarGrupo(String nombre, List<ContactoIndividual> contactos) {
 		List<String> c = new LinkedList<String>();

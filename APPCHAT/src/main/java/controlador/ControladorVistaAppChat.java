@@ -455,6 +455,7 @@ public class ControladorVistaAppChat {
 		ContactoIndividual i = usuarioActual.modifyContactoI(codigo, nick);
 		adaptadorContacto.actualizarContactoIndividual(i);
 	}
+	
 
 	public void enviarMensaje(String mensaje, int codigo) {
 		Mensaje m = usuarioActual.addMiMensaje(mensaje, codigo);
