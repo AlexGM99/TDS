@@ -636,7 +636,7 @@ public class ChatWindow implements InterfazVistas{
 		enviarMensaje.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				//TODO enviar mensajes
+				controlador.enviarMensaje(textmensaje.getText(), codigoActivo);
 			}
 		});
 		GridBagConstraints gbc_enviarMensaje = new GridBagConstraints();

@@ -194,6 +194,42 @@ public class Usuario {
 		}
 	}
 	
+	public Mensaje addMiMensaje(String mensaje, int codigo) {
+		if (existContactoI(codigo)) {
+			ContactoIndividual cI = getContactoI(codigo);
+			Mensaje m = new Mensaje(mensaje, new Date(), this.movil, cI, TipoContacto.INDIVIDUAL);
+			cI.addMensaje(m);
+			return m;
+		}else if (existContactoG(codigo)) {
+			ContactoGrupo cG = getContactoG(codigo);
+			Mensaje m = new Mensaje(mensaje, new Date(), this.movil, cG, TipoContacto.GRUPO);
+			cG.addMensaje(m);
+			return m;
+		}
+		return null;
+	}
+	
+	public ContactoIndividual addMensajeDelCI(Mensaje m, Usuario emisor, int code) {
+		ContactoIndividual i = null;
+		if (existContactoI(code)) {
+			i = getContactoI(code);
+			i.addMensaje(m);
+		} else {
+			i = new ContactoIndividual(emisor.getMovil(), emisor.getMovil());
+			i.addMensaje(m);
+		}
+		return i;
+	}
+	
+	public ContactoGrupo addMensajeDelCG(Mensaje m, Usuario emisor, int code) {
+		ContactoGrupo g = null;
+		if (existContactoG(code)) {
+			g = getContactoG(code);
+			g.addMensaje(m);
+		}
+		return g;
+	}
+	
 	public ContactoGrupo registrarGrupo(String nombre, List<ContactoIndividual> contactos) {
 		List<String> c = new LinkedList<String>();
 		contactos.stream().forEach(ci->c.add(ci.getMovil()));;

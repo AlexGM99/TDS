@@ -55,7 +55,7 @@ import persistencia.IAdaptadorContactoIndividualDAO;
 import persistencia.IAdaptadorMensajeDAO;
 import persistencia.IAdaptadorUsuarioDAO;
 
-public class ControladorVistaAppChat{
+public class ControladorVistaAppChat implements Observer{
 	public static final String REGISTRO_CORRECTO = "U've been registered into the Dark Lord Army!!!!!!!!!";
 	public static final String REGISTRO_NOMBRE_YA_USADO = "User already registered";
 	
@@ -365,6 +365,7 @@ public class ControladorVistaAppChat{
 		return creado != null;
 	}
 	
+	//TERMINADO
 	public boolean ModificarGrupo(String nombre, List<Integer> contactos, int code) {
 		ContactoGrupo creado = usuarioActual.getContactoG(code);
 		ContactoGrupo noModificado =  new ContactoGrupo(creado);
@@ -382,7 +383,7 @@ public class ControladorVistaAppChat{
 		}
 		return creado != null;
 	}
-	
+	//TERMINADO
 	public boolean eliminarContacto(int codigo) {
 		boolean borrado = false;
 		ContactoGrupo g;
@@ -394,6 +395,7 @@ public class ControladorVistaAppChat{
 			if (g.getAdmin().getCodigo() == usuarioActual.getCodigo()) {
 				catalogoUsuarios.borrarGrupoUsers(g);
 				borrado = usuarioActual.DeleteContactoG(codigo);
+				adaptadorUsuario.actualizarUsuario(usuarioActual);
 				adaptadorGrupo.borrarContactoGrupo(g);
 			}
 			else
@@ -449,14 +451,27 @@ public class ControladorVistaAppChat{
 	}
 	
 	public void enviarMensaje(String mensaje, int codigo) {
-		//TODO coger el usuario que envio el mensaje y enviarlo
-		
-		
-		
+		Mensaje m = usuarioActual.addMiMensaje(mensaje, codigo);
+		adaptadorUsuario.actualizarUsuario(usuarioActual);
+		adaptadorContacto.actualizarContactoIndividual(usuarioActual.getContactoI(codigo));
+		List<Usuario> receptores = catalogoUsuarios.enviarMensajeAcontactos(codigo, usuarioActual);
+		if (!receptores.isEmpty()) {
+			if (m.getTipoReceptor().equals(TipoContacto.INDIVIDUAL))
+			{
+				Usuario u = receptores.get(0);
+				ContactoIndividual ci = u.addMensajeDelCI(m, usuarioActual, codigo);
+				adaptadorContacto.actualizarContactoIndividual(ci);
+				adaptadorUsuario.actualizarUsuario(u);
+			} else {
+				List<ContactoGrupo> gs = new LinkedList<ContactoGrupo>();
+				receptores.stream().forEach( receptor -> gs.add(receptor.addMensajeDelCG(m, usuarioActual, codigo)));
+				receptores.stream().forEach( p -> adaptadorUsuario.actualizarUsuario(p));
+				gs.stream().forEach(p -> adaptadorGrupo.actualizarContactoGrupo(p));
+			}
+		}
+		// TODO actualizar vista de mensajes
 	}
-	
-	//TODO patron observer para recoger un mensaje del bbdd
-	
+		
 	
 	public List<Contacto> buscarChats(String text){
 		return usuarioActual.RecuperarContactosFiltrados(text);
@@ -536,5 +551,17 @@ public class ControladorVistaAppChat{
 		InterfazVistas antigua = interfaz;
 		interfaz = new LogIn(this);
 		antigua.exit();
+	}
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		if (arg1 instanceof String) {
+			System.out.println(
+			"NombreObserver: Nombre ha cambiado a " + (String)arg1);
+			}else{
+			System.out.println(
+			"NombreObserver: Algo diferente ha cambiado!");
+			}
+		
 	}
 }
