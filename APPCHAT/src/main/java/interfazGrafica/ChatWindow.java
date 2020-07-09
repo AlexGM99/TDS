@@ -7,7 +7,6 @@ import java.awt.Color;
 
 import javax.swing.JPanel;
 import java.awt.GridBagLayout;
-import java.awt.HeadlessException;
 import java.awt.Image;
 
 import javax.swing.JButton;
@@ -29,7 +28,6 @@ import controlador.ControladorVistaAppChat;
 import modelo.Contacto;
 import modelo.ContactoGrupo;
 import modelo.ContactoIndividual;
-import modelo.Prueba;
 import modelo.Usuario;
 import pulsador.IEncendidoListener;
 import pulsador.Luz;
@@ -106,7 +104,6 @@ public class ChatWindow implements InterfazVistas{
 	private JButton btnPremium;
 	private JButton btnInfoUso;
 	private JButton btnExportar;
-	private JButton btnCargador;
 	private JButton btnExit;
 	private JButton btnNewContact;
 	private JButton btnNewGroup;
@@ -466,40 +463,6 @@ public class ChatWindow implements InterfazVistas{
 			});
 			popupMenu_2.add(btnInfoUso);
 		}
-			
-		/*btnCargador = new JButton("Load messages");
-		btnCargador.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				popupMenu_2.setVisible(false);
-		        JFileChooser fileChooser = new JFileChooser();
-		        FileNameExtensionFilter txtFilter = new FileNameExtensionFilter("Plain text files", "txt"); 
-		        fileChooser.setFileFilter(txtFilter);
-		        fileChooser.showOpenDialog(fileChooser);
-				File file = fileChooser.getSelectedFile();
-				if (file != null) {
-					String filePath = file.getAbsolutePath();
-					String formatDate = null;
-					try {
-						formatDate = SimpleTextParser.detectFormatDate(filePath);					
-					} catch (HeadlessException | IOException e1) {
-						//e1.printStackTrace();
-						JOptionPane.showMessageDialog(null, "There was an error reading the date format", "Boom!", JOptionPane.ERROR_MESSAGE);
-					}
-					if (formatDate == null)
-						JOptionPane.showMessageDialog(null, "There was an error reading the date format", "Boom!", JOptionPane.ERROR_MESSAGE);
-					else if ( ! controlador.cargarMensajes(filePath, formatDate))
-						JOptionPane.showMessageDialog(null, "There was an error loading your messages", "Boom!", JOptionPane.ERROR_MESSAGE);
-					for (ContactoIndividual it : controlador.getUsuarioActual().getContactos()) {
-						System.out.println(it.getNombre() + ":" + it.getMensajes());
-					}
-					for (ContactoGrupo it : controlador.getUsuarioActual().getGrupos()) {
-						System.out.println(it.getNombre() + ":" + it.getMensajes());
-					}
-				}
-			}
-		});
-		popupMenu_2.add(btnCargador);*/
 		
 		btnExportar = new JButton("Export contacts");
 		btnExportar.addMouseListener(new MouseAdapter() {
