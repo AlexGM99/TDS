@@ -287,7 +287,7 @@ public class ChatWindow implements InterfazVistas{
 		mostrarPerfil.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				//TO DO mostrar el perfil del usuario
+				//TODO mostrar el perfil del usuario
 					popupMenu_2.setLocation(mostrarPerfil.getLocationOnScreen());
 					popupMenu_2.setVisible(!popupMenu_2.isVisible());
 			}

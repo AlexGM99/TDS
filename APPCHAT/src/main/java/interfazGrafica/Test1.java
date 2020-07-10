@@ -1,27 +1,44 @@
 package interfazGrafica;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.ScrollPane;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.LinkedList;
+import java.util.List;
 
+import javax.swing.DefaultListModel;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.SoftBevelBorder;
 
+import modelo.Contacto;
 import tds.BubbleText;
 import javax.swing.JScrollPane;
+import javax.swing.ListCellRenderer;
+import javax.swing.ListModel;
 
 public class Test1 {
+	
+	private JFrame window;
+	private DefaultListModel<Integer> listModel;
+	private JList<Integer> chatslist;
+	private JScrollPane scrollChats;
+	private JPanel panel;
+
 
 	/**
 	 * Launch the application.
@@ -49,34 +66,51 @@ public class Test1 {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-				
-		JFrame bombilla = new JFrame();
-		bombilla.setLocationRelativeTo(null);
-		bombilla.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		bombilla.setBounds(100, 100, 328, 119);
-		JPanel panel1 = new JPanel();
+		window = new JFrame();
+		window.setLocationRelativeTo(null);
+		window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		window.setBounds(100, 100, 328, 119);
+		window.setVisible(true);
+		Dimension pantalla = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension ventana = window.getSize();
+        window.setLocation((pantalla.width - ventana.width) / 2, (pantalla.height - ventana.height) / 2);
+	
+        panel = new JPanel();
+		panel.setAutoscrolls(true);
+		window.getContentPane().add(panel, BorderLayout.CENTER);
+		GridBagLayout gbl_panel = new GridBagLayout();
+		gbl_panel.columnWidths = new int[]{1, 0, 0, 0, 21, 75, 165, 0, 35, 0, 0};
+		gbl_panel.rowHeights = new int[]{0, 28, 0, 37, 0, 0};
+		gbl_panel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
+		panel.setLayout(gbl_panel);
+		
+        
+        scrollChats = new JScrollPane();
+		GridBagConstraints gbc_scrollChats = new GridBagConstraints();
+		gbc_scrollChats.gridheight = 2;
+		gbc_scrollChats.gridwidth = 4;
+		gbc_scrollChats.insets = new Insets(0, 0, 0, 5);
+		gbc_scrollChats.fill = GridBagConstraints.BOTH;
+		gbc_scrollChats.gridx = 1;
+		gbc_scrollChats.gridy = 3;
+		panel.add(scrollChats, gbc_scrollChats);
+		
+		listModel = new DefaultListModel<Integer>();
+		
+		chatslist = new JList<Integer>(listModel);
+		scrollChats.setViewportView(chatslist);
+			
+		/*JPanel panel1 = new JPanel();
 		panel1.setBorder(new EmptyBorder(5, 5, 5, 5));
 		bombilla.setContentPane(panel1);
-		panel1.setLayout(new BorderLayout(0, 0));
-		Dimension pantalla = Toolkit.getDefaultToolkit().getScreenSize();
-        Dimension ventana = bombilla.getSize();
-        bombilla.setLocation((pantalla.width - ventana.width) / 2, (pantalla.height - ventana.height) / 2);
+		panel1.setLayout(new BorderLayout(0, 0));*/
 		
 		JPanel panel2 = new JPanel();
-		panel1.add(panel2, BorderLayout.SOUTH);
-		
-		JButton btnIos = new JButton("iOS");
-		btnIos.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				System.out.println("1");
-			}
-		});
-		panel2.add(btnIos);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		//panel1.add(scrollPane, BorderLayout.EAST);
-		
+		panel2.setVisible(true);
+		window.add(panel2);
+		//panel1.add(panel2, BorderLayout.SOUTH);
+			
 		JScrollPane scroll_chat = new JScrollPane();
 		GridBagConstraints gbc_scroll_chat = new GridBagConstraints();
 		gbc_scroll_chat.gridheight = 2;
@@ -85,13 +119,17 @@ public class Test1 {
 		gbc_scroll_chat.fill = GridBagConstraints.BOTH;
 		gbc_scroll_chat.gridx = 5;
 		gbc_scroll_chat.gridy = 2;
-		panel1.add(scroll_chat, BorderLayout.EAST);
+		panel2.add(scroll_chat, gbc_scroll_chat);
 		
-		JList<JButton>chat_list = new JList<JButton>();
+		//DefaultListModel<JButton>listModel = new DefaultListModel<JButton>();
+		//JList<JButton>chat_list = new JList<JButton>();
+		//scroll_chat.setViewportView(chat_list);
+
 		
+		LinkedList<Integer> emojis = new LinkedList<Integer>();
 		
 		for (int i = 0; i < BubbleText.MAXICONO; i++) {
-			JButton boton = new JButton();
+			/*JButton boton = new JButton();
 			Icon icono = BubbleText.getEmoji(i);
 			boton.setIcon(icono);
 			boton.addMouseListener(new MouseAdapter() {
@@ -105,40 +143,46 @@ public class Test1 {
 					aux1.getContentPane().add(aux2);
 					aux1.setVisible(true);
 				}
-			});
-			chat_list.add(boton);
+			});*/
+			//chat_list.add(boton);
 			//panel2.add(boton);
+			
+			emojis.add(new Integer(i));
 		}
 		
-		/*
-		JButton btnAndroid1 = new JButton("Android 1");
-		btnAndroid1.setIcon(BubbleText.getEmoji(1));
-		btnAndroid1.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				bombilla.setVisible(false);
-				System.out.println("2");
-			}
-		});
-		panel2.add(btnAndroid1);
-		JButton btnAndroid2 = new JButton("Android 2");
-		btnAndroid2.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				bombilla.setVisible(false);
-				System.out.println("3");
-			}
-		});
-		panel2.add(btnAndroid2);
+		setChats(emojis);
 		
-		JPanel panel3 = new JPanel();
-		panel1.add(panel3, BorderLayout.CENTER);
-		panel3.setLayout(new BorderLayout(0, 0));
-		JLabel lblNewLabel = new JLabel("Choose the date format");
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		panel3.add(lblNewLabel);*/
-		scroll_chat.setViewportView(chat_list);
-		bombilla.setVisible(true);
+		
+		
+		//scroll_chat.add(chat_list);
+		//scroll_chat.setViewportView(chat_list);
+		//scroll_chat.setVisible(true);
+	}
+	
+	
+	
+	
+	public void setChats(LinkedList<Integer> listaModel) {
+		listModel = new DefaultListModel<Integer>();
+		listaModel.stream().forEach(cont -> listModel.addElement(cont));
+		chatslist = new JList<Integer>(listModel);
+		scrollChats.setViewportView(chatslist);
+		chatslist.setCellRenderer(new chatListRender());
+	}
+	
+	private class chatListRender extends JLabel implements ListCellRenderer<Integer> {
+		public chatListRender() {
+		    setOpaque(true);
+		}
+	    public Component getListCellRendererComponent(JList<? extends Integer> list, Integer numEmoji, int index,
+	        boolean isSelected, boolean cellHasFocus) {
+	    	
+	    	this.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+	    	
+    		this.setIcon(BubbleText.getEmoji(numEmoji));
+	    	
+	        return this;
+	    }
 	}
 
 }
