@@ -32,6 +32,7 @@ import modelo.Mensaje;
 import modelo.Usuario;
 import pulsador.IEncendidoListener;
 import pulsador.Luz;
+import tds.BubbleText;
 
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
@@ -69,6 +70,8 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import java.awt.FlowLayout;
 import java.awt.ComponentOrientation;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.BoxLayout;
 
 public class ChatWindow implements InterfazVistas{
 
@@ -92,7 +95,6 @@ public class ChatWindow implements InterfazVistas{
 	private JScrollPane scrollChats;
 	private JList<Contacto> chatslist;
 	private JScrollPane scroll_chat;
-	private JList chat_list;
 	private DefaultListModel<Contacto> listModel;
 	
 	private int codigoActivo = -1;
@@ -110,6 +112,8 @@ public class ChatWindow implements InterfazVistas{
 	private JButton btnNewGroup;
 	private JButton btnModify;
 	private Luz luz_1;
+	private JPanel chat_list;
+	private JPanel panel_burbujas;
 	/**
 	 * Launch the application.
 	 */
@@ -710,6 +714,7 @@ public class ChatWindow implements InterfazVistas{
 		scrollChats.setViewportView(chatslist);
 		
 		scroll_chat = new JScrollPane();
+		scroll_chat.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		GridBagConstraints gbc_scroll_chat = new GridBagConstraints();
 		gbc_scroll_chat.gridheight = 2;
 		gbc_scroll_chat.gridwidth = 5;
@@ -719,8 +724,16 @@ public class ChatWindow implements InterfazVistas{
 		gbc_scroll_chat.gridy = 2;
 		panel.add(scroll_chat, gbc_scroll_chat);
 		
-		chat_list = new JList();
+		chat_list = new JPanel();
+		chat_list.setAutoscrolls(true);
 		scroll_chat.setViewportView(chat_list);
+		chat_list.setLayout(new BorderLayout(0, 0));
+		
+		panel_burbujas = new JPanel();
+		panel_burbujas.setSize(new Dimension(400,400));
+		chat_list.add(panel_burbujas);
+		panel_burbujas.setLayout(new BoxLayout(panel_burbujas, BoxLayout.Y_AXIS));
+		scroll_chat.setAutoscrolls(true);
 		
 		JScrollPane scrollmensaje = new JScrollPane();
 		GridBagConstraints gbc_scrollmensaje = new GridBagConstraints();
@@ -752,7 +765,6 @@ public class ChatWindow implements InterfazVistas{
 		panel_emoji.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				System.out.println("emojis");
 			}
 		});
 		GridBagConstraints gbc_panel_emoji = new GridBagConstraints();
@@ -932,10 +944,10 @@ public class ChatWindow implements InterfazVistas{
     	}
     	
     	lblnombrechat.setText(actNick);
-    	java.util.List<Mensaje> m = controlador.getMensajes(codigoActivo);
-    	System.out.println("------------------------------------");
-    	m.stream().forEach( mes -> System.out.println(mes.getTexto()));
-    	System.out.println("------------------------------------");
+    	
+    	panel_burbujas.removeAll();;    	
+    	
+    	LinkedList<BubbleText> b = controlador.getBurbujas(panel_burbujas, codigoActivo);
 	}
 	
 	public void setChats(LinkedList<Contacto> listaModel) {

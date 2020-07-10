@@ -1,5 +1,6 @@
 package controlador;
 
+import java.awt.Component;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -18,6 +19,8 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import javax.swing.JPanel;
 
 import org.knowm.xchart.CategoryChart;
 import org.knowm.xchart.CategoryChartBuilder;
@@ -60,6 +63,7 @@ import persistencia.IAdaptadorContactoGrupoDAO;
 import persistencia.IAdaptadorContactoIndividualDAO;
 import persistencia.IAdaptadorMensajeDAO;
 import persistencia.IAdaptadorUsuarioDAO;
+import tds.BubbleText;
 
 public class ControladorVistaAppChat implements IMensajesListener {
 	
@@ -459,6 +463,19 @@ public class ControladorVistaAppChat implements IMensajesListener {
 		}
 		
 	}
+	
+	public LinkedList<BubbleText> getBurbujas(JPanel c ,int codigoActivo){
+		LinkedList<Mensaje> messages = new LinkedList<Mensaje>(usuarioActual.getMensajes(codigoActivo));
+		Contacto cont;
+		boolean grupo = false;
+		if (usuarioActual.existContactoG(codigoActivo)) {
+			cont = usuarioActual.getContactoG(codigoActivo);
+			grupo = true;
+		}
+		else
+			cont = usuarioActual.getContactoI(codigoActivo);
+		return AuxRender.getBurbujas(c, messages, usuarioActual.getMovil(),cont,grupo );
+	}
 		
 	//TODO Actualizar vista de chat
 	public void eliminarMensajes(int codigo) {
@@ -498,6 +515,7 @@ public class ControladorVistaAppChat implements IMensajesListener {
 	}
 	
 	public void enviarMensaje(String mensaje, int codigo) {
+		if (mensaje == null || mensaje.isEmpty() ) return;
 		Mensaje m = usuarioActual.addMiMensaje(mensaje, codigo);
 		adaptadorMensaje.registrarMensaje(m);
 		if (m.getTipoReceptor().equals(TipoContacto.INDIVIDUAL))

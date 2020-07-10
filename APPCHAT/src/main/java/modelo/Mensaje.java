@@ -29,6 +29,7 @@ public class Mensaje {
 		this.texto = m.texto;
 		this.hora = m.hora;
 		this.receptor = receptor;
+		this.tlfEmisor = m.tlfEmisor;
 		this.tipoReceptor = m.tipoReceptor;
 	}
 	
