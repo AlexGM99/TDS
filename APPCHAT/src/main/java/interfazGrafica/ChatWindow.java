@@ -921,6 +921,7 @@ public class ChatWindow implements InterfazVistas{
     		lblnombrechat.setIcon(img6);
 		}
 		else if (!ruta.trim().isEmpty()) {
+			try {
     		File f = new File(ruta);
     		BufferedImage myPicture = null;
 			try {
@@ -930,11 +931,18 @@ public class ChatWindow implements InterfazVistas{
 			}			
     		Image aux=myPicture.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
     		lblnombrechat.setIcon(new ImageIcon(aux));
+			}
+			catch (Exception e) {
+				Image img5= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/usuarioDefecto.png")).getImage();
+	    		ImageIcon img6=new ImageIcon(img5.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+	    		lblnombrechat.setIcon(img6);
+			}
     	} else {
     		Image img5= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/usuarioDefecto.png")).getImage();
     		ImageIcon img6=new ImageIcon(img5.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
     		lblnombrechat.setIcon(img6);
     	}
+    	
     	
     	lblnombrechat.setText(actNick);
     	

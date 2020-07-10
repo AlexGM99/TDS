@@ -119,7 +119,7 @@ public class LogIn implements InterfazVistas {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				//TO DO funcionalidad del login
-				String usuario = textField.getText();
+				String usuario = textField.getText().trim();
 				@SuppressWarnings("deprecation")
 				String contrasena = passwordField.getText();
 				boolean logeado = controlador.loginUser(usuario, contrasena);
