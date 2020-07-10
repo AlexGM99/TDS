@@ -152,7 +152,7 @@ public class CatalogoUsuarios {
 			usuarios.put(usu.getMovil(), usu);
 	}
 		
-	// obtiene el viewmodel para un contacto individual
+	// obtiene el viewmodel para un contacto individual con los datos necesarios en una vista
 	public ViewModelDatosChat getDatosVentana(int codigo, Usuario usu) {
 		ContactoIndividual u = usu.getContactoI(codigo);
 		if (existeUsuario(u.getMovil())) {
@@ -162,6 +162,7 @@ public class CatalogoUsuarios {
 		}
 		else return new ViewModelUsuario("", u.getNombre(), u.getMovil(), "", u.getNombre());
 	}
+	//obtiene el viewModel para un grupo
 	public ViewModelDatosChat getDatosVentanaGrupo(int codigo, Usuario usu, ControladorVistaAppChat c) {
 		ContactoGrupo u = usu.getContactoG(codigo);
 		Usuario admin = u.getAdmin();
@@ -170,14 +171,8 @@ public class CatalogoUsuarios {
 		return new ViewModelGrupo(contactos, contAd, u.getNombre(), c);
 	}
 	
-	public ViewModelGrupo getDatosVentanaGrupo(List<String> contactosMovil) {
-		return null;
-		/*List<ContactoIndividual> contactos = usu.getContactos(u.getMiembros());
-		ContactoIndividual contAd = usu.getContactoODefault(admin);
-		return new ViewModelGrupo(contactos, contAd, u.getNombre(), c);*/
-	}
-	
-	
+	// Obtiene todos los contactos del usuario cuyo movil está en moviles y si no existe el contacto, crea un contacto imaginario para mostrarle en un
+	// grupo al usuario todos los integrantes
 	public List<ContactoIndividual> getContactosAunqueNoExistenEnUsuario(Usuario u, Set<String> moviles){
 		List<ContactoIndividual> c = new LinkedList<ContactoIndividual>();
 		c = u.getContactos().stream().filter(p -> moviles.contains(p.getMovil())).collect(Collectors.toList());
@@ -187,12 +182,13 @@ public class CatalogoUsuarios {
 			if (existeUsuario(string))
 			{
 				Usuario s = getByMovil(string);
-				c.add(new ContactoIndividual(s.getNombre(), s.getMovil()));
+				c.add(new ContactoIndividual(s.getNombre(), s.getMovil())); // se crea con un movil solamente, no tendrá nombre dado por el usuario, es el por defecto si no lo conoces
 			}
 		}
 		return c;
 	}
 	
+	// envia el mensaje a todos los contactos
 	public List<Usuario> enviarMensajeAcontactos(int codigo, Usuario u) {
 		List<Usuario> receptores = new LinkedList<Usuario>();
 		if (u.existContactoI(codigo) && existeUsuario(u.getContactoI(codigo).getMovil())) {
