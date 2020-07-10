@@ -765,6 +765,7 @@ public class ChatWindow implements InterfazVistas{
 		panel_emoji.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				new Emoji(controlador, codigoActivo);
 			}
 		});
 		GridBagConstraints gbc_panel_emoji = new GridBagConstraints();
