@@ -32,7 +32,6 @@ import modelo.Mensaje;
 import modelo.Usuario;
 import pulsador.IEncendidoListener;
 import pulsador.Luz;
-import tds.BubbleText;
 
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
@@ -612,9 +611,9 @@ public class ChatWindow implements InterfazVistas{
 				int opt = JOptionPane.showConfirmDialog(btnPremium,"Are you sure?", "Clear history", JOptionPane.OK_OPTION);
 				if (opt==JOptionPane.OK_OPTION) {
 					controlador.eliminarMensajes(codigoActivo);
-					setChats((LinkedList)controlador.getContactos());
+					setChats((LinkedList<Contacto>)controlador.getContactos());
 					ponerChat();
-					setChats((LinkedList)controlador.getContactos());
+					setChats((LinkedList<Contacto>)controlador.getContactos());
 				}
 			}
 		});
@@ -754,7 +753,7 @@ public class ChatWindow implements InterfazVistas{
 					controlador.enviarMensaje(textmensaje.getText(), codigoActivo);
 					ponerChat();
 					textmensaje.setText("");
-					setChats((LinkedList)controlador.getContactos());
+					setChats((LinkedList<Contacto>)controlador.getContactos());
 				}
 			}
 		});
@@ -790,7 +789,7 @@ public class ChatWindow implements InterfazVistas{
 				controlador.enviarMensaje(textmensaje.getText(), codigoActivo);
 				ponerChat();
 				textmensaje.setText("");
-				setChats((LinkedList)controlador.getContactos());
+				setChats((LinkedList<Contacto>)controlador.getContactos());
 			}
 		});
 		GridBagConstraints gbc_enviarMensaje = new GridBagConstraints();
@@ -808,7 +807,7 @@ public class ChatWindow implements InterfazVistas{
 				controlador.enviarMensaje(textmensaje.getText(), codigoActivo);
 				ponerChat();
 				textmensaje.setText("");
-				setChats((LinkedList)controlador.getContactos());
+				setChats((LinkedList<Contacto>)controlador.getContactos());
 			}
 		});
 		Image img3= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/envioAdap.png")).getImage();
@@ -839,6 +838,8 @@ public class ChatWindow implements InterfazVistas{
 	}
 	
 	private class chatListRender extends JLabel implements ListCellRenderer<Contacto> {
+
+		private static final long serialVersionUID = 3376884880044053194L;
 		public chatListRender() {
 		    setOpaque(true);
 		}

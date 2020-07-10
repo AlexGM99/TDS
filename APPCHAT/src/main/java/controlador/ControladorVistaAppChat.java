@@ -1,31 +1,21 @@
 package controlador;
 
-import java.awt.Component;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
+
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.swing.JPanel;
-
-import org.knowm.xchart.CategoryChart;
-import org.knowm.xchart.CategoryChartBuilder;
-import org.knowm.xchart.PieChartBuilder;
-import org.knowm.xchart.style.Styler.LegendPosition;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -135,7 +125,6 @@ public class ControladorVistaAppChat implements IMensajesListener {
 		catalogoUsuarios = CatalogoUsuarios.getUnicaInstancia();
 	}
 
-	// TODO ordenar por fecha Mensaje y por nombre contacto
 	public boolean loginUser(String name, String pass) {
 		// loguear el usuario
 		if (catalogoUsuarios.logIn(name, pass) == CatalogoUsuarios.CODIGO_LOG_IN_OK)
@@ -491,7 +480,6 @@ public class ControladorVistaAppChat implements IMensajesListener {
 		AuxRender.getBurbujas(c, m, usuarioActual.getMovil(),cont,grupo, getContactoIndividuales() );
 	}
 		
-	//TODO Actualizar vista de chat
 	public void eliminarMensajes(int codigo) {
 		ContactoGrupo g;
 		ContactoIndividual c;
@@ -557,11 +545,6 @@ public class ControladorVistaAppChat implements IMensajesListener {
 				adaptadorContacto.actualizarContactoIndividual(ci);
 
 				adaptadorUsuario.actualizarUsuario(u);
-			} else {
-				List<ContactoGrupo> gs = new LinkedList<ContactoGrupo>();
-				//receptores.stream().forEach(receptor -> gs.add(receptor.addMensajeDelCG(m, usuarioActual, codigo)));
-				//gs.stream().filter(grupo -> grupo != null).forEach(p -> adaptadorGrupo.actualizarContactoGrupo(p));
-				//receptores.stream().forEach(p -> adaptadorUsuario.actualizarUsuario(p));
 			}
 		}
 	}
@@ -575,7 +558,7 @@ public class ControladorVistaAppChat implements IMensajesListener {
 		return usuarioActual.getMensajes(codigo);
 	}
 
-	// TODO Funcion para buscar un mensaje en un chat normal
+	// Funcion para buscar un mensaje en un chat normal
 	public void buscarMensajeContacto(String usuario, Date fini, Date ffin, String texto, int codigoActivo) {
 		if (codigoActivo < 0) return;
 		Contacto contacto = null;
@@ -590,7 +573,7 @@ public class ControladorVistaAppChat implements IMensajesListener {
 	}
 	
 	
-	// TODO Cargador de mensajes
+	// Cargador de mensajes
 	public void cargarMensajes(String fich, String formatDateWhatsApp) {
 		Plataforma p;
 		if (formatDateWhatsApp.equals(SimpleTextParser.FORMAT_DATE_IOS))

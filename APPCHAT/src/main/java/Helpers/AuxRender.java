@@ -7,10 +7,8 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import modelo.Contacto;
-import modelo.ContactoGrupo;
 import modelo.ContactoIndividual;
 import modelo.Mensaje;
-import modelo.Usuario;
 import tds.BubbleText;
 
 public class AuxRender {

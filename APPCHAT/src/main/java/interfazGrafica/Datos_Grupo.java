@@ -3,7 +3,6 @@ package interfazGrafica;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -36,13 +35,14 @@ import java.awt.Insets;
 
 public class Datos_Grupo extends JFrame {
 
+	private static final long serialVersionUID = -276951443569803746L;
 	private DefaultListModel<ContactoIndividual> listModelContactos;
 	private JPanel contentPane;
 	private ControladorVistaAppChat controlador;
 	private List<ContactoIndividual> contactos;
 	private ContactoIndividual admin;
 	private String nombre;
-	private JList list;
+	private JList<ContactoIndividual> list;
 	private JScrollPane scrollPane;
 	/**
 	 * Create the frame.
@@ -66,7 +66,7 @@ public class Datos_Grupo extends JFrame {
 		
 		listModelContactos = new DefaultListModel<ContactoIndividual>();
 
-		list = new JList();
+		list = new JList<ContactoIndividual>();
 		scrollPane.setViewportView(list);
 		
 		JLabel label_1 = new JLabel("");
@@ -138,6 +138,9 @@ public class Datos_Grupo extends JFrame {
 	}
 	
 	private class chatListRender extends JLabel implements ListCellRenderer<ContactoIndividual> {
+
+		private static final long serialVersionUID = -8675866247067660852L;
+
 		public chatListRender() {
 		    setOpaque(true);
 		}

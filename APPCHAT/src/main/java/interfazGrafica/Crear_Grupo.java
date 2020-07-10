@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import javax.swing.JPanel;
 
 import controlador.ControladorVistaAppChat;
-import modelo.Contacto;
 import modelo.ContactoIndividual;
 import modelo.Usuario;
 
@@ -39,21 +38,19 @@ import java.awt.Component;
 import javax.swing.border.MatteBorder;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.border.EtchedBorder;
-import javax.swing.border.TitledBorder;
-import javax.swing.border.LineBorder;
+
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class Crear_Grupo extends JFrame implements InterfazVistas {
 
+	private static final long serialVersionUID = 3052109374117565567L;
 	private JScrollPane scrollPane_contacts;
-	private JList list_contacts;
+	private JList<ContactoIndividual> list_contacts;
 	private DefaultListModel<ContactoIndividual> listModelContactos;
 	private DefaultListModel<ContactoIndividual> listModelSeleccionados;
 	private List<ContactoIndividual> contactos;
@@ -69,7 +66,7 @@ public class Crear_Grupo extends JFrame implements InterfazVistas {
 	private LinkedList<Integer> seleccionados;
 	private LinkedList<Integer> contactosUsuario;
 	private JScrollPane scrollPanel_seleccionados;
-	private JList list_seleccionados;
+	private JList<ContactoIndividual> list_seleccionados;
 	private int lastSeleccionado = -1;
 	private int lastContacto = -1;
 	private int numSelect = 0;
@@ -233,7 +230,7 @@ public class Crear_Grupo extends JFrame implements InterfazVistas {
 		scrollPanel_seleccionados.setPreferredSize(new Dimension(260, 200));
 		getContentPane().add(scrollPanel_seleccionados, BorderLayout.EAST);
 		
-		list_seleccionados = new JList();
+		list_seleccionados = new JList<ContactoIndividual>();
 		scrollPanel_seleccionados.setViewportView(list_seleccionados);
 		
 		JPanel panel_1 = new JPanel();
@@ -352,6 +349,9 @@ public class Crear_Grupo extends JFrame implements InterfazVistas {
 	
 
 	private class chatListRender extends JLabel implements ListCellRenderer<ContactoIndividual> {
+
+		private static final long serialVersionUID = -6851892823131349088L;
+
 		public chatListRender() {
 		    setOpaque(true);
 		}

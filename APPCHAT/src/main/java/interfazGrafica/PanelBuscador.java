@@ -1,6 +1,5 @@
 package interfazGrafica;
 
-import javax.swing.JPanel;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 
@@ -19,10 +18,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Date;
 import java.awt.Dimension;
-import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 
 public class PanelBuscador extends JFrame {
+
+	private static final long serialVersionUID = 1514085002165256306L;
 	private JTextField textField_usuario;
 	private JTextField textField_texto;
 

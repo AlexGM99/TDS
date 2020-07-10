@@ -1,8 +1,5 @@
 package interfazGrafica;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -24,6 +21,7 @@ import java.awt.Font;
 
 public class Datos_Chat_Actual extends JFrame {
 
+	private static final long serialVersionUID = -6549542955811115123L;
 	private JPanel contentPane;
 	JLabel labelFoto;
 	JLabel lblNombre;

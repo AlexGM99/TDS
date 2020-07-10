@@ -10,9 +10,6 @@ import java.util.List;
 
 import Descuentos.DescuentoCompuesto;
 import Descuentos.DescuentoSimple;
-import Descuentos.InterfazDescuentos;
-
-
 
 public class ControladorDescuentos {
 	// Windows

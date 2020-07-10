@@ -7,11 +7,9 @@ import java.util.Date;
 
 import org.junit.Before;
 import org.junit.Test;
-import modelo.ContactoGrupo;
 import modelo.Usuario;
 import persistencia.DAOException;
 import persistencia.FactoriaDAO;
-import persistencia.IAdaptadorContactoGrupoDAO;
 import persistencia.IAdaptadorUsuarioDAO;
 
 
