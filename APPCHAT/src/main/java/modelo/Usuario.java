@@ -9,16 +9,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import Helpers.AuxRender;
 import Helpers.KeyValue;
-import interfazGrafica.Datos_Chat_Actual;
-
-// TODO Revisar implementación
-// TODO Faltan premium
-// TODO Faltan estadísticas
 
 public class Usuario {
 	private int codigo;
