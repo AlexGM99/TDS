@@ -2,6 +2,7 @@ package Helpers;
 
 import java.util.Map;
 
+// clase para simular la entrada de un mapa genérico, al estilo la clase keyvaluepair  de c#
 public class KeyValue<K, V> implements Map.Entry<K, V>
 {
     private K key;

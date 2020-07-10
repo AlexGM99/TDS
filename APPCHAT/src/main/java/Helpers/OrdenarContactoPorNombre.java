@@ -4,6 +4,7 @@ import java.util.Comparator;
 
 import modelo.Contacto;
 
+//comparador para ordenador contactos por su nombre
 public class OrdenarContactoPorNombre implements Comparator<Contacto>{
 	 @Override
 	    public int compare(Contacto o1, Contacto o2) {
