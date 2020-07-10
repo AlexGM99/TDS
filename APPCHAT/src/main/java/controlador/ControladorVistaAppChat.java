@@ -504,8 +504,12 @@ public class ControladorVistaAppChat implements IMensajesListener {
 		List<Contacto> sinMensajes = new LinkedList<Contacto>();
 		sinMensajes = lista.stream().filter( a -> a.getMensajes().isEmpty()).collect(Collectors.toList());
 		conMensajes = lista.stream().filter( a -> !a.getMensajes().isEmpty()).collect(Collectors.toList());
-		Collections.sort(conMensajes);
-		sinMensajes.sort(new OrdenarContactoPorNombre());
+		if (conMensajes == null) {
+			Collections.sort(conMensajes);
+		}
+		if (sinMensajes == null) {
+			sinMensajes.sort(new OrdenarContactoPorNombre());
+		}
 		List<Contacto> listaOrdenada = conMensajes;
 		sinMensajes.stream().forEach(p -> listaOrdenada.add(p));
 		return new LinkedList<Contacto>(listaOrdenada);
