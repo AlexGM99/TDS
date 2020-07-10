@@ -20,8 +20,8 @@ public class CargadorMensajes {
 		oyentes.remove(oyente);
 	}
 
+	// Parsea del fichero proporcionado por la vista, los mensajes y notifica a los oyentes
 	public void setFichero (String ruta, String formatDate, Plataforma plataforma) {
-		
 		List<MensajeWhatsApp> chat = null;
 		try {
 			chat = SimpleTextParser.parse(ruta, formatDate, plataforma);
@@ -31,6 +31,7 @@ public class CargadorMensajes {
 		notificarNuevosMensajes(new MensajesEvent(this, chat));
 	}
 
+	// Envía a los oyentes el evento con los mensajes
 	@SuppressWarnings("unchecked")
 	private void notificarNuevosMensajes(MensajesEvent e) {
 		Vector<IMensajesListener> lista;

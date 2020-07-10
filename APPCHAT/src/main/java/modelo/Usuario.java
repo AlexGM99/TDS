@@ -306,6 +306,8 @@ public class Usuario {
 			return null;
 		}
 	}
+	
+	// Obtiene los contactos asociados a un conjunto de móviles
 	public List<ContactoIndividual> getContactos(Set<String> moviles){
 		List<ContactoIndividual> contactosG = contactos.stream().filter(p -> moviles.contains(p.getMovil())).collect(Collectors.toList());
 		List<String> Asignados = new LinkedList<String>();
@@ -316,6 +318,7 @@ public class Usuario {
 		return contactosG;
 	}
 	
+	// Devuelve, si lo hay, un contacto asociado al móvil proporcionado
 	public ContactoIndividual GetSitieneContactoByMovil(String movil) {
 		try {
 		return contactos.stream().filter(p -> p.getMovil().equals(movil)).collect(Collectors.toList()).get(0);
@@ -325,6 +328,7 @@ public class Usuario {
 		return null;
 	}
 	
+	// Comprueba si hay un contacto asociado a cierto usuario y, en caso de que no lo haya, lo crea
 	public ContactoIndividual getContactoODefault(Usuario u) {
 		ContactoIndividual c;
 		if ((c = GetSitieneContactoByMovil(u.movil))!= null)
@@ -424,6 +428,7 @@ public class Usuario {
 				+ saludo + "\n\t premium=" + premium + "\n\t contactos=" + contactos + "\n\t grupos=" + grupos + "]";
 	}
 
+	// Obtiene el número de mensajes totales enviados a un tipo de contacto
 	public int getNumMensajes(TipoContacto tipoContacto) {
 		int contador = 0;
 		
@@ -454,6 +459,7 @@ public class Usuario {
 		return contador;
 	}
 	
+	// Obtiene una lista de los mensajes enviados por mes a un tipo de contacto
 	public List<Integer> getNumMensajesPorMes(TipoContacto tipoContacto) {
 		// Creamos una lista donde guardaremos los mensajes enviados en cada mes
 		List<Integer> mensajesAnual = new ArrayList<Integer>(12);
@@ -491,6 +497,7 @@ public class Usuario {
 		return mensajesAnual;
 	}
 	
+	// Obtiene una lista de los mensajes enviados por mes a un tipo de contacto en un año en concreto
 	public List<Integer> getNumMensajesPorMes(int year, TipoContacto tipoContacto) {
 		// Creamos una lista donde guardaremos los mensajes enviados en cada mes
 		List<Integer> mensajesAnual = new ArrayList<Integer>(12);
@@ -529,6 +536,7 @@ public class Usuario {
 		return mensajesAnual;
 	}
 
+	// Obtiene un mapa con el nombre del gurpo y los mensajes enviados a éste
 	public Map<String, Integer> getNumMensajesEnviadosPorGrupo() {
 
 		Map<String, Integer> mensajesGrupo = new HashMap<String, Integer>(grupos.size());

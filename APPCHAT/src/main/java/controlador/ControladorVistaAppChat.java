@@ -614,13 +614,13 @@ public class ControladorVistaAppChat implements IMensajesListener {
 	@Override
 	public void nuevosMensajes(MensajesEvent e) {
 		List<MensajeWhatsApp> mensajes = e.getMensajes();
-		Contacto receptor;
+		// Comprueba que sea una conversación entre 2 personas
 		Set<String> autores = mensajes.stream()
 				.map(m -> m.getAutor())
 				.collect(Collectors.toSet());
 		if (autores.size() != 2)
 			return;
-		
+		// Comprueba que se tenga un contacto asociado a la otra persona
 		ContactoIndividual auxC = null;
 		for (String it : autores) {
 			if (usuarioActual.getContactos().stream()
@@ -632,18 +632,18 @@ public class ControladorVistaAppChat implements IMensajesListener {
 		}
 		if (auxC == null)
 			return;
-		
+		// Obtiene el usuario asociado al contacto
 		Usuario auxU = catalogoUsuarios.getByMovil(auxC.getMovil());
 		ContactoIndividual auxC1 = null;
 		if ( ! auxU.getContactos().stream()
 				.anyMatch(c -> c.getNombre().equals(usuarioActual.getMovil())))
 			return;
-		
+		// Obtiene el contacto del usuarioActual de la otra persona
 		auxC1 = auxU.getContactos().stream()
 				.filter(c -> c.getNombre().equals(usuarioActual.getMovil()))
 				.collect(Collectors.toList())
 				.get(0);
-					
+		// Se comprueba quien es el emisor y el receptor
 		for (MensajeWhatsApp itM : mensajes) {
 			if (itM.getAutor().equals(auxC.getNombre()))
 				registrarMensaje(itM.getTexto(), itM.getAutor(), java.sql.Timestamp.valueOf(itM.getFecha()), auxC1, TipoContacto.INDIVIDUAL);

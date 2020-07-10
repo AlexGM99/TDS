@@ -76,6 +76,7 @@ public class Register implements InterfazVistas {
                     + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
 	private JButton btnClear;
 	
+	// Valida los campos del registro 
 	private boolean checkFields() {
 		boolean salida=true;
 		boolean passMatch = true;
@@ -204,7 +205,6 @@ public class Register implements InterfazVistas {
 		avatarPhoto.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				//TO DO Ir al selector de imagenes del ordenador
 				lblWrongPicture.setVisible(false);
 				Scanner entrada = null;
 		        JFileChooser fileChooser = new JFileChooser();
@@ -449,6 +449,7 @@ public class Register implements InterfazVistas {
 					String pass = passwordField.getText();
 					//String passAgain = passwordField_1.getPassword().toString();
 					//ImageIcon fotoPerfil = (ImageIcon)lblPhoto.getIcon();
+					// Llama al controlador para registrar a un usuario
 					String registrado =
 							controlador.RegisterUser(firts+" "+second, birth, email, phone, nick, pass, 
 									rutaAbsolutaAlaImagen, greeting);

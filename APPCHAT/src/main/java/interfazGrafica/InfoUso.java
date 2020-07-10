@@ -50,6 +50,7 @@ public class InfoUso extends JFrame {
 	 * Create the frame.
 	 */
 	public InfoUso(ControladorVistaAppChat controlador) {
+		// Inicializar
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 328, 119);
@@ -78,7 +79,7 @@ public class InfoUso extends JFrame {
 				graficaHistograma.getStyler().setLegendPosition(LegendPosition.InsideNW);
 				graficaHistograma.getStyler().setHasAnnotations(true);
 				graficaHistograma.getStyler().setSeriesColors(GRAFICA_HISTOGRAMA_COLOR);
-				// Valores
+				// Añadir valores
 				graficaHistograma.addSeries("Messages sent", MESES_YEAR, valores);	 
 				//Mostrar
 				XChartPanel<CategoryChart> grafica = new XChartPanel<CategoryChart>(graficaHistograma);
@@ -113,7 +114,7 @@ public class InfoUso extends JFrame {
 				// Personalizar gráfico
 				graficaTarta.getStyler().setSeriesColors(GRAFICA_TARTA_COLORES);
 				graficaTarta.getStyler().setLegendPosition(LegendPosition.InsideNW);
-				// Valores
+				// Añadir valores
 				for (String it : valores.keySet()) {
 					graficaTarta.addSeries(it, valores.get(it));
 				}

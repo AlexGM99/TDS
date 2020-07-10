@@ -122,6 +122,7 @@ public class LogIn implements InterfazVistas {
 				String usuario = textField.getText().trim();
 				@SuppressWarnings("deprecation")
 				String contrasena = passwordField.getText();
+				// Llama al controlador para comprobar si el usuario estaba registrado
 				boolean logeado = controlador.loginUser(usuario, contrasena);
 				if (!logeado) {
 					JOptionPane.showMessageDialog(lblPass, "Hey, u made a mistake, i dont't know why, but u can't login", "CHECK YOUR LOGIN" , JOptionPane.WARNING_MESSAGE);
@@ -142,6 +143,7 @@ public class LogIn implements InterfazVistas {
 		frmAppchatlogin.getContentPane().add(label, gbc_label);
 		
 		btnRegister = new JButton("Register");
+		// Si se pulsa el botón de "Register" cambia a dicha ventana
 		btnRegister.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {

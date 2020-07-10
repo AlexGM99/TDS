@@ -25,6 +25,7 @@ public class Emoji {
 	
 
 	public Emoji(ControladorVistaAppChat controlador, int codeChat) {
+		// Inicializar JFrame
 		this.controlador = controlador;
 		frame = new JFrame("Emojis");
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -32,20 +33,21 @@ public class Emoji {
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		
+		// Obtener iconos
 		List<Integer> emoticonos = new LinkedList<Integer>();
 		for (int i = 0; i < BubbleText.MAXICONO; i++) {
 			emoticonos.add(i);
 		}
-
+		// Guardar iconos en una lista
 		jList = new JList<>(emoticonos.toArray(new Integer[emoticonos.size()]));
-
 		jList.setCellRenderer(createListRenderer());
 		jList.addListSelectionListener(createListSelectionListener(jList, codeChat));
+		
 		pane = new JScrollPane(jList);
-
 		frame.add(pane);
 	}
 
+	// Listener que llama al controlador para enviar el mensaje con el emoji
 	private ListSelectionListener createListSelectionListener(JList<Integer> list, int codeChat) {
 		return e -> {
 			if (!e.getValueIsAdjusting()) {
@@ -55,6 +57,7 @@ public class Emoji {
 		};
 	}
 
+	// Renderiza la imagen del emoticono
 	private ListCellRenderer<? super Integer> createListRenderer() {
 		return new DefaultListCellRenderer() {
 			private static final long serialVersionUID = 416372501922746920L;
