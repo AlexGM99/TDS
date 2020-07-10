@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import Helpers.AuxRender;
 import Helpers.KeyValue;
 import interfazGrafica.Datos_Chat_Actual;
 
@@ -552,7 +553,7 @@ public class Usuario {
 			if (!c.getMensajes().isEmpty())
 				last = c.getLastMessageText();
 		}
-		String patternEmoji = "^:\\d+$";
+		String patternEmoji = AuxRender.PATTEREMOJI;
 		if (last.matches(patternEmoji))
 			return "emoji";
 		return last;

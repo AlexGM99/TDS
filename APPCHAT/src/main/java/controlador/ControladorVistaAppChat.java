@@ -336,6 +336,12 @@ public class ControladorVistaAppChat implements IMensajesListener {
 				getContactosByCodigos(contactos));
 		return contactosI.stream().filter(cont -> contenido(cont.getNombre(), nombre)).collect(Collectors.toList());
 	}
+	
+	//envia un emoji en su formato texto
+	public void sendEmoji(int codeEmoji, int codeChat) {
+		String e = AuxRender.setEmojiAsText(codeEmoji);
+		enviarMensaje(e, codeChat);
+	}
 
 	// TERMINADO
 	public boolean contenido(String contenedorB, String contenidoB) {
