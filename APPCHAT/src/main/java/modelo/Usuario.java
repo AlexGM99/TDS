@@ -437,7 +437,8 @@ public class Usuario {
 		case GRUPO:
 			for (Contacto c : grupos) {
 				for (Mensaje m : c.getMensajes()) {
-					if (m.getTlfEmisor().equals(this.movil)) {
+					String tlfEmisor = m.getTlfEmisor();
+					if (tlfEmisor != null && tlfEmisor.equals(this.movil)) {
 						contador++;
 					}
 				}
@@ -447,7 +448,8 @@ public class Usuario {
 		case INDIVIDUAL:
 			for (Contacto c : contactos) {
 				for (Mensaje m : c.getMensajes()) {
-					if (m.getTlfEmisor().equals(this.movil)) {
+					String tlfEmisor = m.getTlfEmisor();
+					if (tlfEmisor != null && tlfEmisor.equals(this.movil)) {
 						contador++;
 					}
 				}
@@ -461,6 +463,8 @@ public class Usuario {
 	public List<Integer> getNumMensajesPorMes(TipoContacto tipoContacto) {
 		// Creamos una lista donde guardaremos los mensajes enviados en cada mes
 		List<Integer> mensajesAnual = new ArrayList<Integer>(12);
+		for (int i = 0; i < 12; i++)
+			mensajesAnual.add(0);
 		int mes;
 		switch (tipoContacto) {
 		case GRUPO:
@@ -468,7 +472,8 @@ public class Usuario {
 				for (Mensaje m : c.getMensajes()) {
 					// Obtenemos la hora del mensaje y la pasamos de Date a LocalDate
 					LocalDate horaM = m.getHora().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-					if (m.getTlfEmisor().equals(this.movil)) {
+					String tlfEmisor = m.getTlfEmisor();
+					if (tlfEmisor != null && tlfEmisor.equals(this.movil)) {
 						mes = horaM.getMonthValue();
 						mensajesAnual.set(mes - 1, mensajesAnual.get(mes - 1) + 1);
 					}
@@ -495,6 +500,8 @@ public class Usuario {
 	public List<Integer> getNumMensajesPorMes(int year, TipoContacto tipoContacto) {
 		// Creamos una lista donde guardaremos los mensajes enviados en cada mes
 		List<Integer> mensajesAnual = new ArrayList<Integer>(12);
+		for (int i = 0; i < 12; i++)
+			mensajesAnual.add(0);
 		int mes;
 		switch (tipoContacto) {
 		case GRUPO:
@@ -502,7 +509,8 @@ public class Usuario {
 				for (Mensaje m : c.getMensajes()) {
 					// Obtenemos la hora del mensaje y la pasamos de Date a LocalDate
 					LocalDate horaM = m.getHora().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-					if (m.getTlfEmisor().equals(this.movil) && horaM.getYear() == year) {
+					String tlfEmisor = m.getTlfEmisor();
+					if (tlfEmisor != null && tlfEmisor.equals(this.movil) && horaM.getYear() == year) {
 						mes = horaM.getMonthValue();
 						mensajesAnual.set(mes - 1, mensajesAnual.get(mes - 1) + 1);
 					}
@@ -515,7 +523,8 @@ public class Usuario {
 				for (Mensaje m : c.getMensajes()) {
 					// Obtenemos la hora del mensaje y la pasamos de Date a LocalDate
 					LocalDate horaM = m.getHora().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-					if (m.getTlfEmisor().equals(this.movil) && horaM.getYear() == year) {
+					String tlfEmisor = m.getTlfEmisor();
+					if (tlfEmisor != null && tlfEmisor.equals(this.movil) && horaM.getYear() == year) {
 						mes = horaM.getMonthValue();
 						mensajesAnual.set(mes - 1, mensajesAnual.get(mes - 1) + 1);
 					}
@@ -533,7 +542,8 @@ public class Usuario {
 		for (ContactoGrupo cg : grupos) {
 			contador = 0;
 			for (Mensaje m : cg.getMensajes()) {
-				if (m.getTlfEmisor().equals(this.movil)) {
+				String tlfEmisor = m.getTlfEmisor();
+				if (tlfEmisor != null && tlfEmisor.equals(this.movil)) {
 					contador++;
 				}
 			}
