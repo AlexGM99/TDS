@@ -1,4 +1,4 @@
-package controlador;
+package Helpers;
 
 public class AuxRender {
 

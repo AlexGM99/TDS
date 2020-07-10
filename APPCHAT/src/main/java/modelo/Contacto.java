@@ -1,9 +1,11 @@
 package modelo;
 
+import java.util.Comparator;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class Contacto {
+public abstract class Contacto implements Comparable<Contacto> {
 
 	private int codigo;
 	private String nombre;
@@ -43,6 +45,17 @@ public abstract class Contacto {
 		this.mensajes = mensajes;
 	}
 
+	public String getLastMessageText() {
+		if (mensajes.isEmpty())
+			return "";
+		return mensajes.get(mensajes.size()-1).getTexto();
+	}
+	public Date getLastMessageDate() {
+		if (mensajes.isEmpty())
+			return null;
+		return mensajes.get(mensajes.size()-1).getHora();
+	}
+	
 	@Override
 	public String toString() {
 		return getClass().getSimpleName() + " [codigo=" + codigo + ", nombre=" + nombre + ", mensajes=" + mensajes
@@ -80,5 +93,17 @@ public abstract class Contacto {
 			return false;
 		return true;
 	}
+	
+	 @Override
+     public int compareTo(Contacto o) {
+         if (getLastMessageDate().after(o.getLastMessageDate())) {
+             return -1;
+         }
+         if (getLastMessageDate().before(o.getLastMessageDate())) {
+             return 1;
+         }
+         return 0;
+     }
+	 
 
 }

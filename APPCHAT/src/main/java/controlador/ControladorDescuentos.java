@@ -51,7 +51,6 @@ public class ControladorDescuentos {
 	     catch(Exception e) {
 	       e.printStackTrace();
 	    }
-	    System.out.println(local+ARCHIVO);
 		File archivo = new File (local+ARCHIVO);
 		FileReader fr = null;
 		try {

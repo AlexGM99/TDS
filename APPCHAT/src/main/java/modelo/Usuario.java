@@ -540,5 +540,22 @@ public class Usuario {
 		}
 		return mensajesGrupo;
 	}
+	
+	public String getLastMessageText(int codigo) {
+		String last = "";
+		if (existContactoG(codigo)) {
+			Contacto c = getContactoG(codigo);
+			if (!c.getMensajes().isEmpty())
+				last = c.getLastMessageText();
+		} else if (existContactoI(codigo)) {
+			Contacto c = getContactoI(codigo);
+			if (!c.getMensajes().isEmpty())
+				last = c.getLastMessageText();
+		}
+		String patternEmoji = "^:\\d+$";
+		if (last.matches(patternEmoji))
+			return "emoji";
+		return last;
+	}
 
 }

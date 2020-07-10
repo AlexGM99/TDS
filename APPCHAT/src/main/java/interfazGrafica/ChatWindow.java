@@ -606,7 +606,9 @@ public class ChatWindow implements InterfazVistas{
 				int opt = JOptionPane.showConfirmDialog(btnPremium,"Are you sure?", "Clear history", JOptionPane.OK_OPTION);
 				if (opt==JOptionPane.OK_OPTION) {
 					controlador.eliminarMensajes(codigoActivo);
+					setChats((LinkedList)controlador.getContactos());
 					ponerChat();
+					setChats((LinkedList)controlador.getContactos());
 				}
 			}
 		});
@@ -737,6 +739,7 @@ public class ChatWindow implements InterfazVistas{
 					controlador.enviarMensaje(textmensaje.getText(), codigoActivo);
 					ponerChat();
 					textmensaje.setText("");
+					setChats((LinkedList)controlador.getContactos());
 				}
 			}
 		});
@@ -772,6 +775,7 @@ public class ChatWindow implements InterfazVistas{
 				controlador.enviarMensaje(textmensaje.getText(), codigoActivo);
 				ponerChat();
 				textmensaje.setText("");
+				setChats((LinkedList)controlador.getContactos());
 			}
 		});
 		GridBagConstraints gbc_enviarMensaje = new GridBagConstraints();
@@ -789,6 +793,7 @@ public class ChatWindow implements InterfazVistas{
 				controlador.enviarMensaje(textmensaje.getText(), codigoActivo);
 				ponerChat();
 				textmensaje.setText("");
+				setChats((LinkedList)controlador.getContactos());
 			}
 		});
 		Image img3= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/envioAdap.png")).getImage();
@@ -852,7 +857,8 @@ public class ChatWindow implements InterfazVistas{
 	        		ImageIcon img6=new ImageIcon(img5.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
 	        		this.setIcon(img6);
 				}
-	        	this.setText(cont.getNombre());
+	    		String t = controlador.getLastMessageText(cont.getCodigo());
+	        	this.setText(cont.getNombre() + " - " + t);
 	        	if (isSelected) {
 		    	    setBackground(list.getSelectionBackground());
 		    	    setForeground(list.getSelectionForeground());
@@ -878,7 +884,8 @@ public class ChatWindow implements InterfazVistas{
     	    	    setBackground(list.getBackground());
     	    	    setForeground(list.getForeground());
     	    	}
-        		this.setText(cont.getNombre());
+        		String t = controlador.getLastMessageText(cont.getCodigo());
+	        	this.setText(cont.getNombre() + " - " + t);
 	        	if (isSelected) {
 		    	    setBackground(list.getSelectionBackground());
 		    	    setForeground(list.getSelectionForeground());
@@ -923,6 +930,7 @@ public class ChatWindow implements InterfazVistas{
     		ImageIcon img6=new ImageIcon(img5.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
     		lblnombrechat.setIcon(img6);
     	}
+    	
     	lblnombrechat.setText(actNick);
     	java.util.List<Mensaje> m = controlador.getMensajes(codigoActivo);
     	System.out.println("------------------------------------");
@@ -931,6 +939,7 @@ public class ChatWindow implements InterfazVistas{
 	}
 	
 	public void setChats(LinkedList<Contacto> listaModel) {
+		listaModel = controlador.getOrder(listaModel);
 		listModel = new DefaultListModel<Contacto>();
 		listaModel.stream().forEach(cont -> listModel.addElement(cont));
 		chatslist = new JList<Contacto>(listModel);

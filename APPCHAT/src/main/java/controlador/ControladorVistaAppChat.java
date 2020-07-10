@@ -5,7 +5,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -36,7 +38,9 @@ import cargadorMensajes.Plataforma;
 import cargadorMensajes.SimpleTextParser;
 import Descuentos.DescuentoCompuesto;
 import Descuentos.DescuentoSimple;
+import Helpers.AuxRender;
 import Helpers.KeyValue;
+import Helpers.OrdenarContactoPorNombre;
 import ViewModels.ViewModelDatosChat;
 import ViewModels.ViewModelGrupo;
 import interfazGrafica.ChatWindow;
@@ -470,7 +474,23 @@ public class ControladorVistaAppChat implements IMensajesListener {
 		adaptadorContacto.actualizarContactoIndividual(i);
 	}
 	
+	public LinkedList<Contacto> getOrder(List<Contacto> lista) {
+		List<Contacto> conMensajes = new LinkedList<Contacto>();
+		List<Contacto> sinMensajes = new LinkedList<Contacto>();
+		sinMensajes = lista.stream().filter( a -> a.getMensajes().isEmpty()).collect(Collectors.toList());
+		conMensajes = lista.stream().filter( a -> !a.getMensajes().isEmpty()).collect(Collectors.toList());
+		Collections.sort(conMensajes);
+		sinMensajes.sort(new OrdenarContactoPorNombre());
+		List<Contacto> listaOrdenada = conMensajes;
+		sinMensajes.stream().forEach(p -> listaOrdenada.add(p));
+		return new LinkedList<Contacto>(listaOrdenada);
+	}
+	
 
+	public String getLastMessageText(int codigo) {
+		return usuarioActual.getLastMessageText(codigo);
+	}
+	
 	public void enviarMensaje(String mensaje, int codigo) {
 		Mensaje m = usuarioActual.addMiMensaje(mensaje, codigo);
 		adaptadorMensaje.registrarMensaje(m);
