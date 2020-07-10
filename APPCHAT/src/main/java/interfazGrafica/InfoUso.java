@@ -34,6 +34,8 @@ import javax.swing.SwingConstants;
 
 public class InfoUso extends JFrame {
 
+	private static final long serialVersionUID = -3685602735969574874L;
+
 	private JPanel contentPane;
 
 	// TODO Ruta para guardar los usuarios
@@ -46,35 +48,19 @@ public class InfoUso extends JFrame {
 	public static final BitmapFormat GRAFICA_TARTA_FORMATO = BitmapFormat.PNG;
 
 	/**
-	 * Launch the application.
-	 */
-	/*public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					InfoUso frame = new InfoUso();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}*/
-
-	/**
 	 * Create the frame.
 	 */
 	public InfoUso(ControladorVistaAppChat controlador) {
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 328, 119);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
 		Dimension pantalla = Toolkit.getDefaultToolkit().getScreenSize();
-        Dimension ventana = getSize();
-        setLocation((pantalla.width - ventana.width) / 2, (pantalla.height - ventana.height) / 2);
+		Dimension ventana = getSize();
+		setLocation((pantalla.width - ventana.width) / 2, (pantalla.height - ventana.height) / 2);
 
 		JPanel panel = new JPanel();
 		contentPane.add(panel, BorderLayout.SOUTH);
@@ -117,22 +103,22 @@ public class InfoUso extends JFrame {
 
 		JButton btnNewButton_1 = new JButton("Group most used");
 		panel.add(btnNewButton_1);
-		
+
 		btnNewButton_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				Map<String, Double> valores = controlador.getInformacionUsoGrupos();
 
 				// Crear diagrama de tarta con los 6 grupos
-			    PieChart graficaTarta = new PieChartBuilder().title("Most messages sent to groups").build();
-			    // Personalizar gráfico
-			    graficaTarta.getStyler().setSeriesColors(GRAFICA_TARTA_COLORES);
-			    graficaTarta.getStyler().setLegendPosition(LegendPosition.InsideNW);
-			    // Valores
-			    for (String it : valores.keySet()) {
-			    	graficaTarta.addSeries(it, valores.get(it));
+				PieChart graficaTarta = new PieChartBuilder().title("Most messages sent to groups").build();
+				// Personalizar gráfico
+				graficaTarta.getStyler().setSeriesColors(GRAFICA_TARTA_COLORES);
+				graficaTarta.getStyler().setLegendPosition(LegendPosition.InsideNW);
+				// Valores
+				for (String it : valores.keySet()) {
+					graficaTarta.addSeries(it, valores.get(it));
 				}
-			    //Mostrar
+				//Mostrar
 				XChartPanel<PieChart> grafica = new XChartPanel<PieChart>(graficaTarta);
 				JFrame ventana = new JFrame();
 				ventana.add(grafica);
@@ -142,9 +128,9 @@ public class InfoUso extends JFrame {
 				ventana.setVisible(true);
 				ventana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				grafica.setVisible(true);
-				
-			    // Guardar	    
-			    try {
+
+				// Guardar	    
+				try {
 					BitmapEncoder.saveBitmap(graficaTarta, GRAFICA_TARTA_PATH, GRAFICA_TARTA_FORMATO);
 				} catch (IOException e3) {
 					//e3.printStackTrace();

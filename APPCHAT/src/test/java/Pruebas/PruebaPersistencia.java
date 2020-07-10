@@ -1,8 +1,13 @@
-package modelo;
+package Pruebas;
 
 import java.time.Instant;
 import java.util.Date;
 
+import modelo.ContactoGrupo;
+import modelo.ContactoIndividual;
+import modelo.Mensaje;
+import modelo.TipoContacto;
+import modelo.Usuario;
 import persistencia.DAOException;
 import persistencia.FactoriaDAO;
 import persistencia.IAdaptadorContactoGrupoDAO;
@@ -10,7 +15,7 @@ import persistencia.IAdaptadorContactoIndividualDAO;
 import persistencia.IAdaptadorMensajeDAO;
 import persistencia.IAdaptadorUsuarioDAO;
 
-public class Prueba {
+public class PruebaPersistencia {
 
 	public static void main(String[] args) {
 

@@ -3,9 +3,6 @@ package modelo;
 import java.util.Date;
 import tds.BubbleText;
 
-// TODO Terminar de implementar
-// TODO Emoticonos
-
 public class Mensaje {
 	private int codigo;
 	private String texto;
