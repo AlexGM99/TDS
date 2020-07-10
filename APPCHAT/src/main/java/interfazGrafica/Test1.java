@@ -3,21 +3,23 @@ package interfazGrafica;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import java.awt.ScrollPane;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.time.DateTimeException;
 
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
+import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import cargadorMensajes.SimpleTextParser;
 import tds.BubbleText;
+import javax.swing.JScrollPane;
 
 public class Test1 {
 
@@ -28,7 +30,7 @@ public class Test1 {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Test1 window = new Test1();
+					new Test1();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -67,22 +69,46 @@ public class Test1 {
 		btnIos.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				bombilla.setVisible(false);
 				System.out.println("1");
 			}
 		});
 		panel2.add(btnIos);
 		
+		JScrollPane scrollPane = new JScrollPane();
+		//panel1.add(scrollPane, BorderLayout.EAST);
+		
+		JScrollPane scroll_chat = new JScrollPane();
+		GridBagConstraints gbc_scroll_chat = new GridBagConstraints();
+		gbc_scroll_chat.gridheight = 2;
+		gbc_scroll_chat.gridwidth = 5;
+		gbc_scroll_chat.insets = new Insets(0, 0, 5, 0);
+		gbc_scroll_chat.fill = GridBagConstraints.BOTH;
+		gbc_scroll_chat.gridx = 5;
+		gbc_scroll_chat.gridy = 2;
+		panel1.add(scroll_chat, BorderLayout.EAST);
+		
+		JList<JButton>chat_list = new JList<JButton>();
+		
 		
 		for (int i = 0; i < BubbleText.MAXICONO; i++) {
 			JButton boton = new JButton();
-			boton.setIcon(BubbleText.getEmoji(i));
+			Icon icono = BubbleText.getEmoji(i);
+			boton.setIcon(icono);
 			boton.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					bombilla.setVisible(false);
+					//System.out.println(icono);
+					JFrame aux1 = new JFrame();
+					aux1.setMinimumSize(new Dimension(100, 100));
+					JLabel aux2 = new JLabel();
+					aux2.setIcon(icono);
+					aux1.getContentPane().add(aux2);
+					aux1.setVisible(true);
 				}
 			});
+			chat_list.add(boton);
+			//panel2.add(boton);
 		}
 		
 		/*
@@ -112,7 +138,7 @@ public class Test1 {
 		JLabel lblNewLabel = new JLabel("Choose the date format");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		panel3.add(lblNewLabel);*/
-		
+		scroll_chat.setViewportView(chat_list);
 		bombilla.setVisible(true);
 	}
 
