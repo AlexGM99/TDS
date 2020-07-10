@@ -886,22 +886,12 @@ public class ChatWindow implements InterfazVistas{
 	    		Image img5= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/Grupo.png")).getImage();
         		ImageIcon img6=new ImageIcon(img5.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
         		this.setIcon(img6);
-        		if (isSelected) {
-    	    	    setBackground(list.getSelectionBackground());
-    	    	    setForeground(list.getSelectionForeground());
-    	    	    codigoActivo = ((ContactoGrupo)cont).getCodigo();
-    	    	    actNick = cont.getNombre();
-    	    	    ponerChat();
-    	    	} else {
-    	    	    setBackground(list.getBackground());
-    	    	    setForeground(list.getForeground());
-    	    	}
         		String t = controlador.getLastMessageText(cont.getCodigo());
 	        	this.setText(cont.getNombre() + " - " + t);
 	        	if (isSelected) {
 		    	    setBackground(list.getSelectionBackground());
 		    	    setForeground(list.getSelectionForeground());
-		    	    codigoActivo = ((ContactoGrupo)cont).getCodigo();
+		    	    codigoActivo = cont.getCodigo();
 		    	    actNick = cont.getNombre();
 		    	    ponerChat();
 		    	} else {
@@ -945,8 +935,7 @@ public class ChatWindow implements InterfazVistas{
     	
     	lblnombrechat.setText(actNick);
     	
-    	panel_burbujas.removeAll();;    	
-    	
+    	panel_burbujas.removeAll();    	
     	LinkedList<BubbleText> b = controlador.getBurbujas(panel_burbujas, codigoActivo);
 	}
 	

@@ -2,11 +2,13 @@ package Helpers;
 
 import java.awt.Color;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JPanel;
 
 import modelo.Contacto;
 import modelo.ContactoGrupo;
+import modelo.ContactoIndividual;
 import modelo.Mensaje;
 import modelo.Usuario;
 import tds.BubbleText;
@@ -31,14 +33,21 @@ public class AuxRender {
 		return Integer.parseInt(num);
 	}
 	
-	public static LinkedList<BubbleText> getBurbujas(JPanel c, LinkedList<Mensaje> mensajes, String mimovil, Contacto cont, boolean grupo){
+	public static LinkedList<BubbleText> getBurbujas(JPanel c, LinkedList<Mensaje> mensajes, String mimovil, Contacto cont, boolean grupo, List<ContactoIndividual> contactos){
 		LinkedList<BubbleText> burbujas = new LinkedList<BubbleText>();
 		for (Mensaje mensaje : mensajes) {
 			boolean enviado = mimovil.equals(mensaje.getTlfEmisor());
 			BubbleText bubble;
 			String emisor = mensaje.getTlfEmisor();
-			if(!grupo)
+			if(!grupo && !enviado)
 				emisor = cont.getNombre();
+			else if (!enviado){
+				try {
+				 	emisor = contactos.stream().filter( contactito -> contactito.getMovil().equals(mensaje.getTlfEmisor())).findFirst().get().getNombre();
+				}
+				catch (Exception e) {
+				}
+			}
 			if (isEmoji(mensaje.getTexto()))
 			{
 				int emoji = getNumEmoji(mensaje.getTexto());
