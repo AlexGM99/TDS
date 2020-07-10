@@ -19,6 +19,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Date;
 import java.awt.Dimension;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EtchedBorder;
 
 public class PanelBuscador extends JFrame {
 	private JTextField textField_usuario;
@@ -109,6 +111,7 @@ public class PanelBuscador extends JFrame {
 		textField_texto.setColumns(10);
 		
 		JLabel lblNewLabel_1 = new JLabel("");
+		lblNewLabel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		lblNewLabel_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -116,6 +119,8 @@ public class PanelBuscador extends JFrame {
 				Date inicio = dateChooser.getDate();
 				Date fin = dateChooser_1.getDate();;
 				String texto = textField_texto.getText();
+				contolador.buscarMensajeContacto(usuario, inicio, fin, texto, codigoActivo);
+				exit();
 			}
 		});
 		lblNewLabel_1.setIcon(img6);
@@ -132,4 +137,7 @@ public class PanelBuscador extends JFrame {
 		 setVisible(i);
 	 }
 
+	public void exit() {
+		this.dispose();
+	}
 }

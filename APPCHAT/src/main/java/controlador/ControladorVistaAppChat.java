@@ -87,6 +87,8 @@ public class ControladorVistaAppChat implements IMensajesListener {
 	
 	private CargadorMensajes cargador;
 	
+	public KeyValue<Integer, List<Mensaje>> mensajes;
+	 
 	// TERMINADO
 	private ControladorVistaAppChat() {
 		// Inicializar adaptadores
@@ -476,6 +478,18 @@ public class ControladorVistaAppChat implements IMensajesListener {
 			cont = usuarioActual.getContactoI(codigoActivo);
 		return AuxRender.getBurbujas(c, messages, usuarioActual.getMovil(),cont,grupo, getContactoIndividuales() );
 	}
+	
+	public void setBurbuja(JPanel c, LinkedList<Mensaje> m, int codigoActivo) {
+		Contacto cont;
+		boolean grupo = false;
+		if (usuarioActual.existContactoG(codigoActivo)) {
+			cont = usuarioActual.getContactoG(codigoActivo);
+			grupo = true;
+		}
+		else
+			cont = usuarioActual.getContactoI(codigoActivo);
+		AuxRender.getBurbujas(c, m, usuarioActual.getMovil(),cont,grupo, getContactoIndividuales() );
+	}
 		
 	//TODO Actualizar vista de chat
 	public void eliminarMensajes(int codigo) {
@@ -563,15 +577,16 @@ public class ControladorVistaAppChat implements IMensajesListener {
 
 	// TODO Funcion para buscar un mensaje en un chat normal
 	public void buscarMensajeContacto(String usuario, Date fini, Date ffin, String texto, int codigoActivo) {
-		if (codigoActivo < 0 || texto == null || texto.isEmpty()) return;
+		if (codigoActivo < 0) return;
 		Contacto contacto = null;
 		if (usuarioActual.existContactoG(codigoActivo))
 			contacto = usuarioActual.getContactoG(codigoActivo);
 		else if (usuarioActual.existContactoI(codigoActivo))
 			contacto = usuarioActual.getContactoI(codigoActivo);
 		if (contacto == null) return;
-		contacto.getMensajeFiltrados( usuario,  fini,  ffin,  texto);
-		
+		ChatWindow chat = (ChatWindow) interfaz;
+		mensajes = new KeyValue<Integer, List<Mensaje>>(codigoActivo, contacto.getMensajeFiltrados( usuario,  fini,  ffin,  texto));
+		chat.setBurbujas(new LinkedList<Mensaje>(mensajes.getValue()));
 	}
 	
 	
@@ -586,6 +601,13 @@ public class ControladorVistaAppChat implements IMensajesListener {
 		cargador.setFichero(fich, formatDateWhatsApp, p);
 	}
 	
+	public List<Mensaje> setMensajesNuevoContacto(int codigoActivo){
+		
+		if (mensajes != null && mensajes.getKey() == codigoActivo)
+			return mensajes.getValue();
+		mensajes = new KeyValue<Integer, List<Mensaje>>(codigoActivo, getMensajes(codigoActivo));
+		return mensajes.getValue();
+	}
 
 	@Override
 	public void nuevosMensajes(MensajesEvent e) {
@@ -626,7 +648,6 @@ public class ControladorVistaAppChat implements IMensajesListener {
 			else if (itM.getAutor().equals(auxC1.getNombre()))
 				registrarMensaje(itM.getTexto(), itM.getAutor(), java.sql.Timestamp.valueOf(itM.getFecha()), auxC, TipoContacto.INDIVIDUAL); 				
 		}
-		System.out.println("F");
 		
 		for (ContactoIndividual it : getUsuarioActual().getContactos()) {
 			System.out.println(it.getNombre() + ":" + it.getMensajes());
@@ -636,7 +657,6 @@ public class ControladorVistaAppChat implements IMensajesListener {
 			System.out.println(it.getNombre() + ":" + it.getMensajes());
 		}
 		
-		System.out.println("FF");
 
 	}
 

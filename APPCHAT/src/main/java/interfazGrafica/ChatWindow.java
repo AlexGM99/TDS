@@ -938,8 +938,36 @@ public class ChatWindow implements InterfazVistas{
     	
     	lblnombrechat.setText(actNick);
     	
-    	panel_burbujas.removeAll();    	
-    	LinkedList<BubbleText> b = controlador.getBurbujas(panel_burbujas, codigoActivo);
+    	for (Component comp : panel_burbujas.getComponents()) {
+			comp.setEnabled(false);
+		}
+    	panel_burbujas.removeAll();
+    	panel_burbujas.remove(panel_burbujas);
+    	lblnombrechat.setText(actNick);
+    	panel_burbujas = new JPanel();
+		panel_burbujas.setSize(new Dimension(400,400));
+		chat_list.add(panel_burbujas);
+		panel_burbujas.setLayout(new BoxLayout(panel_burbujas, BoxLayout.Y_AXIS));
+    	
+    	
+    	LinkedList<Mensaje> mensajes = new LinkedList<Mensaje>( controlador.setMensajesNuevoContacto(codigoActivo));
+    	setBurbujas(mensajes);
+    	//LinkedList<BubbleText> b = controlador.getBurbujas(panel_burbujas, codigoActivo);
+	}
+	
+	public void setBurbujas(LinkedList<Mensaje> ms) {
+		for (Component comp : panel_burbujas.getComponents()) {
+			comp.setEnabled(false);
+		}
+    	panel_burbujas.removeAll();
+    	panel_burbujas.remove(panel_burbujas);
+    	lblnombrechat.setText(actNick);
+    	panel_burbujas = new JPanel();
+		panel_burbujas.setSize(new Dimension(400,400));
+		chat_list.add(panel_burbujas);
+		panel_burbujas.setLayout(new BoxLayout(panel_burbujas, BoxLayout.Y_AXIS));
+		
+		controlador.setBurbuja(panel_burbujas, ms, codigoActivo);
 	}
 	
 	public void setChats(LinkedList<Contacto> listaModel) {
