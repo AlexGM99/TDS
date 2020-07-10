@@ -474,7 +474,7 @@ public class ControladorVistaAppChat implements IMensajesListener {
 		}
 		else
 			cont = usuarioActual.getContactoI(codigoActivo);
-		return AuxRender.getBurbujas(c, messages, usuarioActual.getMovil(),cont,grupo );
+		return AuxRender.getBurbujas(c, messages, usuarioActual.getMovil(),cont,grupo, getContactoIndividuales() );
 	}
 		
 	//TODO Actualizar vista de chat
