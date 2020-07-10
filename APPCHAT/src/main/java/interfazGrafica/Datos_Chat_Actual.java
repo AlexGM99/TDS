@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.awt.Font;
 
+// Vista de la información del contacto
 public class Datos_Chat_Actual extends JFrame {
 
 	private static final long serialVersionUID = -6549542955811115123L;

@@ -46,6 +46,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+// Vista para crear un grupo
 public class Crear_Grupo extends JFrame implements InterfazVistas {
 
 	private static final long serialVersionUID = 3052109374117565567L;
@@ -105,6 +106,7 @@ public class Crear_Grupo extends JFrame implements InterfazVistas {
 		buscador.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				// Llama al controlador para filtrar los contactos
 				setChats(new LinkedList<ContactoIndividual>(controlador.setContactosFilter(contactosUsuario, Barra_de_búsqueda.getText())));
 				setChatsSeleccionados(new LinkedList<ContactoIndividual>(controlador.setContactosFilter(seleccionados, Barra_de_búsqueda.getText())));
 			}
@@ -203,6 +205,7 @@ public class Crear_Grupo extends JFrame implements InterfazVistas {
 		Barra_de_búsqueda.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
+				// Llama al controlador para filtrar los contactos
 				setChats(new LinkedList<ContactoIndividual>(controlador.setContactosFilter(contactosUsuario, Barra_de_búsqueda.getText())));
 				setChatsSeleccionados(new LinkedList<ContactoIndividual>(controlador.setContactosFilter(seleccionados, Barra_de_búsqueda.getText())));
 			}
@@ -289,6 +292,7 @@ public class Crear_Grupo extends JFrame implements InterfazVistas {
 		btnCrearGrupo.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				// Llama al controlador para crear el grupo
 				boolean creado = controlador.crearGrupo(txtNombreGrupo.getText(), seleccionados);
 				if (creado)
 					exit();

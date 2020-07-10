@@ -33,6 +33,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
+// Vista de la información del grupo
 public class Datos_Grupo extends JFrame {
 
 	private static final long serialVersionUID = -276951443569803746L;

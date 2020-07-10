@@ -174,6 +174,7 @@ public class ChatWindow implements InterfazVistas{
 					public void mouseClicked(MouseEvent e) {
 						bombilla.setVisible(false);
 						try {
+							// Llama al controlador para cargar los mensajes
 							controlador.cargarMensajes(filePath, SimpleTextParser.FORMAT_DATE_IOS);
 						} catch (IndexOutOfBoundsException | DateTimeException e2) {
 							JOptionPane.showMessageDialog(null, "There was an error loading your messages", "Boom!", JOptionPane.ERROR_MESSAGE);
@@ -187,6 +188,7 @@ public class ChatWindow implements InterfazVistas{
 					public void mouseClicked(MouseEvent e) {
 						bombilla.setVisible(false);
 						try {
+							// Llama al controlador para cargar los mensajes
 							controlador.cargarMensajes(filePath, SimpleTextParser.FORMAT_DATE_ANDROID_1);
 						} catch (IndexOutOfBoundsException | DateTimeException e2) {
 							//e2.printStackTrace();
@@ -201,6 +203,7 @@ public class ChatWindow implements InterfazVistas{
 					public void mouseClicked(MouseEvent e) {
 						bombilla.setVisible(false);
 						try {
+							// Llama al controlador para cargar los mensajes
 							controlador.cargarMensajes(filePath, SimpleTextParser.FORMAT_DATE_ANDROID_2);
 						} catch (IndexOutOfBoundsException | DateTimeException e2) {
 							JOptionPane.showMessageDialog(null, "There was an error loading your messages", "Boom!", JOptionPane.ERROR_MESSAGE);
@@ -223,6 +226,7 @@ public class ChatWindow implements InterfazVistas{
 		});		
 		mostrarPerfil.add(luz_1, gbc_luz_1);
 		
+		// Si no se encuentra la imagen de perfil pone la imagen por defecto y avisa al usuario
 		if (!user.getImagen().trim().isEmpty()) {
 		 Scanner entrada = null;
 		 try {
@@ -291,7 +295,6 @@ public class ChatWindow implements InterfazVistas{
 		mostrarPerfil.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				//TO DO mostrar el perfil del usuario
 					popupMenu_2.setLocation(mostrarPerfil.getLocationOnScreen());
 					popupMenu_2.setVisible(!popupMenu_2.isVisible());
 			}
@@ -324,7 +327,6 @@ public class ChatWindow implements InterfazVistas{
 		btnChangePhoto.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				//TO DO cambiar la foto de perfil por la elegida por el usuario -> copiar de register + 
 				Scanner entrada = null;
 				popupMenu_2.setVisible(false);
 		        JFileChooser fileChooser = new JFileChooser();
@@ -345,7 +347,7 @@ public class ChatWindow implements InterfazVistas{
 		    			Image aux=myPicture.getScaledInstance(60, 60, Image.SCALE_SMOOTH);
 		    			label_MifotoPerfil.setIcon(new ImageIcon(aux));
 		    			label_MifotoPerfil.repaint();
-		    			//TO DO llamar al controlador que actualice el usuario y analizar error
+		    			// llamar al controlador que actualice el usuario y analizar error
 		    			boolean changed = controlador.changePhoto(ruta);
 				        if (!changed) {
 				        	JOptionPane.showConfirmDialog(chat_list, "There where an error in the process to become a dark boss with an appropiate image",
@@ -379,7 +381,7 @@ public class ChatWindow implements InterfazVistas{
 		btnChangeGreeting.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				//TO DO cambiar el saludo y llamar al controlador que lo cambie en la BBDD 
+				// cambiar el saludo y llamar al controlador que lo cambie en la BBDD 
 				popupMenu_2.setVisible(false);
 				String newGreeting = JOptionPane.showInputDialog(btnChangeGreeting, 
 						"Your actual greeting: " + controlador.getGreeting(),
@@ -391,6 +393,7 @@ public class ChatWindow implements InterfazVistas{
 		});
 		popupMenu_2.add(btnChangeGreeting);
 		
+		// Cierra la sesión de usuario
 		btnExit = new JButton("Exit");
 		btnExit.addMouseListener(new MouseAdapter() {
 			@Override
@@ -407,12 +410,14 @@ public class ChatWindow implements InterfazVistas{
 				popupMenu_2.setVisible(false);
 				String telefono = 
 						JOptionPane.showInputDialog(null, "Introduce the phone number of the new contact", "New Contact", JOptionPane.QUESTION_MESSAGE);
+				// Comprueba que exista un usuario asociado al telefono indicado
 				if (telefono != null && !controlador.existeUsuario(telefono)) {
 					JOptionPane.showMessageDialog(null, "We couldn't find the number " + telefono);
 				}else if (telefono != null){
 					String nick =
 							JOptionPane.showInputDialog(null, "Introduce how you would like to save it", "New Contact " + telefono, JOptionPane.QUESTION_MESSAGE);
 					if (nick != null) {
+						// Llama al controlador para registrar el contacto
 						controlador.registrarContacto(nick, telefono);
 					} else {
 						JOptionPane.showMessageDialog(null, "this is not a name!");
@@ -428,6 +433,7 @@ public class ChatWindow implements InterfazVistas{
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				popupMenu_2.setVisible(false);
+				// Llama a la vista de crear grupo
 				crearGrupo = new Crear_Grupo(controlador.getUsuarioActual() ,controlador.getContactoIndividuales(), controlador);
 				crearGrupo.setVisible(true);
 			}
@@ -440,6 +446,7 @@ public class ChatWindow implements InterfazVistas{
 			btnPremium.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
+					// Obtiene el mejor descuento para aplicarselo al usuario
 					DescuentoSimple descuentos = controlador.getMejorDescuento();
 					popupMenu_2.setVisible(false);
 					
@@ -447,6 +454,7 @@ public class ChatWindow implements InterfazVistas{
 							descuentos!=null?"Unirse a la orden premium" + " - promoción: "+descuentos.getName():"Unirse a la orden premium", 
 							JOptionPane.OK_OPTION);
 					if (opt==JOptionPane.OK_OPTION) {
+						// Mejora el usuario a premium
 						controlador.vendoMiAlmaPorPremium();
 						popupMenu_2.remove(btnPremium);
 					}
@@ -461,6 +469,7 @@ public class ChatWindow implements InterfazVistas{
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					popupMenu_2.setVisible(false);
+					// Llama a la función para mostrar la información de uso
 					InfoUso infoUso = new InfoUso(controlador);
 					infoUso.setVisible(true);
 				}
@@ -478,6 +487,7 @@ public class ChatWindow implements InterfazVistas{
 		        File file = fileChooser.getSelectedFile();
 				if (file != null) {
 					String filePath = file.getAbsolutePath(); 
+					// Llama al controlador para exportar los contactos
 					if (! controlador.exportarContactos(filePath))
 						JOptionPane.showMessageDialog(null, "There was an error exporting your contacts", "Boom!", JOptionPane.ERROR_MESSAGE);
 				}
@@ -546,6 +556,7 @@ public class ChatWindow implements InterfazVistas{
 		buscadorMensjs.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				// Muestra la ventana para filtrar mensajes
 				PanelBuscador b = new PanelBuscador(codigoActivo, controlador);
 				b.setVisible(true);
 			}
@@ -591,6 +602,7 @@ public class ChatWindow implements InterfazVistas{
 				popupMenu_1.setVisible(false);
 				int opt = JOptionPane.showConfirmDialog(btnPremium,"Are you sure?", "Delete", JOptionPane.OK_OPTION);
 				if (opt==JOptionPane.OK_OPTION) {
+					// Llama al controlador para eliminar el contacto si tengo permiso para hacerlo
 					if (!controlador.eliminarContacto(codigoActivo)){
 						JOptionPane.showConfirmDialog(null,"No se pudo borrar el contacto", "Contacto no borrado",  JOptionPane.WARNING_MESSAGE);
 					}
@@ -609,6 +621,7 @@ public class ChatWindow implements InterfazVistas{
 				popupMenu_1.setVisible(false);
 				int opt = JOptionPane.showConfirmDialog(btnPremium,"Are you sure?", "Clear history", JOptionPane.OK_OPTION);
 				if (opt==JOptionPane.OK_OPTION) {
+					// Llama al controlador para borrar mi lista de los mensajes del chat
 					controlador.eliminarMensajes(codigoActivo);
 					setChats((LinkedList<Contacto>)controlador.getContactos());
 					ponerChat();
@@ -623,6 +636,7 @@ public class ChatWindow implements InterfazVistas{
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				popupMenu_1.setVisible(false);
+				// Llama al controlador para comprobar si existe un contacto y actualizarlo
 				if (controlador.isContactoInd(codigoActivo)) {
 					String nick =
 							JOptionPane.showInputDialog(null, "Introduce how you would like to save it", "Edit Contact " + controlador.GetMovilI(codigoActivo), JOptionPane.QUESTION_MESSAGE);
@@ -691,7 +705,7 @@ public class ChatWindow implements InterfazVistas{
 		txtChat.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				// TO DO buscador por pulsación al igual que los mensajes
+				// buscador por pulsación al igual que los mensajes
 				setChats((LinkedList<Contacto>)controlador.buscarChats(txtChat.getText()));
 			}
 		});
@@ -749,6 +763,7 @@ public class ChatWindow implements InterfazVistas{
 			@Override
 			public void keyTyped(KeyEvent e) {
 				if (e.getKeyChar() == '\n' || e.getKeyChar() == '\r') {
+					// Llama al controlador para enviar un mensaje al presionar return
 					controlador.enviarMensaje(textmensaje.getText(), codigoActivo);
 					ponerChat();
 					textmensaje.setText("");
@@ -765,6 +780,7 @@ public class ChatWindow implements InterfazVistas{
 		panel_emoji.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				// Abre la vista del panel de emojis
 				new Emoji(controlador, codigoActivo);
 			}
 		});
@@ -785,6 +801,7 @@ public class ChatWindow implements InterfazVistas{
 		enviarMensaje.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				// Llama al controlador para enviar un mensaje al pulsar el botón de enviar
 				controlador.enviarMensaje(textmensaje.getText(), codigoActivo);
 				ponerChat();
 				textmensaje.setText("");
@@ -835,7 +852,7 @@ public class ChatWindow implements InterfazVistas{
 	public void exit() {
 		frmAppchat.dispose();
 	}
-	
+	// Renderizar contactos con imagen y nombre
 	private class chatListRender extends JLabel implements ListCellRenderer<Contacto> {
 
 		private static final long serialVersionUID = 3376884880044053194L;
@@ -906,11 +923,13 @@ public class ChatWindow implements InterfazVistas{
 	    }
 	}
 	
+	// Quita un chat como activo en pantalla
 	private void quitarChat() {
 		lblnombrechat.setIcon(null);
 		lblnombrechat.setText("");
 	}
 	
+	// Establece el chat activo en pantalla y dibuja los mensajes
 	private void ponerChat() {
 		String ruta = controlador.getImage(codigoActivo);
 		if(ruta.equals("GRUPO"))
@@ -944,6 +963,7 @@ public class ChatWindow implements InterfazVistas{
     	
     	lblnombrechat.setText(actNick);
     	
+    	// Se borra todo para volver a dibujarlo debido a problemas con el garbage collector
     	for (Component comp : panel_burbujas.getComponents()) {
 			comp.setEnabled(false);
 		}
@@ -976,6 +996,7 @@ public class ChatWindow implements InterfazVistas{
 		controlador.setBurbuja(panel_burbujas, ms, codigoActivo);
 	}
 	
+	// Establece la lista de chats
 	public void setChats(LinkedList<Contacto> listaModel) {
 		listaModel = controlador.getOrder(listaModel);
 		listModel = new DefaultListModel<Contacto>();
@@ -984,6 +1005,8 @@ public class ChatWindow implements InterfazVistas{
 		scrollChats.setViewportView(chatslist);
 		chatslist.setCellRenderer(new chatListRender());
 	}
+	
+	// Añade una chat a la lista
 	public void addChat(Contacto cont) {
 		listModel.addElement(cont);
 		chatslist = new JList<Contacto>(listModel);
