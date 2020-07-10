@@ -515,6 +515,7 @@ public class ControladorVistaAppChat implements IMensajesListener {
 	}
 	
 	public void enviarMensaje(String mensaje, int codigo) {
+		if (codigo<0) return;
 		if (mensaje == null || mensaje.isEmpty() ) return;
 		Mensaje m = usuarioActual.addMiMensaje(mensaje, codigo);
 		adaptadorMensaje.registrarMensaje(m);
