@@ -11,7 +11,6 @@ public class Cargador {
 		try {
 			System.out.println(SimpleTextParser.FORMAT_DATE_ANDROID_2.equals(SimpleTextParser.detectFormatDate("/home/edupema/Escritorio/chat-tds.txt")));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

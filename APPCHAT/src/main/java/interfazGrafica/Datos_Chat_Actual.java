@@ -42,7 +42,6 @@ public class Datos_Chat_Actual extends JFrame {
 			try {
 				myPicture = ImageIO.read(f);
 			} catch (IOException e) {
-				//TODO ADVERTENCIA
 			}			
     		Image aux=myPicture.getScaledInstance(80, 80, Image.SCALE_SMOOTH);
     		ImageIcon aux1 = new ImageIcon(aux);

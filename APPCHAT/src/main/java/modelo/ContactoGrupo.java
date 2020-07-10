@@ -56,12 +56,10 @@ public class ContactoGrupo extends Contacto {
 	}
 	@Override
 	public void setNombre(String nombre) {
-		// TODO Auto-generated method stub
 		super.setNombre(nombre);
 	}
 	@Override
 	public void setMensajes(List<Mensaje> mensajes) {
-		// TODO Auto-generated method stub
 		super.setMensajes(mensajes);
 	}
 	public void setMiembros(Set<String> miembros) {

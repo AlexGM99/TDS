@@ -606,7 +606,6 @@ public class ChatWindow implements InterfazVistas{
 		btnClearHistory.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				//TODO clear history messages of the chat
 				popupMenu_1.setVisible(false);
 				int opt = JOptionPane.showConfirmDialog(btnPremium,"Are you sure?", "Clear history", JOptionPane.OK_OPTION);
 				if (opt==JOptionPane.OK_OPTION) {
@@ -858,7 +857,6 @@ public class ChatWindow implements InterfazVistas{
 		        		ImageIcon aux1 = new ImageIcon(aux);
 		        		this.setIcon(aux1);
 					} catch (IOException e) {
-						//TODO ADVERTENCIA
 						Image img5= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/usuarioDefecto.png")).getImage();
 		        		ImageIcon img6=new ImageIcon(img5.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
 		        		this.setIcon(img6);
@@ -928,7 +926,6 @@ public class ChatWindow implements InterfazVistas{
 			try {
 				myPicture = ImageIO.read(f);
 			} catch (IOException e) {
-				//TODO ADVERTENCIA
 			}			
     		Image aux=myPicture.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
     		lblnombrechat.setIcon(new ImageIcon(aux));

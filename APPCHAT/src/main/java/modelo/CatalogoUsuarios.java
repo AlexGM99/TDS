@@ -146,9 +146,7 @@ public class CatalogoUsuarios {
 		for (Usuario usu : usuariosBD)
 			usuarios.put(usu.getMovil(), usu);
 	}
-	
-	// TODO wrapper de los datos de inicio y pasarlos a la vista
-	
+		
 	public ViewModelDatosChat getDatosVentana(int codigo, Usuario usu) {
 		ContactoIndividual u = usu.getContactoI(codigo);
 		if (existeUsuario(u.getMovil())) {

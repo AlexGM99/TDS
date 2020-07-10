@@ -38,7 +38,6 @@ public class InfoUso extends JFrame {
 
 	private JPanel contentPane;
 
-	// TODO Ruta para guardar los usuarios
 	public static final List<String> MESES_YEAR = Arrays.asList(new String[] { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec" });
 	public static final Color[] GRAFICA_HISTOGRAMA_COLOR = new Color[] { new Color(243, 180, 159) };
 	public static final String GRAFICA_HISTOGRAMA_PATH = System.getProperty("user.home") + "/Grafica-Uso-Anual";

@@ -104,7 +104,6 @@ public class Datos_Grupo extends JFrame {
         		ImageIcon aux1 = new ImageIcon(aux);
         		labelAdmin.setIcon(aux1);
 			} catch (IOException e) {
-				//TODO ADVERTENCIA
 				Image img5= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/usuarioDefecto.png")).getImage();
         		ImageIcon img6=new ImageIcon(img5.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
         		labelAdmin.setIcon(img6);
@@ -158,7 +157,6 @@ public class Datos_Grupo extends JFrame {
 		        		ImageIcon aux1 = new ImageIcon(aux);
 		        		this.setIcon(aux1);
 					} catch (IOException e) {
-						//TODO ADVERTENCIA
 						Image img5= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/usuarioDefecto.png")).getImage();
 		        		ImageIcon img6=new ImageIcon(img5.getScaledInstance(40, 40, Image.SCALE_SMOOTH));
 		        		this.setIcon(img6);
