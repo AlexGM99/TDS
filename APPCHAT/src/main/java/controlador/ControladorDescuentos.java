@@ -20,7 +20,7 @@ public class ControladorDescuentos {
 			"0;Invierno;5.0;Tienes que ser muy guapo\n" + 
 			"1;Oferta;5.0;Vendes tu cuerpecito al diablo\n" + 
 			"";
-	
+	// Obtiene los descuentos de un string constante
 	private List<DescuentoSimple> getDescuentos(){
 		List<DescuentoSimple> desc = new LinkedList<DescuentoSimple>();
 		String[] descuento = DESCUENTOS.split("\n");
@@ -38,6 +38,7 @@ public class ControladorDescuentos {
 		return desc;
 	}
 	
+	// Lee los descuentos del fichero dedicado a ello
 	private List<DescuentoSimple> getDescuentosFromFile(){
 		List<DescuentoSimple> desc = new LinkedList<DescuentoSimple>();
 		File miDir = new File (".");
@@ -79,7 +80,7 @@ public class ControladorDescuentos {
 		return desc;
 	}
 	
-	
+	//Función que obtiene los descuentos usando los lectores de descuentos, ahora mismo funciona con el lector de fichero
 	public DescuentoCompuesto getDescuentosActuales(){
 		DescuentoCompuesto descuentos;
 		List<DescuentoSimple> d = getDescuentosFromFile();

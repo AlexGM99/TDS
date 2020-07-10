@@ -94,19 +94,19 @@ public class ControladorVistaAppChat implements IMensajesListener {
 		controladorDescuentos = new ControladorDescuentos();
 	}
 
-	// TERMINADO
+	// Singleton
 	public static ControladorVistaAppChat getUnicaInstancia() {
 		if (unicaInstancia == null)
 			unicaInstancia = new ControladorVistaAppChat();
 		return unicaInstancia;
 	}
 
-	// TERMINADO
+	// actualiza la ventana actual
 	public void setInterface(InterfazVistas interfaz) {
 		this.interfaz = interfaz;
 	}
 
-	// TERMINADO
+	// incializa los adaptadores de la persistencia
 	private void inicializarAdaptadores() {
 		FactoriaDAO factoria = null;
 		try {
@@ -120,7 +120,7 @@ public class ControladorVistaAppChat implements IMensajesListener {
 		adaptadorMensaje = factoria.getMensajeDAO();
 	}
 
-	// TERMINADO
+	// incializa el catalogo
 	private void inicializarCatalogos() {
 		catalogoUsuarios = CatalogoUsuarios.getUnicaInstancia();
 	}
@@ -140,13 +140,13 @@ public class ControladorVistaAppChat implements IMensajesListener {
 		return true;
 	}
 
-	// TERMINADO
+	// Obtiene los contactos del usuario actual mediante los codigos
 	public List<ContactoIndividual> getContactosByCodigos(List<Integer> codes) {
 		List<ContactoIndividual> contactos = usuarioActual.getContactos();
 		return contactos.stream().filter(p -> codes.contains(p.getCodigo())).collect(Collectors.toList());
 	}
 
-	// TERMINADO
+	// registrar un nuevo usuario
 	public String RegisterUser(String nombre, Date fechanacimiento, String email, String movil, String usuario,
 			String contraseña, String imagen, String saludo) {
 		Usuario user;
@@ -157,14 +157,15 @@ public class ControladorVistaAppChat implements IMensajesListener {
 			user = new Usuario(nombre, fechanacimiento, email, movil, usuario, contraseña, imagen);
 		else
 			user = new Usuario(nombre, fechanacimiento, email, movil, usuario, contraseña, imagen, saludo);
+		// actualizamos la instancia actual
 		usuarioActual = user;
 		catalogoUsuarios.addUsuario(user);
 		adaptadorUsuario.registrarUsuario(user);
-		changeToChatWindow();
+		changeToChatWindow(); // cambiamos a la ventana de chat actual
 		return REGISTRO_CORRECTO;
 	}
 
-	// TERMINADO
+	// cambia la foto del usuario
 	public boolean changePhoto(String ruta) {
 		usuarioActual.setImagen(ruta);
 		// actualizamos en la bbdd
@@ -172,50 +173,50 @@ public class ControladorVistaAppChat implements IMensajesListener {
 		return true;
 	}
 
-	// TERMINADO
+	// cambia nuestro saluedo
 	public boolean changeGreeting(String greeting) {
 		usuarioActual.setSaludo(greeting);
-		adaptadorUsuario.actualizarUsuario(usuarioActual);
+		adaptadorUsuario.actualizarUsuario(usuarioActual); // actualizar bbdd
 		return true;
 	}
-	// TERMINADO
+	// obtiene el saludo del usuario actual
 	public String getGreeting() {
 		return usuarioActual.getSaludo();
 	}
 
-	// TERMINADO
+	// cambiar a la ventana de registro
 	public void changeToRegister() {
 		InterfazVistas antigua = interfaz;
 		interfaz = new Register(this);
 		antigua.exit();
 	}
 
-	// TERMINADO
+	// cambiar a la ventana de login
 	public void changeToLogin() {
 		InterfazVistas antigua = interfaz;
 		interfaz = new LogIn(this);
 		antigua.exit();
 	}
 
-	// TERMINADO
+	// Cambiar a la ventana de chat actual
 	public void changeToChatWindow() {
 		InterfazVistas antigua = interfaz;
 		interfaz = new ChatWindow(this, usuarioActual);
 		antigua.exit();
 	}
 
-	// TERMINADO
+	// devuelve si el usuario actual es premium o no
 	public boolean soypremium() {
 		return usuarioActual.isPremium();
 	}
 
-	// TERMINADO
+	// obtiene el mejor descuento
 	public DescuentoSimple getMejorDescuento() {
-		DescuentoCompuesto descuentos = controladorDescuentos.getDescuentosActuales();
+		DescuentoCompuesto descuentos = controladorDescuentos.getDescuentosActuales(); // delegar en el experto
 		double max = 0.0;
 		DescuentoSimple mejorDescuento = null;
 		List<DescuentoSimple> simples = descuentos.getdescuento();
-		for (DescuentoSimple s : simples) {
+		for (DescuentoSimple s : simples) { // coger el mejor
 			if (Double.parseDouble(s.getCantidad()) > max) {
 				{
 					max = Double.parseDouble(s.getCantidad());
@@ -226,20 +227,20 @@ public class ControladorVistaAppChat implements IMensajesListener {
 		return mejorDescuento;
 	}
 
-	// TERMINADO
+	// actualizar el usuario a premium
 	public void vendoMiAlmaPorPremium() {
 		usuarioActual.setPremium(true);
 		adaptadorUsuario.actualizarUsuario(usuarioActual);
 		catalogoUsuarios.addUsuario(usuarioActual);
 	}
 
-	// TERMINADO
+	// Obtener la imagen de un contacto individual
 	public String getImage(ContactoIndividual cont) {
 		String tel = cont.getMovil();
 		return catalogoUsuarios.getUsuario(tel).getImagen();
 	}
 
-	// TERMINADO
+	// a partir del codigo del contacto obtiene su imagen o GRUPO para indicar que es la imagen por defecto para grupos
 	public String getImage(int code) {
 		ContactoIndividual cI = usuarioActual.getContactoI(code);
 		if (cI != null) {
@@ -250,32 +251,32 @@ public class ControladorVistaAppChat implements IMensajesListener {
 		return "GRUPO";
 	}
 
-	// TERMINADO
+	// obtiene el nick de usuario para un contacto
 	public String getUserNick(ContactoIndividual cont) {
 		String tel = cont.getMovil();
 		return catalogoUsuarios.getUserName(tel);
 	}
 
-	// TERMINADO
+	// obtiene el nick de un usuario a partir del codigo
 	public String getUserNick(int code) {
 		return catalogoUsuarios.getUserName(code);
 	}
 
-	// TERMINADO
+	// obtiene el codigo de un contacto "DEPRECATED"
 	public int getCode(ContactoIndividual cont) {
 		return cont.getCodigo();
 		// String tel = cont.getMovil();
 		// return catalogoUsuarios.getCodigo(tel);
 	}
 
-	// TERMINADO
+	// Dice si existe o no un usuario para un teléfono
 	public boolean existeUsuario(String telefono) {
 		if (telefono == null)
 			return false;
 		return catalogoUsuarios.existeUsuario(telefono);
 	}
 
-	// TERMINADO
+	// obtiene la lista de contactos, tanto individuales como grupos del usuario actual
 	public List<Contacto> getContactos() {
 		LinkedList<Contacto> contactos = new LinkedList<Contacto>();
 		usuarioActual.getContactos().stream().forEach(cont -> contactos.add(cont));
@@ -283,32 +284,33 @@ public class ControladorVistaAppChat implements IMensajesListener {
 		return contactos;
 	}
 
-	// TERMINADO
 	public Usuario getUsuarioActual() {
 		return this.usuarioActual;
 	}
 
-	// TERMINADO
+	// Obtiene todos los contactos individuales del usuario actual
 	public List<ContactoIndividual> getContactoIndividuales() {
 		LinkedList<ContactoIndividual> contactos = new LinkedList<ContactoIndividual>();
 		usuarioActual.getContactos().stream().forEach(cont -> addifUser(contactos, cont));
 		return contactos;
 	}
 
+	// Si existe un usuario asociado a un contacto, lo añade a la lista (contactos importados podian importar contactos sin usuario en algunas versiones)
 	private void addifUser(LinkedList<ContactoIndividual> c, ContactoIndividual ci) {
 		if (existeUsuario(ci.getMovil()))
 			c.add(ci);
 	}
 
-	// TERMINADO
+	// Obtiene el view model de los datos de un chat para mostrar la venta de información del contacto, grupo o individual
 	public ViewModelDatosChat getDatos(int codigo) {
 		if (usuarioActual.existContactoI(codigo))
-			return catalogoUsuarios.getDatosVentana(codigo, usuarioActual);
+			return catalogoUsuarios.getDatosVentana(codigo, usuarioActual); // datos para usuario
 		else if (usuarioActual.existContactoG(codigo))
-			return catalogoUsuarios.getDatosVentanaGrupo(codigo, usuarioActual, unicaInstancia);
+			return catalogoUsuarios.getDatosVentanaGrupo(codigo, usuarioActual, unicaInstancia); // datos para grupo
 		return null;
 	}
 
+	// Obtiene los datos para un grupo, pero además lo crea con contactos seleccionados para poder ir a modificar grupos a partir de este viewmodel
 	public ViewModelGrupo getViewGrupo(int codigo) {
 		ContactoGrupo g;
 		if ((g = usuarioActual.getContactoG(codigo)) != null) {
@@ -338,7 +340,7 @@ public class ControladorVistaAppChat implements IMensajesListener {
 		enviarMensaje(e, codeChat);
 	}
 
-	// TERMINADO
+	// devuelve si el string contenido está contenido en contenedor
 	public boolean contenido(String contenedorB, String contenidoB) {
 		int i = 0;
 		if (contenidoB.length() > contenedorB.length())
@@ -353,7 +355,7 @@ public class ControladorVistaAppChat implements IMensajesListener {
 		return false;
 	}
 
-	// TERMINADO
+	//  registra un nuevo contacto, lo almacena en bbdd y actualiza el usuario
 	public ContactoIndividual registrarContacto(String usuario, String telefono) {
 		ContactoIndividual cont = new ContactoIndividual(usuario, telefono);
 		adaptadorContacto.registrarContactoIndividual(cont);
@@ -364,7 +366,7 @@ public class ControladorVistaAppChat implements IMensajesListener {
 		return cont;
 	}
 
-	// TERMINADO
+	// Crea un grupo
 	public boolean crearGrupo(String nombre, List<Integer> contactos) {
 		ContactoGrupo creado = usuarioActual.registrarGrupo(nombre, getContactosByCodigos(contactos));
 		if (creado != null) {
@@ -377,36 +379,36 @@ public class ControladorVistaAppChat implements IMensajesListener {
 		return creado != null;
 	}
 
-	// TERMINADO
+	// Modifcacion de un grupo
 	public boolean ModificarGrupo(String nombre, List<Integer> contactos, int code) {
-		ContactoGrupo creado = usuarioActual.getContactoG(code);
-		ContactoGrupo noModificado = new ContactoGrupo(creado);
-		if (creado != null) {
+		ContactoGrupo creado = usuarioActual.getContactoG(code); // lo obtenemos
+		if (creado != null) { // puede ser null si no existe
+		ContactoGrupo noModificado = new ContactoGrupo(creado); // copia
 			creado.setNombre(nombre);
 			creado.setMiembros(
-					getContactosByCodigos(contactos).stream().map(p -> p.getMovil()).collect(Collectors.toSet()));
-			usuarioActual.DeleteContactoG(code);
-			usuarioActual.addGrupo(creado);
-			catalogoUsuarios.registrarGrupoEnUsuarios(creado);
-			catalogoUsuarios.deleteEnUsuarios(creado.getMiembros(), noModificado.getMiembros(), code);
-			adaptadorGrupo.actualizarContactoGrupo(creado);
+					getContactosByCodigos(contactos).stream().map(p -> p.getMovil()).collect(Collectors.toSet())); // introducimos todos los miembros
+			usuarioActual.DeleteContactoG(code); 
+			usuarioActual.addGrupo(creado); // lo añadimos de nuevo
+			catalogoUsuarios.registrarGrupoEnUsuarios(creado); // registramos el grupo en todos los usuarios seleccionados
+			catalogoUsuarios.deleteEnUsuarios(creado.getMiembros(), noModificado.getMiembros(), code); // y lo quitamos en los usuario borrados
+			adaptadorGrupo.actualizarContactoGrupo(creado); // actualizamos
 			ChatWindow chat = (ChatWindow) interfaz;
 
-			chat.setChats(new LinkedList<Contacto>(getContactos()));
+			chat.setChats(new LinkedList<Contacto>(getContactos())); // actualizamos la lista de chats
 		}
 		return creado != null;
 	}
 
-	// TERMINADO
+	// borrar un contacto
 	public boolean eliminarContacto(int codigo) {
 		boolean borrado = false;
 		ContactoGrupo g;
-		if (usuarioActual.existContactoI(codigo)) {
-			borrado = usuarioActual.DeleteContactoI(codigo);
+		if (usuarioActual.existContactoI(codigo)) { // vemos si es individual
+			borrado = usuarioActual.DeleteContactoI(codigo); // y borramos
 		} else if ((g = usuarioActual.getContactoG(codigo)) != null) {
-			if (g.getAdmin().getCodigo() == usuarioActual.getCodigo()) {
-				catalogoUsuarios.borrarGrupoUsers(g);
-				borrado = usuarioActual.DeleteContactoG(codigo);
+			if (g.getAdmin().getCodigo() == usuarioActual.getCodigo()) { // pero si es grupo y eres admin
+				catalogoUsuarios.borrarGrupoUsers(g); // borramos en todos los users
+				borrado = usuarioActual.DeleteContactoG(codigo); // y en el nuestro
 				adaptadorUsuario.actualizarUsuario(usuarioActual);
 				adaptadorGrupo.borrarContactoGrupo(g);
 			} else
@@ -414,7 +416,7 @@ public class ControladorVistaAppChat implements IMensajesListener {
 		} else {
 			borrado = false;
 		}
-		if (borrado) {
+		if (borrado) { // si se ha borrado actualizamos los chats
 			adaptadorUsuario.actualizarUsuario(usuarioActual);
 			ChatWindow chat = (ChatWindow) interfaz;
 			LinkedList<Contacto> lista = (LinkedList<Contacto>) getContactos();
@@ -441,7 +443,7 @@ public class ControladorVistaAppChat implements IMensajesListener {
 		return usuarioActual.getContactoI(codigo).getMovil();
 	}
 	
-	// TERMINADO
+	// registra un nuevo mensaje y lo añade los receptores
 	public void registrarMensaje(String texto, String emisor, Date hora, Contacto receptor, TipoContacto tipoReceptor) {
 		Mensaje m = new Mensaje(texto, hora, emisor, receptor, tipoReceptor);
 		receptor.addMensaje(m);
@@ -455,6 +457,7 @@ public class ControladorVistaAppChat implements IMensajesListener {
 		
 	}
 	
+	// muestra todos los mensajes de un chat al usuario
 	public LinkedList<BubbleText> getBurbujas(JPanel c ,int codigoActivo){
 		LinkedList<Mensaje> messages = new LinkedList<Mensaje>(usuarioActual.getMensajes(codigoActivo));
 		Contacto cont;
@@ -468,6 +471,7 @@ public class ControladorVistaAppChat implements IMensajesListener {
 		return AuxRender.getBurbujas(c, messages, usuarioActual.getMovil(),cont,grupo, getContactoIndividuales() );
 	}
 	
+	// añade solamente una lista concreta de mensajes, necesario para los filtros
 	public void setBurbuja(JPanel c, LinkedList<Mensaje> m, int codigoActivo) {
 		Contacto cont;
 		boolean grupo = false;
@@ -480,6 +484,7 @@ public class ControladorVistaAppChat implements IMensajesListener {
 		AuxRender.getBurbujas(c, m, usuarioActual.getMovil(),cont,grupo, getContactoIndividuales() );
 	}
 		
+	//elimina los mensajes de un chat y se actualizará la pagina en la lista
 	public void eliminarMensajes(int codigo) {
 		ContactoGrupo g;
 		ContactoIndividual c;
@@ -492,22 +497,26 @@ public class ControladorVistaAppChat implements IMensajesListener {
 			g.setMensajes(new LinkedList<Mensaje>());
 			adaptadorGrupo.actualizarContactoGrupo(g);
 		}
+		mensajes = new KeyValue<Integer, List<Mensaje>>(codigo, getMensajes(codigo));
 	}
 
+	// actualiza el nombre con el que se guarda un contacto
 	public void actualizarContactoI(int codigo, String nick) {
 		ContactoIndividual i = usuarioActual.modifyContactoI(codigo, nick);
 		adaptadorContacto.actualizarContactoIndividual(i);
 	}
+	
+	// ordena la lista de contactos por mensajes y si no hay, por nombre del chat
 	
 	public LinkedList<Contacto> getOrder(List<Contacto> lista) {
 		List<Contacto> conMensajes = new LinkedList<Contacto>();
 		List<Contacto> sinMensajes = new LinkedList<Contacto>();
 		sinMensajes = lista.stream().filter( a -> a.getMensajes().isEmpty()).collect(Collectors.toList());
 		conMensajes = lista.stream().filter( a -> !a.getMensajes().isEmpty()).collect(Collectors.toList());
-		if (conMensajes == null) {
+		if (conMensajes != null) {
 			Collections.sort(conMensajes);
 		}
-		if (sinMensajes == null) {
+		if (sinMensajes != null) {
 			sinMensajes.sort(new OrdenarContactoPorNombre());
 		}
 		List<Contacto> listaOrdenada = conMensajes;
@@ -516,25 +525,27 @@ public class ControladorVistaAppChat implements IMensajesListener {
 	}
 	
 
+	// obtiene el ultimo mensaje de un contacto por su codigo
 	public String getLastMessageText(int codigo) {
 		return usuarioActual.getLastMessageText(codigo);
 	}
 	
+	// enviar mensaje a los receptores
 	public void enviarMensaje(String mensaje, int codigo) {
 		if (codigo<0) return;
-		if (mensaje == null || mensaje.isEmpty() ) return;
-		Mensaje m = usuarioActual.addMiMensaje(mensaje, codigo);
+		if (mensaje == null || mensaje.isEmpty() ) return; // tiene que existir el mensaje
+		Mensaje m = usuarioActual.addMiMensaje(mensaje, codigo); // añade a mi usuario el mensaje al chat con código codigo
 		adaptadorMensaje.registrarMensaje(m);
 		if (m.getTipoReceptor().equals(TipoContacto.INDIVIDUAL))
-			adaptadorContacto.actualizarContactoIndividual(usuarioActual.getContactoI(codigo));
+			adaptadorContacto.actualizarContactoIndividual(usuarioActual.getContactoI(codigo)); // actualiza el contacto
 		else
-			adaptadorGrupo.actualizarContactoGrupo(usuarioActual.getContactoG(codigo));
+			adaptadorGrupo.actualizarContactoGrupo(usuarioActual.getContactoG(codigo));// a un grupo
 		adaptadorUsuario.actualizarUsuario(usuarioActual);
-		List<Usuario> receptores = catalogoUsuarios.enviarMensajeAcontactos(codigo, usuarioActual);
+		List<Usuario> receptores = catalogoUsuarios.enviarMensajeAcontactos(codigo, usuarioActual); // enviar el mensaje a todos los usuarios receptores
 		if (!receptores.isEmpty()) {
 			if (m.getTipoReceptor().equals(TipoContacto.INDIVIDUAL)) {
 				Usuario u = receptores.get(0);
-				KeyValue<Boolean, KeyValue<Mensaje,ContactoIndividual>> ciV = u.addMensajeDelCI(m, usuarioActual, codigo);
+				KeyValue<Boolean, KeyValue<Mensaje,ContactoIndividual>> ciV = u.addMensajeDelCI(m, usuarioActual, codigo); // a un contacto individual
 				ContactoIndividual ci = ciV.getValue().getValue();
 				if (ciV.getKey()) {
 					List<Mensaje> mess = ci.getMensajes();
@@ -544,7 +555,7 @@ public class ControladorVistaAppChat implements IMensajesListener {
 					ci.setMensajes(mess);
 				}
 				else {
-					adaptadorMensaje.registrarMensaje(ciV.getValue().getKey());
+					adaptadorMensaje.registrarMensaje(ciV.getValue().getKey()); 
 				}
 				adaptadorContacto.actualizarContactoIndividual(ci);
 
@@ -553,16 +564,18 @@ public class ControladorVistaAppChat implements IMensajesListener {
 		}
 	}
 
+	//recupera todos los chats del usuario actual
 	public List<Contacto> buscarChats(String text) {
 		return usuarioActual.RecuperarContactosFiltrados(text);
 
 	}
 
+	//recupera todos los mensajes del chat actual
 	public List<Mensaje> getMensajes(int codigo) {
 		return usuarioActual.getMensajes(codigo);
 	}
 
-	// Funcion para buscar un mensaje en un chat normal
+	// Funcion para buscar un mensaje en un chat normal segun los filtros
 	public void buscarMensajeContacto(String usuario, Date fini, Date ffin, String texto, int codigoActivo) {
 		if (codigoActivo < 0) return;
 		Contacto contacto = null;
@@ -572,7 +585,7 @@ public class ControladorVistaAppChat implements IMensajesListener {
 			contacto = usuarioActual.getContactoI(codigoActivo);
 		if (contacto == null) return;
 		ChatWindow chat = (ChatWindow) interfaz;
-		mensajes = new KeyValue<Integer, List<Mensaje>>(codigoActivo, contacto.getMensajeFiltrados( usuario,  fini,  ffin,  texto));
+		mensajes = new KeyValue<Integer, List<Mensaje>>(codigoActivo, contacto.getMensajeFiltrados( usuario,  fini,  ffin,  texto)); // delegamos el filtrado al contacto
 		chat.setBurbujas(new LinkedList<Mensaje>(mensajes.getValue()));
 	}
 	
@@ -588,6 +601,7 @@ public class ControladorVistaAppChat implements IMensajesListener {
 		cargador.setFichero(fich, formatDateWhatsApp, p);
 	}
 	
+	// pone los mensajes para un nuevo contacto seleccionado
 	public List<Mensaje> setMensajesNuevoContacto(int codigoActivo){
 		
 		if (mensajes != null && mensajes.getKey() == codigoActivo)
@@ -596,6 +610,7 @@ public class ControladorVistaAppChat implements IMensajesListener {
 		return mensajes.getValue();
 	}
 
+	// Cargador de mensajes
 	@Override
 	public void nuevosMensajes(MensajesEvent e) {
 		List<MensajeWhatsApp> mensajes = e.getMensajes();
@@ -636,15 +651,6 @@ public class ControladorVistaAppChat implements IMensajesListener {
 				registrarMensaje(itM.getTexto(), itM.getAutor(), java.sql.Timestamp.valueOf(itM.getFecha()), auxC, TipoContacto.INDIVIDUAL); 				
 		}
 		
-		for (ContactoIndividual it : getUsuarioActual().getContactos()) {
-			System.out.println(it.getNombre() + ":" + it.getMensajes());
-		}
-		
-		for (ContactoIndividual it : auxU.getContactos()) {
-			System.out.println(it.getNombre() + ":" + it.getMensajes());
-		}
-		
-
 	}
 
 	public boolean exportarContactos(String filePath) {
