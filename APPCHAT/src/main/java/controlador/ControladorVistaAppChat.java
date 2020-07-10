@@ -562,9 +562,16 @@ public class ControladorVistaAppChat implements IMensajesListener {
 	}
 
 	// TODO Funcion para buscar un mensaje en un chat normal
-	public List<Mensaje> buscarMensajeContacto(String texto, LocalDate fecha1, LocalDate fecha2) {
-		// Cualquiera de los parámetros puede ser opcional
-		return null;
+	public void buscarMensajeContacto(String usuario, Date fini, Date ffin, String texto, int codigoActivo) {
+		if (codigoActivo < 0 || texto == null || texto.isEmpty()) return;
+		Contacto contacto = null;
+		if (usuarioActual.existContactoG(codigoActivo))
+			contacto = usuarioActual.getContactoG(codigoActivo);
+		else if (usuarioActual.existContactoI(codigoActivo))
+			contacto = usuarioActual.getContactoI(codigoActivo);
+		if (contacto == null) return;
+		contacto.getMensajeFiltrados( usuario,  fini,  ffin,  texto);
+		
 	}
 	
 	

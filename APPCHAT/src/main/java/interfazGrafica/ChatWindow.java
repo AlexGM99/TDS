@@ -78,7 +78,6 @@ public class ChatWindow implements InterfazVistas{
 	private Crear_Grupo crearGrupo;
 	
 	private JFrame frmAppchat;
-	private JTextField txtBuscar;
 	private JTextField txtChat;
 	private JTextField textmensaje;
 	
@@ -114,6 +113,7 @@ public class ChatWindow implements InterfazVistas{
 	private Luz luz_1;
 	private JPanel chat_list;
 	private JPanel panel_burbujas;
+	private JLabel label;
 	/**
 	 * Launch the application.
 	 */
@@ -544,6 +544,13 @@ public class ChatWindow implements InterfazVistas{
 		opciones_usuario.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		
 		buscadorMensjs = new JPanel();
+		buscadorMensjs.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				PanelBuscador b = new PanelBuscador(codigoActivo, controlador);
+				b.setVisible(true);
+			}
+		});
 		buscadorMensjs.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		GridBagConstraints gbc_buscadorMensjs = new GridBagConstraints();
 		gbc_buscadorMensjs.gridheight = 2;
@@ -553,16 +560,11 @@ public class ChatWindow implements InterfazVistas{
 		gbc_buscadorMensjs.gridy = 0;
 		panel.add(buscadorMensjs, gbc_buscadorMensjs);
 		
-		txtBuscar = new JTextField();
-		txtBuscar.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent e) {
-				//TODO llamar a la función que busque mensaje
-			}
-		});
-		txtBuscar.setText("buscar");
-		buscadorMensjs.add(txtBuscar);
-		txtBuscar.setColumns(10);
+		label = new JLabel("");
+		Image img10= new ImageIcon(ChatWindow.class.getResource("/ImagensDefault/lupitaRed.png")).getImage();
+		ImageIcon img11=new ImageIcon(img10.getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+		label.setIcon(img11);
+		buscadorMensjs.add(label);
 		GridBagConstraints gbc_opciones_usuario = new GridBagConstraints();
 		gbc_opciones_usuario.gridwidth = 2;
 		gbc_opciones_usuario.gridheight = 2;

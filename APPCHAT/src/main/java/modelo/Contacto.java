@@ -4,13 +4,22 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public abstract class Contacto implements Comparable<Contacto> {
 
 	private int codigo;
 	private String nombre;
 	private List<Mensaje> mensajes;
-
+	
+	public static String FECHAINI = "@fechainicio:(\\d{1,2}-\\d{1,2}-\\d{4})";
+	public static String FECHAFIN = "@fechafin:(\\d{1,2}-\\d{1,2}-\\d{4})";
+	public static String USUARIO = "@usuario:(\\S*)([ ]||$)";
+	
+	public static String REGEXCERRADA = "(" + FECHAINI +")?" +"(" + FECHAFIN +")?" +"(" + USUARIO +")?";
+	
 	protected Contacto(String nombre) {
 		codigo = 0;
 		this.nombre = nombre;
@@ -105,5 +114,30 @@ public abstract class Contacto implements Comparable<Contacto> {
          return 0;
      }
 	 
+	 public List<Mensaje> getMensajeFiltrados(String tlfusuario, Date fini, Date ffin, String texto){
+		 boolean usuario = false;
+		 boolean inicio = false;
+		 boolean ffinal = false;
+		 boolean text = false;
+		 if (tlfusuario != null && !tlfusuario.isEmpty())
+			 usuario = true;
+		 if (fini != null)
+			 inicio=true;
+		 if (ffin != null)
+			 ffinal = true;
+		 if (texto != null && !texto.isEmpty())
+			 text = true;
+		 List<Mensaje> mensajesfiltrados = new LinkedList<Mensaje>(this.mensajes);
+		 if (usuario)
+			 mensajesfiltrados = mensajesfiltrados.stream().filter(p -> p.getTlfEmisor().equals(tlfusuario)).collect(Collectors.toList());
+		 if (inicio)
+			 mensajesfiltrados = mensajesfiltrados.stream().filter(p->p.getHora().after(fini)).collect(Collectors.toList());
+		 if (ffinal)
+			 mensajesfiltrados = mensajesfiltrados.stream().filter(p->p.getHora().before(ffin)).collect(Collectors.toList());
+		 if (text)
+			 mensajesfiltrados = mensajesfiltrados.stream().filter(p->p.getTexto().toLowerCase().contains(texto.toLowerCase())).collect(Collectors.toList());
+		 
+		 return mensajesfiltrados;
+	 }
 
 }
