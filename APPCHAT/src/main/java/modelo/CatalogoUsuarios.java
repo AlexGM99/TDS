@@ -96,43 +96,48 @@ public class CatalogoUsuarios {
 		usuarios.remove(user.getMovil());
 	}
 
+	//loguea un usuario actual si existe
 	public int logIn(String movil, String contraseña) {
 		Usuario user = usuarios.get(movil);
 		if (user == null)
-			return CODIGO_USER_NOT_FOUND;
+			return CODIGO_USER_NOT_FOUND; // devuelve que no existe
 		if (user.getContraseña().equals(contraseña))
-			return CODIGO_LOG_IN_OK;
+			return CODIGO_LOG_IN_OK; // todo bien, login correcto
 		else
-			return CODIGO_WRONG_PASSWORD;
+			return CODIGO_WRONG_PASSWORD; // algun dato del login está mal
 	}
 
+	// registra el contacto grupo en todos los usuarios
 	public void registrarGrupoEnUsuarios(ContactoGrupo g) {
 		g.getMiembros().stream()
 			.filter(m -> existeUsuario(m))
 			.forEach(m -> nuevoGrupoEnUser(getByMovil(m), g));
 	}
 	
+	// borrar grupo en todos sus usuarios
 	public void borrarGrupoUsers(ContactoGrupo g) {
 		g.getMiembros().stream()
 			.filter(m -> existeUsuario(m))
 			.forEach(m->quitarGrupoUsers(getByMovil(m), g));
 	}
 	
+	// quita el grupo en un usuario
 	public void quitarGrupoUsers( Usuario u, ContactoGrupo g) {
 		if (u.getContactoG(g.getCodigo())!=null) {
 			u.DeleteContactoG(g.getCodigo());
 			adaptadorUsuario.actualizarUsuario(u);
 		}
 	}
-	
+	// borrar el grupo en todos los usuarios que no pertenecen a la nueva lista de miembros
 	public void deleteEnUsuarios(Set<String> nuevo, Set<String> antiguo, int g)
 	{
 		Set<String> s = new HashSet<String>(antiguo);
-		s.removeAll(nuevo);
+		s.removeAll(nuevo); // OUTER JOIN de listas
 		s.stream().map(m -> getUsuario(m)).forEach(u -> u.DeleteContactoG(g));
 		s.stream().map(m -> getUsuario(m)).forEach(u -> adaptadorUsuario.actualizarUsuario(u));
 	}
 	
+	//registra el grupo en el usuario
 	public void nuevoGrupoEnUser(Usuario u, ContactoGrupo g) {
 		if (u.getContactoG(g.getCodigo())==null) {
 			u.addGrupo(g);
@@ -147,6 +152,7 @@ public class CatalogoUsuarios {
 			usuarios.put(usu.getMovil(), usu);
 	}
 		
+	// obtiene el viewmodel para un contacto individual
 	public ViewModelDatosChat getDatosVentana(int codigo, Usuario usu) {
 		ContactoIndividual u = usu.getContactoI(codigo);
 		if (existeUsuario(u.getMovil())) {
